@@ -1316,6 +1316,246 @@ skills.nodejs.notes = [
  nL(["Hosts: Render, Railway, AWS, Azure, DigitalOcean","Use CI/CD (GitHub Actions) to test and deploy","Take database backups"])}
 ];
 
+/* ===== EXPRESS.JS SKILL =====
+   PASTE THIS BLOCK right after the Node.js notes (after "skills.nodejs.notes = [ ... ];")
+   and BEFORE the line:  var app = document.getElementById("app");
+*/
+
+skills.express = {
+  name: "Express.js",
+  qa: [
+    ["Basics","What is Express.js?","A minimal, fast and flexible web framework for Node.js. It adds routing, middleware, request and response helpers and template support on top of Node's http module, so you can build web apps and APIs quickly."],
+    ["Basics","Why use Express instead of the plain http module?","Plain http makes you parse URLs, methods, bodies and headers by hand. Express gives clean routing, middleware, body parsing, static files, error handling and a huge ecosystem with much less code."],
+    ["Basics","Is Express a framework or a library?","It is a minimal framework. It is unopinionated: it does not force a folder structure, database or template engine."],
+    ["Basics","What are the main features of Express?","Routing, middleware, template engines, static file serving, request and response helpers, error handling, and easy integration with databases and third-party packages."],
+    ["Basics","How do you create a basic Express server?","const express = require('express');\nconst app = express();\napp.get('/', (req, res) => res.send('Hello'));\napp.listen(3000);"],
+    ["Basics","What does express() return?","An application object (app) with methods such as get, post, use, listen, set and engine. It is also a function that can be passed to http.createServer."],
+    ["Basics","What does app.listen() do?","It creates an HTTP server from the app and starts listening on a port. It is a shortcut for http.createServer(app).listen()."],
+    ["Basics","Why separate app.js and server.js?","app.js builds and configures the app and exports it. server.js connects to the database and calls listen. This keeps setup separate from startup and makes testing with Supertest easy."],
+    ["Basics","What is the difference between Node.js and Express.js?","Node.js is the runtime that runs JavaScript on the server. Express is a framework built on Node that simplifies building web servers and APIs."],
+    ["Basics","What are the advantages and disadvantages of Express?","Advantages: simple, flexible, fast to learn, huge ecosystem. Disadvantages: not opinionated so structure is up to you, no built-in validation, auth or ORM, and callback or middleware chains can get messy in large apps."],
+    ["Basics","What is the difference between Express and Koa, Fastify or NestJS?","Koa is a lighter successor from the Express team using async/await. Fastify focuses on speed and schema validation. NestJS is a structured, TypeScript-first framework that runs on top of Express or Fastify."],
+    ["Basics","What changed in Express 5?","Rejected promises and async errors from route handlers are passed to the error handler automatically, path matching syntax is stricter, and some deprecated methods were removed."],
+
+    ["Routing","What is routing?","Mapping an HTTP method and URL path to a handler function. Example: app.get('/users', handler)."],
+    ["Routing","What is the syntax of an Express route?","app.METHOD(path, handler) where METHOD is get, post, put, patch, delete and so on. The handler receives (req, res, next)."],
+    ["Routing","What are route parameters?","Named parts of the URL like /users/:id. Read them with req.params.id."],
+    ["Routing","req.params vs req.query vs req.body?","params: route parts (/users/:id). query: URL query string (?page=2). body: data sent in POST, PUT or PATCH requests."],
+    ["Routing","What is app.all()?","It matches every HTTP method for a path. Useful for logic that applies to all methods on a route."],
+    ["Routing","What is app.route()?","It chains several handlers for one path: app.route('/books').get(list).post(create)."],
+    ["Routing","What is express.Router?","A mini application for grouping related routes and middleware in separate files, mounted with app.use('/users', router)."],
+    ["Routing","Why use routers?","They keep code modular: one router per resource, easier to maintain, test and reuse, and you can apply middleware to a whole group."],
+    ["Routing","Does route order matter?","Yes. Express matches routes in the order they are defined. Specific routes must come before general ones such as '/:id' or a catch-all 404."],
+    ["Routing","How do you handle 404 (route not found)?","Add a middleware after all routes: app.use((req, res) => res.status(404).send('Not found'))."],
+    ["Routing","What are optional and regex routes?","Routes can use patterns and regular expressions, for example /ab?cd or /.*fly$/. Path syntax differs slightly between Express 4 and 5."],
+    ["Routing","What is next('route')?","It skips the remaining handlers of the current route and moves to the next matching route."],
+    ["Routing","How do you use app.param()?","app.param('id', fn) runs a function whenever a route has the :id parameter. Useful to load a record once and attach it to req."],
+
+    ["Request & Response","What is the req object?","Represents the HTTP request: req.params, req.query, req.body, req.headers, req.cookies, req.method, req.url, req.ip, req.get('header')."],
+    ["Request & Response","What is the res object?","Represents the HTTP response: res.send, res.json, res.status, res.redirect, res.render, res.cookie, res.set, res.sendFile, res.download, res.end."],
+    ["Request & Response","res.send vs res.json vs res.end?","send sends text, HTML, buffer or object. json sends JSON with the correct Content-Type. end ends the response without data."],
+    ["Request & Response","How do you set a status code?","res.status(201).json(data). Chaining status with json or send is the usual pattern."],
+    ["Request & Response","res.redirect vs res.render?","redirect sends a 302 (or chosen status) telling the browser to request another URL. render builds HTML from a template and sends it."],
+    ["Request & Response","How do you send a file or force a download?","res.sendFile(absolutePath) shows the file. res.download(path) forces a download."],
+    ["Request & Response","How do you read headers and set headers?","req.get('Authorization') or req.headers. Set with res.set('X-Name', 'value') or res.setHeader()."],
+    ["Request & Response","How do you read and set cookies?","Use cookie-parser to read req.cookies. Set with res.cookie('name', value, { httpOnly: true, secure: true, sameSite: 'lax' })."],
+    ["Request & Response","Why do you get 'Cannot set headers after they are sent'?","The code tries to send a response twice, for example calling res.send and then res.json, or forgetting return after an early res. Use return res.status(...).send(...)."],
+    ["Request & Response","What are res.locals and app.locals?","res.locals holds data available only to the current request's templates. app.locals holds data available to every template for the whole app."],
+    ["Request & Response","How do you get the client IP?","req.ip. Behind a proxy or load balancer set app.set('trust proxy', 1) so Express reads the forwarded IP correctly."],
+
+    ["Middleware","What is middleware?","A function with (req, res, next) that runs between receiving the request and sending the response. It can read or change req and res, end the cycle, or call next()."],
+    ["Middleware","What are the types of middleware?","Application-level (app.use), router-level (router.use), built-in (express.json, express.static), third-party (helmet, morgan, cors, cookie-parser) and error-handling middleware."],
+    ["Middleware","What happens if you forget to call next()?","The request hangs because neither a response is sent nor the next handler is called."],
+    ["Middleware","Why does middleware order matter?","Express runs middleware in the order it is defined. Body parsers and session must come before routes, CSRF after body parsing, and the error handler last."],
+    ["Middleware","What do express.json() and express.urlencoded() do?","They parse JSON bodies and HTML form bodies into req.body. Without them req.body is undefined."],
+    ["Middleware","What does express.static do?","Serves static files such as CSS, images and client scripts from a folder: app.use(express.static('public'))."],
+    ["Middleware","How do you write custom middleware?","function logger(req, res, next) { console.log(req.method, req.url); next(); }\napp.use(logger);"],
+    ["Middleware","What is route-level middleware?","Middleware passed to a specific route: app.get('/admin', protect, adminOnly, handler)."],
+    ["Middleware","How do you pass data between middleware?","Attach it to req (for example req.user) or res.locals, then later middleware and the handler can read it."],
+    ["Middleware","What is the difference between app.use and app.get?","app.use runs for all methods and any path starting with the given prefix. app.get runs only for GET and an exact path match."],
+    ["Middleware","Name useful third-party middleware.","helmet (security headers), morgan (logging), cors, cookie-parser, express-session, express-rate-limit, compression, multer (uploads), passport (auth)."],
+    ["Middleware","What is morgan?","An HTTP request logger middleware that prints method, URL, status and response time."],
+    ["Middleware","What is compression middleware?","It gzips response bodies to reduce size and speed up delivery."],
+
+    ["Template Engines & Static Files","What is a template engine?","A tool that merges data into HTML templates on the server. Examples: EJS, Pug, Handlebars."],
+    ["Template Engines & Static Files","How do you set up EJS in Express?","npm install ejs, then app.set('view engine', 'ejs') and app.set('views', path.join(__dirname, 'views')). Render with res.render('page', { data })."],
+    ["Template Engines & Static Files","<%= %> vs <%- %> in EJS?","<%= %> escapes HTML, which is safe for user data. <%- %> outputs raw HTML and must never be used for untrusted input."],
+    ["Template Engines & Static Files","What are layouts and partials?","Partials are reusable template pieces (navbar, footer) included with include(). Layouts (express-ejs-layouts) wrap many pages in one shared structure."],
+    ["Template Engines & Static Files","How do you serve static files under a prefix?","app.use('/assets', express.static(path.join(__dirname, 'public')))."],
+    ["Template Engines & Static Files","SSR vs building an API?","SSR (server-side rendering) returns ready HTML with a template engine. An API returns JSON for a separate frontend such as React."],
+
+    ["Error Handling","How does error handling work in Express?","Errors thrown in sync code or passed with next(err) skip normal middleware and go to error-handling middleware with four parameters (err, req, res, next)."],
+    ["Error Handling","Where should the error handler be placed?","After all routes and other middleware, as the last app.use()."],
+    ["Error Handling","How do you handle errors in async handlers?","In Express 4 wrap in try/catch and call next(err), or use an asyncHandler wrapper. Express 5 forwards rejected promises automatically."],
+    ["Error Handling","What is an asyncHandler?","const asyncHandler = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); It removes repeated try/catch blocks."],
+    ["Error Handling","What is a custom error class?","class AppError extends Error with statusCode and isOperational so the error middleware can send the right status and message."],
+    ["Error Handling","Why hide stack traces in production?","They reveal internal paths and logic to attackers. Show a friendly message and log details privately."],
+    ["Error Handling","Operational vs programmer errors?","Operational: expected problems like invalid input or a database outage. Programmer: bugs. Handle the first and fix the second."],
+    ["Error Handling","How do you handle unhandled rejections and exceptions?","Listen to process.on('unhandledRejection') and 'uncaughtException', log, shut down gracefully and let a process manager restart the app."],
+
+    ["REST API","What is a REST API?","An API style using HTTP methods on resources identified by URLs, stateless and usually returning JSON."],
+    ["REST API","Which HTTP methods do you use for CRUD?","POST creates, GET reads, PUT replaces, PATCH updates partly, DELETE removes."],
+    ["REST API","Common status codes?","200 OK, 201 Created, 204 No Content, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 409 Conflict, 422 Unprocessable, 429 Too Many Requests, 500 Server Error."],
+    ["REST API","PUT vs PATCH?","PUT replaces the whole resource. PATCH changes only the fields sent."],
+    ["REST API","What does idempotent mean?","Repeating a request gives the same result. GET, PUT and DELETE are idempotent. POST is not."],
+    ["REST API","How do you implement pagination?","Read page and limit from req.query, validate them, then use skip((page-1)*limit) and limit(limit) and return total count with the data."],
+    ["REST API","How do you version an API?","Put the version in the URL (/api/v1/users), or in a header. URL versioning is the most common."],
+    ["REST API","What is CORS and how do you enable it?","A browser rule that blocks cross-origin requests unless the server allows them. Use the cors package with a specific allowed origin list."],
+    ["REST API","How do you structure a large Express project?","Folders for routes, controllers, services, models, middleware, config and utils. Controllers stay thin, business logic lives in services."],
+    ["REST API","What is the MVC pattern in Express?","Model (data, Mongoose), View (EJS or JSON response), Controller (request logic). Routes connect URLs to controllers."],
+
+    ["Authentication & Sessions","Session vs JWT?","Sessions keep state on the server and use a cookie with a session ID, and are easy to revoke. JWTs are signed tokens kept by the client, stateless but harder to revoke."],
+    ["Authentication & Sessions","How do sessions work with express-session?","The server creates a session, stores data in a store, and sends a session ID cookie. On each request the ID is used to load req.session."],
+    ["Authentication & Sessions","Why not use MemoryStore in production?","It leaks memory, loses sessions on restart and is not shared between instances. Use connect-mongo or Redis."],
+    ["Authentication & Sessions","Which cookie options are important?","httpOnly, secure (HTTPS only), sameSite and maxAge. Behind a proxy also set trust proxy."],
+    ["Authentication & Sessions","How do you hash passwords?","With bcrypt or argon2 and a salt. Never store plain text or fast hashes like MD5. Compare with bcrypt.compare."],
+    ["Authentication & Sessions","How do you write auth middleware?","function protect(req, res, next) {\n  if (!req.session.userId) return res.redirect('/login');\n  next();\n}"],
+    ["Authentication & Sessions","Authentication vs authorization?","Authentication verifies who you are. Authorization decides what you may do (roles such as admin or user)."],
+    ["Authentication & Sessions","How do you implement role-based access?","Store a role on the user and use middleware like adminOnly that checks req.user.role and returns 403 if not allowed."],
+    ["Authentication & Sessions","How do you verify a JWT in Express?","Read the token from the Authorization header or cookie, call jwt.verify with the secret, attach the payload to req.user, then call next. Return 401 on failure."],
+    ["Authentication & Sessions","What is session fixation and how do you prevent it?","An attacker sets a known session ID before login. Call req.session.regenerate() after successful login."],
+    ["Authentication & Sessions","What is Passport.js?","An authentication middleware with strategies for local login, JWT, Google, GitHub and more."],
+
+    ["Security","How do you secure an Express app?","helmet, CORS rules, rate limiting, input validation, hashed passwords, secure cookies, CSRF protection, body size limits, authorization checks, env-based secrets, dependency audits, HTTPS and safe error messages."],
+    ["Security","What is helmet?","Middleware that sets secure HTTP headers such as CSP, X-Frame-Options, X-Content-Type-Options and HSTS."],
+    ["Security","What is rate limiting?","Limiting how many requests a client can make in a time window with express-rate-limit. It slows brute-force and abuse, especially on login routes."],
+    ["Security","What is CSRF and how do you prevent it?","An attack that makes a logged-in browser send an unwanted request. Prevent with CSRF tokens and SameSite cookies."],
+    ["Security","What is XSS and how do you prevent it?","Injecting scripts into pages. Escape output (EJS <%= %>), validate input, use a Content Security Policy and HttpOnly cookies."],
+    ["Security","What is NoSQL injection?","Sending objects like {\"$ne\": \"\"} to change a query. Validate input types, allow-list filter and sort values and never pass req.query or req.body straight into a query."],
+    ["Security","What is IDOR / broken access control?","Accessing another user's data by changing an ID. Always query by both the resource id and the logged-in user's id."],
+    ["Security","What is mass assignment and how do you avoid it?","Saving req.body directly lets users change protected fields such as role. Pick explicit allowed fields only."],
+    ["Security","Why limit the request body size?","express.json({ limit: '10kb' }) prevents huge payloads from wasting memory or causing denial of service."],
+    ["Security","How do you protect secrets?","Keep them in .env, add .env to .gitignore, never hardcode credentials and use a secrets manager in production."],
+
+    ["Database Integration","How do you connect Express to MongoDB?","Use Mongoose: mongoose.connect(process.env.DBURL), then start app.listen after the connection succeeds."],
+    ["Database Integration","Why start the server only after the DB connects?","So the app never serves requests it cannot fulfil. A failed connection stops startup with a clear error."],
+    ["Database Integration","How do you do CRUD in an Express controller?","Use Model.create, find, findById, findByIdAndUpdate and findByIdAndDelete inside async handlers, checking for not found and sending proper status codes."],
+    ["Database Integration","How do you avoid the N+1 query problem?","Use populate, aggregation with $lookup or batched queries instead of queries inside a loop."],
+    ["Database Integration","How do you use a SQL database with Express?","Use a driver or ORM such as mysql2, pg, Sequelize, Prisma or Knex, with parameterized queries to prevent SQL injection."],
+
+    ["Validation & File Uploads","How do you validate input in Express?","Use Joi, Zod or express-validator in a validation middleware that checks req.body, req.params and req.query and returns 400 or 422 with messages."],
+    ["Validation & File Uploads","Why validate on the server?","Client checks can be bypassed with browser tools or Postman. The server is the trusted place."],
+    ["Validation & File Uploads","How do you handle file uploads?","Use Multer middleware for multipart/form-data, limit size and type, and in production store files in cloud storage like S3 or Cloudinary, keeping only the URL in the database."],
+    ["Validation & File Uploads","Why is CSRF tricky with multipart forms?","The body is not parsed until Multer runs, so the CSRF token is not available earlier. Validate CSRF after Multer."],
+
+    ["Performance & Deployment","How do you improve Express performance?","Use async code, compression, caching (Redis), database indexes, pagination, connection pooling, streams for big data, NODE_ENV=production and cluster mode."],
+    ["Performance & Deployment","What does NODE_ENV=production do?","Enables production optimizations such as view caching, and my app also uses it for secure cookies and hiding error details."],
+    ["Performance & Deployment","How do you scale an Express app?","Run several instances behind a load balancer, keep servers stateless, store sessions in Redis or MongoDB, cache data, and use PM2, containers or autoscaling."],
+    ["Performance & Deployment","What is trust proxy?","app.set('trust proxy', 1) tells Express it is behind a reverse proxy so req.ip, req.protocol and secure cookies work correctly."],
+    ["Performance & Deployment","How do you deploy an Express app?","Push to GitHub, deploy on Render, Railway or AWS, set environment variables, run npm ci and npm start, use HTTPS, a process manager and logging."],
+    ["Performance & Deployment","What is graceful shutdown?","On SIGTERM stop accepting new requests, finish running ones, close the DB connection and then exit."],
+    ["Performance & Deployment","What is logging and why use winston or pino?","Structured logs with levels and transports make production debugging easier than console.log. morgan logs HTTP requests."],
+
+    ["Testing","How do you test an Express app?","Export the app without listening, then use Jest or Mocha with Supertest to call endpoints and assert status codes and bodies, with a separate test database."],
+    ["Testing","What should you test in an Express project?","Validation, auth and role checks, ownership rules, error responses, and key business logic in services."],
+
+    ["Coding Questions","Write a basic Express CRUD route set.","router.get('/', list);\nrouter.get('/:id', getOne);\nrouter.post('/', create);\nrouter.put('/:id', update);\nrouter.delete('/:id', remove);\napp.use('/api/items', router);"],
+    ["Coding Questions","Write a logging middleware.","app.use((req, res, next) => {\n  console.log(req.method, req.originalUrl);\n  next();\n});"],
+    ["Coding Questions","Write an error-handling middleware.","app.use((err, req, res, next) => {\n  const status = err.statusCode || 500;\n  res.status(status).json({ error: status === 500 ? 'Server error' : err.message });\n});"],
+    ["Coding Questions","Write a role-check middleware.","const allowRoles = (...roles) => (req, res, next) => {\n  if (!roles.includes(req.user.role)) return res.status(403).json({ error: 'Forbidden' });\n  next();\n};"],
+    ["Coding Questions","Write a simple validation middleware.","function validate(req, res, next) {\n  const { name, price } = req.body;\n  if (!name || typeof price !== 'number' || price <= 0)\n    return res.status(400).json({ error: 'Invalid input' });\n  next();\n}"],
+    ["Coding Questions","Write a paginated list endpoint.","app.get('/items', asyncHandler(async (req, res) => {\n  const page = Math.max(parseInt(req.query.page) || 1, 1);\n  const limit = 10;\n  const items = await Item.find().skip((page - 1) * limit).limit(limit);\n  const total = await Item.countDocuments();\n  res.json({ items, page, pages: Math.ceil(total / limit) });\n}));"],
+    ["Coding Questions","Setup session with a MongoDB store.","app.use(session({\n  secret: process.env.SESSION_SECRET,\n  resave: false,\n  saveUninitialized: false,\n  store: MongoStore.create({ mongoUrl: process.env.DBURL }),\n  cookie: { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production' }\n}));"],
+
+    ["Situation Based","req.body is undefined. Why?","The body parser is missing or placed after the route. Add express.json() or express.urlencoded() before the routes, and check the Content-Type header."],
+    ["Situation Based","The request hangs and never responds.","A middleware or handler did not call next() or send a response. Check every code path."],
+    ["Situation Based","A route always returns 404 even though it exists.","Check route order, the mounted prefix, the HTTP method, and whether another earlier route or the 404 handler matches first."],
+    ["Situation Based","Frontend gets a CORS error.","Enable the cors middleware on the server with the frontend origin, allow needed headers and methods, and handle credentials if cookies are used."],
+    ["Situation Based","Users get logged out after each restart or deploy.","Sessions are in MemoryStore. Use connect-mongo or Redis."],
+    ["Situation Based","Secure cookies are not set behind a proxy on production.","Set app.set('trust proxy', 1) so Express knows the connection is HTTPS through the proxy."],
+    ["Situation Based","An API becomes slow under load.","Profile, check blocking code and slow queries, add indexes, caching and pagination, and scale with clustering and a load balancer."],
+    ["Situation Based","A user can see another user's data.","Check the query filters by both resource id and user id. Fix the controller, add a test, and review all routes for the same bug."],
+    ["Situation Based","How do you convert a server-rendered Express app to a REST API?","Return JSON instead of res.render, use proper verbs and status codes, keep validation and ownership checks, and use cookie sessions with CORS and CSRF or JWT."],
+    ["Situation Based","A form submission fails with a CSRF error.","Check the hidden _csrf field, that the session cookie is set, and that for multipart forms the check runs after Multer."]
+  ]
+};
+
+skills.express.notes = [
+{t:"1. Introduction to Express.js", h:
+ nP("Express.js is a minimal, flexible web framework for Node.js. It simplifies routing, middleware, request and response handling and is the basis of many Node back ends.")+
+ nL(["Built on top of Node's http module","Unopinionated: you choose structure, database and template engine","Powerful middleware system","Huge ecosystem on npm","Used for web apps, REST APIs and microservices"])+
+ nT(["Node http module","Express"],[["Manual URL and method checks","Clean routing with app.get, app.post"],["Manual body parsing","express.json(), express.urlencoded()"],["No middleware concept","Middleware chain with next()"],["Manual static files","express.static()"],["More code","Less code, faster development"]])+
+ nC("npm init -y\nnpm install express\n\n// server.js\nconst express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => res.send('Hello Express'));\napp.listen(3000, () => console.log('http://localhost:3000'));")},
+
+{t:"2. Request Lifecycle", h:
+ nP("Every request flows through the app in order: middleware, route, handler, response. Errors jump to the error handler.")+
+ nT(["Step","What happens"],[["1. Request arrives","Node passes req and res to Express"],["2. Global middleware","Logging, security headers, body parsing, session"],["3. Route matching","Express finds the first matching method and path"],["4. Route middleware","Auth, validation, upload"],["5. Handler / controller","Business logic, database, build response"],["6. Response","res.json, res.render, res.redirect"],["7. Errors","next(err) skips to error middleware"]])+
+ nC("Browser -> Express -> middleware -> route -> controller -> service -> model -> DB\n                                     |\n                       response <- EJS / JSON")},
+
+{t:"3. Routing", h:
+ nC("app.get('/users', listUsers);\napp.post('/users', createUser);\napp.get('/users/:id', getUser);       // route parameter\napp.put('/users/:id', updateUser);\napp.delete('/users/:id', deleteUser);\n\napp.route('/books')\n   .get(listBooks)\n   .post(addBook);")+
+ nT(["Data source","Access","Example"],[["Route params","req.params.id","/users/:id"],["Query string","req.query.page","/users?page=2"],["Body","req.body","POST form or JSON"],["Headers","req.get('Authorization')","Auth token"],["Cookies","req.cookies","cookie-parser"]])+
+ nT(["Method","Purpose"],[["app.get / post / put / patch / delete","Handle specific HTTP method"],["app.all","Any method"],["app.use","Middleware for any method (prefix match)"],["app.route","Chain handlers for one path"],["app.param","Run code when a param is present"]])+
+ nL(["Routes match in the order defined","Put specific routes before generic ones like '/:id'","Add a 404 handler after all routes"])},
+
+{t:"4. Router & Project Structure", h:
+ nC("// routes/users.js\nconst router = require('express').Router();\nrouter.get('/', ctrl.list);\nrouter.post('/', validate, ctrl.create);\nmodule.exports = router;\n\n// app.js\napp.use('/users', require('./routes/users'));")+
+ nT(["Folder","Contents"],[["config/","DB connection, app settings"],["models/","Mongoose schemas"],["controllers/","Request handling"],["services/","Business logic"],["routes/","URL to controller mapping"],["middleware/","Auth, validation, upload, errors"],["utils/","Helpers and constants"],["views/ and public/","Templates, CSS, client scripts"]])+
+ nL(["app.js builds the app, server.js connects DB and listens","Keep controllers thin","One router file per resource"])},
+
+{t:"5. Request & Response Objects", h:
+ nT(["req property","Meaning"],[["req.params","Route parameters"],["req.query","Query string"],["req.body","Parsed body"],["req.headers / req.get()","Headers"],["req.cookies","Cookies (cookie-parser)"],["req.session","Session (express-session)"],["req.method / req.originalUrl","Method and URL"],["req.ip","Client IP (use trust proxy behind a proxy)"],["req.file / req.files","Uploads (Multer)"]])+
+ nT(["res method","Purpose"],[["res.send()","Send text, HTML, buffer"],["res.json()","Send JSON"],["res.status(code)","Set status"],["res.redirect(url)","Redirect"],["res.render(view, data)","Render template"],["res.sendFile() / download()","Send or download a file"],["res.cookie() / clearCookie()","Cookies"],["res.set()","Set header"],["res.end()","End without data"]])+
+ nC("res.status(201).json({ message: 'Created', id: item._id });\n\n// early return avoids 'headers already sent'\nif (!item) return res.status(404).json({ error: 'Not found' });")},
+
+{t:"6. Middleware", h:
+ nP("Middleware is a function (req, res, next) that sits between request and response. It can change req and res, end the request, or call next().")+
+ nC("function logger(req, res, next) {\n  console.log(req.method, req.originalUrl);\n  next();\n}\napp.use(logger);                          // global\napp.get('/admin', protect, adminOnly, h); // route-level")+
+ nT(["Type","Example"],[["Application-level","app.use(logger)"],["Router-level","router.use(auth)"],["Built-in","express.json(), express.urlencoded(), express.static()"],["Third-party","helmet, cors, morgan, cookie-parser, express-session"],["Error-handling","(err, req, res, next)"]])+
+ nT(["Typical order","Why"],[["1. helmet, cors, morgan","Security headers and logging first"],["2. body parsers, cookie-parser","So req.body and cookies exist"],["3. session","Needs cookies before routes"],["4. CSRF / rate limiter","After parsing"],["5. routes","Business endpoints"],["6. 404 handler","Nothing matched"],["7. error handler","Always last"]])+
+ nL(["Forgetting next() makes the request hang","Call next(err) to jump to the error handler","Order of app.use calls decides execution order"])},
+
+{t:"7. Built-in & Popular Middleware", h:
+ nT(["Middleware","Purpose","Usage"],[["express.json()","Parse JSON body","app.use(express.json())"],["express.urlencoded()","Parse form body","app.use(express.urlencoded({ extended: true }))"],["express.static()","Serve static files","app.use(express.static('public'))"],["helmet","Secure HTTP headers","app.use(helmet())"],["cors","Allow cross-origin requests","app.use(cors({ origin: 'https://site.com' }))"],["morgan","Request logging","app.use(morgan('dev'))"],["cookie-parser","Parse cookies","app.use(cookieParser())"],["express-session","Sessions","app.use(session({...}))"],["express-rate-limit","Limit requests","app.use('/auth', limiter)"],["compression","Gzip responses","app.use(compression())"],["multer","File uploads","upload.single('image')"],["connect-mongo","Session store in MongoDB","store: MongoStore.create({...})"]])},
+
+{t:"8. Template Engines (EJS)", h:
+ nC("const path = require('path');\napp.set('view engine', 'ejs');\napp.set('views', path.join(__dirname, 'views'));\n\napp.get('/', (req, res) => {\n  res.render('home', { title: 'Home', items });\n});")+
+ nC("<!-- views/home.ejs -->\n<h1><%= title %></h1>\n<% items.forEach(function (i) { %>\n  <li><%= i.name %></li>\n<% }) %>\n<%- include('partials/footer') %>")+
+ nT(["EJS tag","Meaning"],[["<%= value %>","Output escaped (safe)"],["<%- value %>","Output raw HTML (unsafe for user data)"],["<% code %>","Run JavaScript, no output"],["<%# comment %>","Comment"],["include('file')","Reusable partial"]])+
+ nL(["Use res.locals for data needed in every template (current user, messages)","express-ejs-layouts gives a shared page layout"])},
+
+{t:"9. Error Handling", h:
+ nC("class AppError extends Error {\n  constructor(msg, statusCode) {\n    super(msg);\n    this.statusCode = statusCode;\n    this.isOperational = true;\n  }\n}\n\nconst asyncHandler = fn => (req, res, next) =>\n  Promise.resolve(fn(req, res, next)).catch(next);\n\napp.get('/items/:id', asyncHandler(async (req, res) => {\n  const item = await Item.findById(req.params.id);\n  if (!item) throw new AppError('Item not found', 404);\n  res.json(item);\n}));\n\n// 404\napp.use((req, res) => res.status(404).json({ error: 'Not found' }));\n\n// central error handler (4 args, last)\napp.use((err, req, res, next) => {\n  const status = err.statusCode || 500;\n  const msg = status === 500 && process.env.NODE_ENV === 'production' ? 'Server error' : err.message;\n  res.status(status).json({ error: msg });\n});")+
+ nL(["Express 4: pass async errors with next(err) or a wrapper; Express 5 forwards rejected promises","Never send stack traces in production","Log errors with winston or pino","Handle process unhandledRejection and shut down gracefully"])},
+
+{t:"10. REST API Design", h:
+ nT(["Method","Route","Action","Success code"],[["GET","/api/products","List","200"],["GET","/api/products/:id","Get one","200"],["POST","/api/products","Create","201"],["PUT","/api/products/:id","Replace","200"],["PATCH","/api/products/:id","Update fields","200"],["DELETE","/api/products/:id","Delete","204"]])+
+ nT(["Code","Meaning"],[["400","Bad request"],["401","Not authenticated"],["403","Not allowed"],["404","Not found"],["409","Conflict (duplicate)"],["422","Validation failed"],["429","Too many requests"],["500","Server error"]])+
+ nC("// paginated list\nconst page = Math.max(parseInt(req.query.page) || 1, 1);\nconst limit = 10;\nconst data = await Item.find().skip((page - 1) * limit).limit(limit);\nconst total = await Item.countDocuments();\nres.json({ data, page, pages: Math.ceil(total / limit) });")+
+ nL(["Use nouns in URLs, not verbs","Keep it stateless","Version with /api/v1","Return consistent JSON for success and errors"])},
+
+{t:"11. Authentication & Sessions", h:
+ nC("const session = require('express-session');\nconst MongoStore = require('connect-mongo');\n\napp.use(session({\n  secret: process.env.SESSION_SECRET,\n  resave: false,\n  saveUninitialized: false,\n  store: MongoStore.create({ mongoUrl: process.env.DBURL }),\n  cookie: { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 1000 * 60 * 60 * 24 }\n}));\n\n// login\nconst ok = await bcrypt.compare(password, user.password);\nif (!ok) return res.status(401).send('Invalid credentials');\nreq.session.regenerate(() => { req.session.userId = user._id; res.redirect('/'); });\n\n// middleware\nconst protect = (req, res, next) => req.session.userId ? next() : res.redirect('/login');\nconst adminOnly = (req, res, next) => req.user.role === 'admin' ? next() : res.status(403).send('Forbidden');")+
+ nT(["Session","JWT"],[["State on server","Stateless token"],["Easy to revoke","Hard to revoke"],["Needs shared store for scaling","Works across services easily"],["Great for server-rendered apps","Great for APIs and mobile"]])+
+ nL(["Hash passwords with bcrypt","Regenerate session after login","Store only the user id in the session","Use a persistent store, not MemoryStore"])},
+
+{t:"12. Security Best Practices", h:
+ nC("app.use(helmet());\napp.use(cors({ origin: 'https://example.com' }));\napp.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));\napp.use(express.json({ limit: '10kb' }));\napp.set('trust proxy', 1);   // behind a proxy")+
+ nT(["Threat","Protection"],[["Brute force","express-rate-limit, strong hashing, lockout"],["XSS","Escape output, CSP, HttpOnly cookies"],["CSRF","CSRF tokens, SameSite cookies"],["NoSQL / SQL injection","Validate types, allow-list values, ODM or parameterized queries"],["IDOR","Query by resource id and user id"],["Mass assignment","Pick allowed fields explicitly"],["Insecure headers","helmet"],["Big payloads","Body size limits"],["Leaked secrets","Env variables, .gitignore, secrets manager"],["Vulnerable packages","npm audit, update dependencies"]])},
+
+{t:"13. Validation & File Uploads", h:
+ nC("// validation middleware with Joi\nconst schema = Joi.object({\n  name: Joi.string().min(2).max(50).required(),\n  price: Joi.number().positive().required()\n});\n\nfunction validate(req, res, next) {\n  const { error, value } = schema.validate(req.body);\n  if (error) return res.status(400).json({ error: error.details[0].message });\n  req.body = value;\n  next();\n}\n\napp.post('/products', validate, createProduct);")+
+ nC("// Multer upload\nconst multer = require('multer');\nconst upload = multer({\n  storage: multer.memoryStorage(),\n  limits: { fileSize: 2 * 1024 * 1024 },\n  fileFilter: (req, file, cb) => cb(null, file.mimetype.startsWith('image/'))\n});\napp.post('/upload', upload.single('image'), (req, res) => res.json({ name: req.file.originalname }));")+
+ nL(["Validate every request on the server","Libraries: Joi, Zod, express-validator","Limit file size and type, never trust the original filename","Store files in cloud storage in production"])},
+
+{t:"14. Database Integration (Mongoose)", h:
+ nC("// server.js\nrequire('dotenv').config();\nconst mongoose = require('mongoose');\nconst app = require('./app');\n\nmongoose.connect(process.env.DBURL)\n  .then(() => app.listen(process.env.PORT || 3000))\n  .catch(err => { console.error(err); process.exit(1); });")+
+ nC("// controller\nexports.create = asyncHandler(async (req, res) => {\n  const { name, price } = req.body;          // explicit fields only\n  const item = await Item.create({ name, price, user: req.user._id });\n  res.status(201).json(item);\n});\n\nexports.getOne = asyncHandler(async (req, res) => {\n  if (!mongoose.isValidObjectId(req.params.id)) return res.status(404).end();\n  const item = await Item.findOne({ _id: req.params.id, user: req.user._id });\n  if (!item) return res.status(404).json({ error: 'Not found' });\n  res.json(item);\n});")+
+ nL(["Start listening only after the DB connects","Add indexes on queried fields","Use lean() for read-only queries and populate() for references","Use transactions for multi-document consistency"])},
+
+{t:"15. Performance, Deployment & Scaling", h:
+ nT(["Technique","Benefit"],[["compression","Smaller responses"],["Caching (Redis)","Faster reads, less DB load"],["Indexes and pagination","Faster queries, smaller payloads"],["Streams","Low memory for big files"],["Cluster / PM2","Use all CPU cores"],["Load balancer + stateless servers","Horizontal scaling"],["Shared session store","Sessions work across instances"],["Background queues","Slow tasks (email, images) off the request path"]])+
+ nT(["Deploy step","Notes"],[["NODE_ENV=production","Optimizations, secure cookies, hidden errors"],["Env variables on the host","Never commit .env"],["npm ci --omit=dev","Exact production dependencies"],["trust proxy","Needed behind Nginx or a platform proxy"],["HTTPS","Secure cookies need it"],["Logging and monitoring","winston or pino, uptime alerts"],["Graceful shutdown","Handle SIGTERM, close DB"]])},
+
+{t:"16. Testing Express Apps", h:
+ nC("// app.js exports app without listening\nconst request = require('supertest');\nconst app = require('../app');\n\ndescribe('GET /api/items', () => {\n  it('returns 200 and a list', async () => {\n    const res = await request(app).get('/api/items');\n    expect(res.statusCode).toBe(200);\n    expect(Array.isArray(res.body.data)).toBe(true);\n  });\n\n  it('blocks unauthenticated access', async () => {\n    const res = await request(app).get('/api/private');\n    expect(res.statusCode).toBe(401);\n  });\n});")+
+ nT(["Tool","Use"],[["Jest / Mocha","Test runner"],["Supertest","HTTP endpoint tests"],["mongodb-memory-server / test DB","Isolated database"],["jest.mock / Sinon","Mock services"]])+
+ nL(["Test validation, auth, roles and ownership rules","Test error responses, not just success","Keep app.js separate from server.js so tests do not open a port"])},
+
+{t:"17. Common Mistakes & Quick Fixes", h:
+ nT(["Problem","Cause","Fix"],[["req.body is undefined","Body parser missing or after route","Add express.json() before routes"],["Request hangs","next() not called or no response","Check all code paths"],["Cannot set headers after they are sent","Two responses","Use return before res.send"],["Route returns 404","Wrong order, method or prefix","Check route order and mount path"],["CORS error","Server not allowing origin","Use cors with correct origin"],["Sessions lost on restart","MemoryStore","connect-mongo or Redis"],["Secure cookie not set","Behind a proxy","app.set('trust proxy', 1)"],["Async error crashes app","Rejection not forwarded (Express 4)","asyncHandler or try/catch with next(err)"],["CSRF fails on upload","Check before Multer","Validate CSRF after Multer"]])}
+];
+   
 var app = document.getElementById("app");
 var barbox = document.getElementById("barbox");
 var groups = { projects: projects, skills: skills };
