@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Interview Prep</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:#222;line-height:1.6}
+header{background:#1f3a5f;color:#fff;padding:16px 20px;text-align:center}
+header h1{margin:0;font-size:22px}
+.wrap{max-width:900px;margin:0 auto;padding:20px}
+.home{text-align:center;min-height:calc(100vh - 120px);display:flex;flex-direction:column;justify-content:center;align-items:center}
+.home h2{font-size:28px;margin-bottom:30px}
+.home p{color:#555;margin-bottom:30px}
+.btns{width:100%;display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.pbtn{background:#1f3a5f;color:#fff;border:0;border-radius:8px;padding:22px 30px;font-size:18px;cursor:pointer;width:300px}
+.pbtn:hover{background:#2c5282}
+.pbtn small{display:block;font-size:13px;font-weight:normal;margin-top:6px;opacity:.85}
+.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid #d8dde3;margin:-20px -20px 16px;padding:8px 20px}
+.bar h2{margin:0;font-size:16px;color:#1f3a5f}
+.back{background:#fff;border:1px solid #1f3a5f;color:#1f3a5f;padding:5px 10px;border-radius:6px;font-size:14px;cursor:pointer}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.tools input,.tools select{padding:9px;border:1px solid #bbb;border-radius:6px;font-size:15px}
+.tools input{flex:1;min-width:200px}
+.count{color:#555;font-size:14px;margin-bottom:10px}
+.cat{background:#e3ebf5;color:#1f3a5f;padding:8px 12px;border-radius:6px;margin:22px 0 10px;font-weight:bold}
+.q{background:#fff;border:1px solid #d8dde3;border-radius:8px;margin-bottom:10px}
+.q button{width:100%;text-align:left;background:none;border:0;padding:14px;font-size:16px;font-weight:bold;cursor:pointer;color:#222}
+.q .a{display:none;padding:0 14px 14px;color:#333;white-space:pre-line}
+.q.open .a{display:block}
+.q.open button{color:#1f3a5f}
+.empty{text-align:center;color:#777;padding:30px}
+.note{background:#fff8e1;border:1px solid #f0d98a;border-radius:8px;padding:14px;margin-bottom:16px}
+footer{text-align:center;color:#777;font-size:13px;padding:20px}
+@media(max-width:600px){
+header h1{font-size:18px}
+.wrap{padding:14px}
+.bar{margin:-14px -14px 14px;padding:8px 14px}
+
+.home h2{font-size:22px}
+.pbtn{width:100%}
+.q button{font-size:15px}
+}
+</style>
+</head>
+<body>
+<header><h1>Project Interview Prep</h1></header>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ===== ADD / EDIT PROJECTS HERE =====
+   Each project has: name, tag, intro, and qa = [category, question, answer] */
+var projects = {
+  p1: {
+    name: "Personal Finance Manager",
+    tag: "Node.js, Express, MongoDB, EJS",
+    intro: "",
+    qa: [
+      ["Project Overview","Explain your project in 1 minute.","I built a Personal Finance Manager using Node.js, Express, MongoDB Atlas, Mongoose and EJS. A user can register, log in, add income and expenses, and see total income, total expenses and balance on a dashboard. They can also search, filter, sort and paginate transactions, and edit or delete them. Each user can only access their own data. It uses bcrypt, sessions, validation and Helmet for security."],
+      ["Project Overview","Why did you choose this project?","Finance tracking is something everyone understands, and it lets me practise real backend concepts: authentication, CRUD, ownership checks, validation, aggregation, pagination and database indexes."],
+      ["Project Overview","What problem does it solve?","People lose track of where their money goes. This app keeps income and expenses in one place and shows a clear balance and category summary."],
+      ["Project Overview","What were the main challenges?","1) Keeping each user's data private with ownership checks.\n2) Calculating totals on the server correctly.\n3) Building safe search/filter/sort queries.\n4) Handling sessions securely (regeneration, cookie flags).\n5) Structuring code into routes, controllers, middleware and models."],
+      ["Project Overview","What would you improve if you had more time?","Add CSRF protection, a MongoDB-backed session store, monthly charts, budgets, CSV export, password reset and email verification, and automated tests."],
+
+      ["Tech Stack","Why Node.js?","It is JavaScript on the server, so I use one language for frontend and backend. It is event-driven and non-blocking, which suits I/O-heavy apps like database-driven web apps."],
+      ["Tech Stack","Why Express.js?","It is a minimal, flexible framework with simple routing and middleware. It gives structure without forcing a lot of rules."],
+      ["Tech Stack","Why MongoDB and not SQL?","Transactions are simple documents that map well to MongoDB's JSON-like model, and the schema can change easily. SQL would also work, since the data is relational (user to transactions). I chose MongoDB because I wanted to learn it with Mongoose, and it fits fast development."],
+      ["Tech Stack","What is Mongoose and why use it?","Mongoose is an ODM for MongoDB. It gives schemas, validation, models, middleware and a clean query API, which keeps data consistent."],
+      ["Tech Stack","What is EJS? Why not React?","EJS is a server-side templating engine that renders HTML with data. I used it for a simple server-rendered app. React would suit a highly interactive SPA, which this project does not need."],
+      ["Tech Stack","What is MongoDB Atlas?","It is MongoDB's cloud-hosted database service. I get a managed cluster, backups and network access rules without running my own server."],
+      ["Tech Stack","What is dotenv and why use it?","It loads values from a .env file into process.env. Secrets like DBURL and SESSION_SECRET stay out of source code and Git."],
+      ["Tech Stack","What is morgan?","An HTTP request logger middleware. It prints method, URL, status and response time, which helps debugging."],
+      ["Tech Stack","What is cookie-parser?","Middleware that parses the Cookie header into req.cookies so the app can read cookies easily."],
+
+      ["Architecture","Explain your folder structure.","config holds the DB connection. models hold Mongoose schemas. controllers hold the logic. routes map URLs to controllers. middleware holds auth, validation and errors. views hold EJS templates. public holds CSS. app.js sets up Express and server.js starts the server after the DB connects."],
+      ["Architecture","What is MVC? Did you use it?","MVC splits an app into Model (data), View (UI) and Controller (logic). Yes: Mongoose models, EJS views and controller files. Routes connect requests to controllers."],
+      ["Architecture","Why separate app.js and server.js?","app.js builds and configures the Express app. server.js connects to MongoDB and then calls listen(). The split keeps setup separate from startup and makes testing easier."],
+      ["Architecture","Why start the server only after the DB connects?","So the app never serves requests it cannot fulfil. If the connection fails, the app does not start, and the error is clear."],
+      ["Architecture","What is middleware?","A function with (req, res, next) that runs between request and response. It can modify req/res, end the request, or call next(). Examples: express.json, session, Helmet, my auth middleware."],
+      ["Architecture","Explain the request flow of adding a transaction.","Browser POSTs the form to /transactions/add. The request goes through body parsing, session, auth middleware (checks userId), validation middleware, then the controller. The controller sets user from req.session.userId, saves the Transaction, and redirects to the list."],
+      ["Architecture","What is the difference between GET and POST?","GET reads data and puts parameters in the URL. POST sends data in the body to change server state. I use POST for add, edit, delete, login and logout."],
+      ["Architecture","Why POST for delete instead of DELETE?","HTML forms only support GET and POST. Without method-override, I use POST routes like /transactions/:id/delete."],
+
+      ["Authentication","How does registration work?","The server validates input, checks the email is not already used, hashes the password with bcrypt, and saves the user. The password is never stored in plain text."],
+      ["Authentication","What is bcrypt and why not plain hashing like MD5?","bcrypt is a slow, salted hashing algorithm built for passwords. MD5/SHA are fast, so attackers can brute-force them quickly. bcrypt adds a unique salt and a cost factor to make cracking expensive."],
+      ["Authentication","What is a salt?","Random data added to the password before hashing, so identical passwords get different hashes and rainbow tables fail."],
+      ["Authentication","Can you decrypt a bcrypt hash?","No. Hashing is one-way. Login uses bcrypt.compare(), which hashes the entered password with the stored salt and compares the results."],
+      ["Authentication","How does login work?","Find user by lowercase email, bcrypt.compare the password, then regenerate the session and store only req.session.userId. Redirect to the dashboard."],
+      ["Authentication","What is session-based authentication?","The server stores session data and gives the browser a session ID in a cookie. On each request the server uses that ID to find the session and know who the user is."],
+      ["Authentication","Session vs JWT?","Sessions keep state on the server and are easy to revoke. JWTs are stateless tokens stored on the client, good for APIs and multiple services but harder to revoke. For a server-rendered app, sessions are simpler and safe."],
+      ["Authentication","What is session fixation and how did you prevent it?","An attacker sets a known session ID before the victim logs in. I call session regenerate after successful login so a new ID is issued."],
+      ["Authentication","Why store only the user ID in the session?","It keeps sessions small and avoids stale or sensitive data. I fetch details from the database when needed. Passwords or full user objects are never stored."],
+      ["Authentication","How does logout work?","POST /auth/logout destroys the session on the server and clears the cookie, then redirects to login."],
+      ["Authentication","What does your auth middleware do?","It checks req.session.userId. If missing, it redirects to login. Otherwise it calls next(). It protects the dashboard and transaction routes."],
+      ["Authentication","What cookie flags did you use?","httpOnly (JavaScript cannot read it), sameSite (limits cross-site sending), and secure in production (HTTPS only)."],
+
+      ["Security","How did you make the app secure?","bcrypt hashing, HTTP-only and SameSite cookies, secret from env, session regeneration, server-side validation, ObjectId validation, ownership checks, explicit update fields, escaped EJS output, allow-listed query values, body size limits, Helmet and safe error pages."],
+      ["Security","What is Helmet?","Middleware that sets secure HTTP headers such as X-Content-Type-Options, X-Frame-Options and Content-Security-Policy to reduce attacks like clickjacking and MIME sniffing."],
+      ["Security","What is XSS and how do you prevent it?","Cross-site scripting injects malicious scripts into pages. EJS <%= %> escapes output, so user text like a description is shown as text, not run as code. I avoid <%- %> for user data."],
+      ["Security","What is NoSQL injection?","Attackers send objects like {\"$ne\": \"\"} to change a query. I avoid it by validating input types, allow-listing filter/sort values, and building queries in a controlled way."],
+      ["Security","What is CSRF? Did you handle it?","CSRF tricks a logged-in user's browser into sending an unwanted request. My project does not implement a CSRF token yet. SameSite cookies help partially. In production I would add synchronizer tokens. I state this honestly as a known limitation."],
+      ["Security","What is an IDOR / broken access control?","When a user can access another user's data by changing an ID in the URL. I prevent it by querying with both the transaction _id and the logged-in user's id."],
+      ["Security","Why limit request body size?","To stop huge payloads that could waste memory or cause denial of service."],
+      ["Security","Why hide error details in production?","Stack traces reveal internal paths and logic. Production shows a friendly 500 page and logs the details privately."],
+      ["Security","Why is MemoryStore a problem in production?","It leaks memory, resets on restart and is not shared between multiple Node processes. I would use a MongoDB or Redis store."],
+      ["Security","How do you protect secrets?","Keep them in .env, add .env to .gitignore, never hardcode credentials, and use a secrets manager in production."],
+
+      ["Database","Explain your database design.","Two collections. User: name, email (unique, lowercase, trimmed), password hash. Transaction: user (ObjectId ref), type, amount, category, description, date, timestamps."],
+      ["Database","Which indexes did you create and why?","user, user+date and user+type. Almost every query filters by user, and lists sort by date or filter by type. Indexes avoid full collection scans."],
+      ["Database","What is an index? Downside?","A data structure that speeds up reads. Downside: uses storage and slows writes slightly, so I only added needed ones."],
+      ["Database","What is a unique index on email?","It guarantees no two users share an email at the database level, even if two requests arrive at once."],
+      ["Database","What is a compound index?","An index on multiple fields, like user + date. Field order matters: it works for queries on user, or user and date."],
+      ["Database","How do you link a transaction to a user?","A user field of type ObjectId with ref: 'User'. It is similar to a foreign key."],
+      ["Database","What is ObjectId validation and why?","Invalid ids cause cast errors. I check with mongoose.isValidObjectId before querying and show a 404 for bad ids."],
+      ["Database","What are timestamps in Mongoose?","timestamps: true adds createdAt and updatedAt automatically."],
+      ["Database","Why store amount as Number? Any issue?","Floating-point numbers can have precision errors. For serious accounting I would store paise as integers or use Decimal128. For this app, validated numbers with limited decimals are fine."],
+      ["Database","What is aggregation?","A MongoDB pipeline (match, group, sort...) that processes data on the server. I use it for totals and expense-by-category summaries."],
+      ["Database","Aggregation vs calculating in JavaScript?","Aggregation runs inside the database and returns only results, so it uses less memory and network. Loading all records and looping in JS does not scale."],
+
+      ["Features","How do you calculate the dashboard totals?","Total income = sum of income amounts, total expenses = sum of expense amounts, balance = income minus expenses. It is calculated on the server for the logged-in user only."],
+      ["Features","How does pagination work?","Read page from the query, validate it (positive integer), then use skip((page-1)*10) and limit(10). I also count documents to compute total pages."],
+      ["Features","Why is skip() slow on large data? Alternative?","skip must walk past all skipped documents. For huge data, use cursor/range-based pagination, e.g. using the last seen date/_id."],
+      ["Features","How does search work?","I use a case-insensitive regex on category and description, combined with the user filter. Special regex characters are escaped to avoid regex injection."],
+      ["Features","How do filter and sort work safely?","Allowed values are listed (income, expense; newest, oldest, highest, lowest). Anything else is ignored or defaulted. User input never goes directly into the query."],
+      ["Features","How does edit work?","Load the transaction by id AND user, show the form filled in, then on POST validate and update only explicit fields (type, amount, category, description, date)."],
+      ["Features","Why update explicit fields?","To prevent mass assignment. If I used req.body directly, a user could try to change the user field or other protected fields."],
+      ["Features","What validation do you do?","Type must be income/expense, amount must be a positive number, category and description required with length limits, date must be valid. Checked on the server, not just in HTML."],
+      ["Features","Why server-side validation if HTML has required?","Client-side checks can be bypassed with browser tools or Postman. The server is the only trusted place."],
+      ["Features","How do you show success/error messages?","Flash-style messages stored in the session and displayed via the messages.ejs partial, then cleared."],
+      ["Features","How did you format Indian currency and dates?","Intl.NumberFormat / toLocaleString with 'en-IN' for number grouping (1,00,000) and the ₹ symbol, and toLocaleDateString('en-IN') for dates."],
+      ["Features","What are EJS partials?","Reusable template pieces like navbar, footer and messages, included with include(). They avoid repeating code."],
+
+      ["Express & Node","What is the event loop?","Node runs JavaScript on one thread. The event loop handles async callbacks, so I/O like DB calls does not block other requests."],
+      ["Express & Node","Explain async/await.","It is syntax over Promises that makes async code look sequential. Wrap in try/catch to handle errors."],
+      ["Express & Node","How do you handle errors?","try/catch in controllers calling next(err), a 404 handler, and a final error middleware (err, req, res, next) that renders 404/500 pages."],
+      ["Express & Node","What is the order of middleware and why does it matter?","Express runs middleware in the order defined. Body parsers and session must come before routes that use req.body or req.session."],
+      ["Express & Node","What is req.params vs req.query vs req.body?","params: route parts like /:id. query: ?search=food. body: data from POST forms."],
+      ["Express & Node","What is express.urlencoded?","Middleware that parses HTML form data into req.body."],
+      ["Express & Node","What is package.json and package-lock.json?","package.json lists dependencies and scripts. package-lock.json records exact versions so installs are repeatable."],
+      ["Express & Node","dependencies vs devDependencies?","dependencies are needed at runtime. devDependencies (like nodemon) are only for development."],
+      ["Express & Node","What does process.env.PORT do?","It reads the port from the environment so hosting platforms can set it. I fall back to 3000 locally."],
+
+      ["Deployment & Scaling","Can your app handle millions of users?","No, and I would not claim that. It demonstrates good habits: pagination, indexes, ownership filters and server-side calculations. To scale you need a shared session store, load balancing, caching, monitoring and DB tuning."],
+      ["Deployment & Scaling","How would you deploy it?","Push code to GitHub, host on Render/Railway/AWS, set environment variables, allow the host in Atlas network access, set NODE_ENV=production, and use HTTPS with a persistent session store."],
+      ["Deployment & Scaling","How would you scale with multiple servers?","Run multiple Node instances behind a load balancer and move sessions to MongoDB/Redis so any instance can read them."],
+      ["Deployment & Scaling","What does NODE_ENV=production do?","Enables production optimizations, and my app uses it to set secure cookies and hide error details."],
+      ["Deployment & Scaling","How would you test this app?","Unit tests for validation and helpers, integration tests with Jest and Supertest for routes, using a test database, and manual testing for ownership rules."],
+
+      ["Situation Based","A user says they can see another user's transaction. What do you do?","Reproduce it, check the query: is it filtering by both _id and user? Fix the controller, add a test that user B gets 404 for user A's id, check logs for other exposure, and review all routes for the same bug."],
+      ["Situation Based","The app is slow with 1 lakh transactions per user. What do you do?","Check indexes with explain(), make sure list queries are paginated and indexed on user+date, use aggregation for totals, avoid regex on huge text if possible (consider text index), and consider caching dashboard totals."],
+      ["Situation Based","Users get logged out after every server restart.","That is MemoryStore behavior. Use connect-mongo or Redis as the session store."],
+      ["Situation Based","Atlas connection fails on startup. How do you debug?","Check DBURL, the username and password (URL-encode special characters), Atlas network access IP list, cluster status, internet and the error message. My server will not start, which is intended."],
+      ["Situation Based","Someone submits a negative or huge amount. What happens?","Server validation rejects it with an error message and keeps the form data. No bad data reaches the database."],
+      ["Situation Based","Two users register with the same email at the same time.","The unique index makes one insert fail with duplicate key error 11000. I catch it and show 'Email already registered'."],
+      ["Situation Based","A user types <script> in the description.","EJS escapes it, so it displays as plain text. Validation can also limit length."],
+      ["Situation Based","How would you add monthly reports?","Use aggregation: match by user and date range, group by month and type, sum amounts. Show in a table or chart."],
+      ["Situation Based","How would you add budgets and alerts?","A Budget model (user, category, limit, month). On adding an expense, compare the month's category total with the limit and show a warning."],
+      ["Situation Based","How would you add password reset?","Generate a random token, store its hash and expiry, email a link, verify token and expiry, let the user set a new password (hash it), then invalidate the token."],
+      ["Situation Based","How would you convert this to a REST API for a React app?","Return JSON instead of rendering EJS, use proper verbs (GET, POST, PUT, DELETE), add JWT or keep cookie sessions with CORS and CSRF handling, and keep the same ownership checks."],
+      ["Situation Based","You find a bug on the day of the interview/demo. What do you do?","Stay calm, explain the issue, find the root cause step by step with logs, fix it if quick, otherwise describe the fix. Honesty and debugging approach matter more than perfection."],
+
+      ["HR & Behavioral","Tell me about yourself in connection with this project.","I am a fresher backend-focused developer. I built a finance manager to learn full-stack fundamentals, and I focused on security, clean structure and honest limitations."],
+      ["HR & Behavioral","What did you learn from this project?","Authentication flows, secure coding basics, MongoDB indexing, MVC structure, validation, pagination, and how to debug and document a project."],
+      ["HR & Behavioral","Did you build this alone? Did you use help?","Be honest. Say what you built yourself, and what resources you used (docs, tutorials, AI tools) and that you understand every part and can explain and modify it."],
+      ["HR & Behavioral","What is the hardest bug you faced?","Pick a real one. Example: ownership checks, session problems or ObjectId errors. Explain the symptom, how you debugged, the fix and the lesson."],
+      ["HR & Behavioral","What are your project's weaknesses?","No CSRF protection, MemoryStore sessions, no automated tests, no email verification or password reset. I know how to fix each of them."],
+      ["HR & Behavioral","Where do you see this project in the future?","Add charts, budgets, CSV export, a REST API, tests, CI/CD and Docker deployment."]
+    ]
+  },
+  p2: {
+    name: "ShopKart",
+    tag: "",
+    intro: "",
+    qa: [
+      ["Project Overview","Explain your project in 1 minute.","ShopKart is a full-stack, India-focused e-commerce app built with Node.js, Express, MongoDB Atlas, Mongoose and EJS. Customers can register, browse, search, filter, sort and paginate products, add to cart, check out with an Indian address using Cash on Delivery, view orders and add reviews. Admins can manage products, categories, users and orders. It uses bcrypt, MongoDB-backed sessions, CSRF protection, Helmet, rate limiting, role-based access and a MongoDB transaction for order creation."],
+      ["Project Overview","What are the two user roles and what can each do?","Customer: register, login, browse, search, cart, checkout, order history, reviews, edit profile.\nAdmin: dashboard, add/edit/delete products and categories, view users, view orders and update order status."],
+      ["Project Overview","Why did you choose an e-commerce project?","E-commerce covers real-world backend problems: authentication, roles, cart, stock, checkout, order consistency, uploads and security. It shows more depth than basic CRUD."],
+      ["Project Overview","Why did you remove Forgot Password?","I removed it intentionally to keep the scope secure and focused. A safe reset needs email delivery, expiring tokens and abuse protection. I would add it properly later rather than ship a weak version."],
+      ["Project Overview","What are the biggest challenges you faced?","1) Keeping order creation, stock decrease and cart clearing consistent (MongoDB transaction).\n2) CSRF with multipart forms (must validate after Multer parses the body).\n3) Role-based access for admin routes.\n4) Preventing overselling with stock validation.\n5) Keeping historical orders correct with product snapshots."],
+      ["Project Overview","What would you improve next?","Real payment gateway with webhook verification, cloud image storage with CDN, Redis caching, email notifications, order tracking, wishlist, coupons, automated tests, Docker and CI/CD."],
+
+      ["Tech Stack","Why Node.js and Express?","One language (JavaScript) for the whole stack, non-blocking I/O for database-heavy apps, and Express gives simple routing and middleware."],
+      ["Tech Stack","Why MongoDB for e-commerce?","Products have flexible attributes and fit documents well. Orders store a snapshot of items as an embedded array. Atlas gives managed hosting, and MongoDB supports multi-document transactions on replica sets."],
+      ["Tech Stack","What is Mongoose?","An ODM that provides schemas, validation, models, relationships through ref/populate and a clean query API."],
+      ["Tech Stack","What is EJS and express-ejs-layouts?","EJS renders HTML on the server using data from controllers. express-ejs-layouts lets many pages share one layout (layouts/main.ejs) with navbar and footer."],
+      ["Tech Stack","What is connect-mongo?","A session store that keeps Express sessions in MongoDB instead of memory, so sessions survive restarts and can be shared by multiple Node instances."],
+      ["Tech Stack","What is Multer?","Middleware for multipart/form-data, used for file uploads. I use memory storage with file validation for product images."],
+      ["Tech Stack","What do dotenv, morgan and cookie-parser do?","dotenv loads secrets from .env. morgan logs HTTP requests. cookie-parser parses cookies."],
+
+      ["Architecture","Explain your folder structure.","config (DB), models (schemas), controllers (request handling), services (business logic like orders and payments), routes (URLs), middleware (auth, admin, upload, errors), utils (helpers, validators, constants), views (EJS), public (CSS)."],
+      ["Architecture","What is the request lifecycle?","Browser, Express, middleware, authentication, authorization, route, controller, service, model, MongoDB, back to controller, EJS render, browser."],
+      ["Architecture","Why do you have a services layer?","Controllers should stay thin. Services hold reusable business logic such as order creation with stock handling (orderService) and the payment boundary (paymentService). This makes code easier to test and maintain."],
+      ["Architecture","What is MVC?","Model (data), View (UI) and Controller (logic). My models are Mongoose schemas, views are EJS and controllers handle requests. I added a services layer between controllers and models."],
+      ["Architecture","What is asyncHandler?","A helper that wraps async controllers and forwards rejected promises to next(err). It removes repeated try/catch blocks and sends errors to the central error middleware."],
+      ["Architecture","What is middleware? Give examples from your project.","A function (req, res, next) that runs before the controller. Examples: protect (auth), adminOnly, upload (Multer), CSRF check, Helmet, rate limiter, error handler."],
+      ["Architecture","Why separate app.js and server.js?","app.js configures Express. server.js connects to the database and starts listening. This separates setup from startup."],
+      ["Architecture","What does createAdmin.js do?","It creates or promotes an admin user using ADMIN_EMAIL and ADMIN_PASSWORD from the environment. This avoids public admin registration."],
+      ["Architecture","What is constants.js for?","Holds fixed values such as roles, order statuses and payment methods in one place, so there are no scattered magic strings."],
+
+      ["Authentication","How does register and login work?","Register: validate input, hash password with bcrypt, save user. Login: find user by email, bcrypt.compare, create a session storing the user id. The authenticated user is then loaded by middleware."],
+      ["Authentication","Why bcrypt?","It is slow and salted by design, which makes brute-force attacks expensive. Plain-text or fast hashes like MD5 are unsafe for passwords."],
+      ["Authentication","What is a session?","Server-side stored data tied to a browser by a session ID cookie. The server looks up the session on each request to know who the user is."],
+      ["Authentication","Why store sessions in MongoDB?","The default MemoryStore is for development only. It loses sessions on restart and does not work across multiple servers. MongoDB store solves both."],
+      ["Authentication","Session vs JWT for this project?","Sessions are simpler and safer for server-rendered apps and are easy to revoke. JWT suits APIs and mobile or microservice setups, but revocation is harder."],
+      ["Authentication","What does the protect middleware do?","It loads the logged-in user from the session and blocks unauthenticated requests by redirecting to login."],
+      ["Authentication","What is authentication vs authorization?","Authentication = who are you (login). Authorization = what are you allowed to do (customer vs admin)."],
+      ["Authentication","How is admin access enforced?","Admin routes use protect first and then adminOnly, which checks user.role is admin. The check happens on the server, so hiding links in the UI is not the only protection."],
+      ["Authentication","What cookie settings do you use?","httpOnly, sameSite and secure (in production over HTTPS). This protects against script access, cross-site sending and sniffing."],
+      ["Authentication","How does logout work?","The session is destroyed on the server and the cookie is cleared. Logout should be a POST with a CSRF token."],
+
+      ["Security","List the security measures in ShopKart.","bcrypt hashing, MongoDB session store, secure cookies, CSRF tokens, Helmet headers, protect and adminOnly middleware, role-based authorization, rate limiting, input validation, upload validation, env-based secrets and centralized error handling."],
+      ["Security","What is CSRF and how did you prevent it?","CSRF makes a logged-in user's browser send an unwanted request. Every state-changing form includes a hidden _csrf token, and the server validates it before processing."],
+      ["Security","Why is CSRF tricky with multipart forms?","Multipart bodies are not parsed until Multer runs, so the token is not available earlier. I validate CSRF after Multer has parsed the request."],
+      ["Security","What is Helmet?","Middleware that sets secure HTTP headers (CSP, X-Frame-Options, X-Content-Type-Options and more) to reduce XSS, clickjacking and sniffing."],
+      ["Security","What is rate limiting and why use it?","It limits how many requests an IP can make in a time window. It slows brute-force login attempts and abuse. Auth routes need it most."],
+      ["Security","What is XSS and how do you prevent it?","Injecting scripts through user content such as reviews. EJS <%= %> escapes output, so scripts show as text. Avoid <%- %> for user data."],
+      ["Security","What is NoSQL injection?","Sending objects like {\"$ne\":\"\"} to alter queries. I validate inputs and allow-list sort and filter values rather than passing req.query straight to MongoDB."],
+      ["Security","What is IDOR / broken access control?","Accessing another user's data by changing an ID. Order details are fetched with both order id and the logged-in user's id, so users only see their own orders."],
+      ["Security","How do you secure file uploads?","Check file type and size, use memory storage, reject non-images, and never trust the original file name. In production, store files in cloud storage and scan or process them."],
+      ["Security","Why should price come from the database, not the form?","Users can edit hidden fields in the browser. The server must read price and stock from the Product collection when adding to cart and placing an order."],
+      ["Security","What if your MongoDB password was exposed on GitHub?","Rotate it immediately in Atlas, remove it from the code, change the connection string in .env and check Git history. Keep .env in .gitignore."],
+
+      ["Database","Explain your database models.","User (name, email, password hash, role, profile, address), Product (name, description, price, category, stock, image, status, rating info), Category, Cart (user, items with quantities), Order (user, item snapshots, totals, shipping address, payment and order status), Review (user, product, rating, text, date)."],
+      ["Database","What is an order snapshot and why use it?","The order stores product name and price at purchase time. If the product price or name changes later, old orders remain correct."],
+      ["Database","How are Product and Category related?","Product has a category field referencing the Category document by ObjectId. populate() can load the category details."],
+      ["Database","What is populate()?","A Mongoose method that replaces referenced ObjectIds with the actual documents, similar to a join."],
+      ["Database","Embedding vs referencing?","Embed data that is read together and does not change independently (order items). Reference data shared by many documents (product to category)."],
+      ["Database","What indexes would you add?","email (unique) on User, user on Cart and Order, category and createdAt on Product, text index or indexed name for search, and user+product on Review (unique, to stop duplicate reviews)."],
+      ["Database","How do you prevent duplicate reviews by one user?","A unique compound index on user and product, plus a server-side check before saving."],
+      ["Database","How are product ratings computed?","Average rating and review count come from reviews, using aggregation or updating product rating fields when a review is added."],
+      ["Database","What is a MongoDB transaction?","A group of operations that all succeed or all fail (ACID). In MongoDB it needs a replica set, which Atlas provides."],
+
+      ["Cart & Checkout","How does Add to Cart work?","Validate the product exists and is active, validate requested quantity against stock, then create or update the user's cart item and show the cart with totals."],
+      ["Cart & Checkout","How do you prevent adding more than the stock?","Quantity is checked against Product.stock on add and update, and again at checkout, because stock can change in between."],
+      ["Cart & Checkout","Explain the checkout flow.","Cart, delivery address, payment method, validate stock, calculate total on the server, create order, decrease stock, clear cart, success page."],
+      ["Cart & Checkout","Why use a transaction for order creation?","Create order, decrease stock and clear cart must stay consistent. Without a transaction a crash could leave an order with no stock deduction, or stock reduced with no order."],
+      ["Cart & Checkout","What happens if two users buy the last item at the same time?","Stock is re-validated inside the transaction and decreased atomically, for example with a condition like stock >= quantity. Only one succeeds and the other sees an out-of-stock message."],
+      ["Cart & Checkout","How is the total calculated?","On the server from database prices times quantities. Client-sent totals are never trusted."],
+      ["Cart & Checkout","Why only Cash on Delivery?","I chose not to fake online payment. paymentService.js is the boundary where a real gateway can be added."],
+      ["Cart & Checkout","How would you add Razorpay or another gateway?","Create a gateway order on the server, take payment on the client, then verify the signature or webhook on the server. Mark the order paid only after verification, and make webhook handling idempotent."],
+      ["Cart & Checkout","What is idempotency?","Repeating the same request gives the same result without duplicate effects. It matters for payment webhooks and double-click order submissions."],
+      ["Cart & Checkout","How do you stop double order submission?","Disable the button on submit, validate the cart is non-empty on the server, clear the cart inside the transaction, and use idempotency keys in a real payment flow."],
+      ["Cart & Checkout","What order statuses do you have and who changes them?","Statuses such as pending, processing, shipped, delivered, cancelled (check constants.js for exact values). Only admins can update them."],
+
+      ["Products & Search","How does server-side search work?","The URL like /products?search=phone is read by the controller, which builds a MongoDB query (case-insensitive regex or text search) and returns only matching products."],
+      ["Products & Search","Why server-side filtering instead of frontend filtering?","The browser would have to download all products. Server-side queries return smaller results and perform better."],
+      ["Products & Search","How do sorting and pagination work?","Allowed sort values (price low to high, high to low, newest) map to fixed sort objects. Pagination uses skip and limit with a validated page number and a total count."],
+      ["Products & Search","Pagination benefits?","Smaller database results, smaller HTTP responses, faster pages and a better user experience."],
+      ["Products & Search","Limitations of skip/limit?","Large skips become slow. For huge catalogs, use cursor-based pagination."],
+      ["Products & Search","How would you improve search for a big catalog?","Use MongoDB text indexes or Atlas Search, or a search engine like Elasticsearch, with filters, ranking and typo tolerance."],
+      ["Products & Search","How do reviews work?","A logged-in customer submits rating and text. The server validates the rating range, links it to user and product, saves it and updates product rating information."],
+      ["Products & Search","Should only buyers be able to review?","That is a good rule: check that the user has a delivered order containing the product. I can add that as an improvement."],
+
+      ["Images & Uploads","Which two image options does the admin have?","A direct image URL (previewed in the form) or an uploaded file handled by Multer."],
+      ["Images & Uploads","How are uploaded images stored currently?","Multer memory storage, converted to a data URL, then saved in MongoDB. This is fine for a learning project."],
+      ["Images & Uploads","Why is that not good for production?","Large base64 data bloats documents, slows queries, uses more bandwidth and hits the 16 MB document limit. Production should use S3/Cloudinary style storage with a CDN and image optimization, and keep only the URL in MongoDB."],
+      ["Images & Uploads","Is a Google image search link a valid image URL?","No. It is a page URL. A direct image URL ends with the real image file, for example .jpg or .png."],
+
+      ["Admin Panel","What can admins manage?","Products, categories, users, orders and order status, from a dashboard."],
+      ["Admin Panel","What happens if an admin deletes a category that has products?","Handle it carefully: block deletion while products use it, or reassign products. Orders are safe because they keep snapshots."],
+      ["Admin Panel","What happens if a product in someone's cart is deleted?","Cart validation should detect missing or inactive products and remove them or warn the user before checkout."],
+      ["Admin Panel","Why a product Status field?","It lets admins hide products without deleting them, which keeps old data and references safe (soft delete idea)."],
+
+      ["Express & Node","What is the event loop?","Node runs JavaScript on one thread and uses the event loop for async I/O, so database calls do not block other requests."],
+      ["Express & Node","How does centralized error handling work?","Controllers pass errors to next(err). errorMiddleware has a 404 handler and a 500 handler that render the correct EJS page and hide stack traces in production."],
+      ["Express & Node","Order of middleware matters, why?","Express runs middleware in order. Session and body parsing must run before routes, and CSRF must run after the body is parsed. The error handler must be last."],
+      ["Express & Node","req.params, req.query, req.body?","params: /products/:id. query: ?search=phone. body: submitted form data."],
+      ["Express & Node","How do you format Indian currency?","toLocaleString('en-IN') with the ₹ symbol, for example 1,23,456."],
+      ["Express & Node","What are validators.js and generateToken.js?","validators.js holds reusable input validation functions. generateToken.js is a helper for generating random tokens."],
+
+      ["Deployment & Scaling","Is the app scalable?","It is designed to scale at the application layer, for example with Mongo sessions, pagination and services, but I do not claim a fixed user capacity. Real capacity depends on infrastructure and design."],
+      ["Deployment & Scaling","How would you scale it for high traffic?","Load balancer with multiple Node instances, shared Mongo or Redis sessions, Redis caching, CDN, object storage, Atlas scaling, background queues, logging, monitoring, autoscaling and containers."],
+      ["Deployment & Scaling","How would you deploy it?","Push to GitHub, deploy on Render, Railway or AWS, set env variables, allow the host in Atlas, set NODE_ENV=production, serve over HTTPS with secure cookies, and add CI/CD."],
+      ["Deployment & Scaling","Why use background queues?","For slow tasks like sending emails or processing images, so the request responds quickly."],
+      ["Deployment & Scaling","How would you test it?","Unit tests for validators and services, integration tests with Jest and Supertest, a test database, and tests for admin-only routes, stock limits and the order transaction."],
+
+      ["Situation Based","A customer says their order was placed but stock did not reduce.","Check that order creation and stock decrease run inside the same transaction and that the session is passed to every operation. Check logs, reproduce, and add a test."],
+      ["Situation Based","A normal user opens /admin directly. What happens?","protect checks login, then adminOnly checks role. A non-admin gets blocked (403 or redirect)."],
+      ["Situation Based","A product price changed after a customer ordered. Does their order change?","No. The order stores a price snapshot, so history stays correct."],
+      ["Situation Based","Customer cart has 5 items but only 3 are in stock at checkout.","Stock is validated again at checkout. The server blocks the order and tells the user to adjust the quantity."],
+      ["Situation Based","Product listing is slow with 1 lakh products.","Check indexes with explain(), keep pagination, use projection to return only needed fields, add a text index or Atlas Search, and cache popular queries."],
+      ["Situation Based","A user tampers with the price field in the browser.","The server ignores client prices and uses the database price, so the tampering has no effect."],
+      ["Situation Based","Sessions are lost after restart.","With connect-mongo they persist. With MemoryStore they would be lost, which is why I use MongoDB storage."],
+      ["Situation Based","A form submission fails with a CSRF error.","Check that the form has the _csrf hidden field, the session cookie is set, and that for multipart forms the CSRF check runs after Multer."],
+      ["Situation Based","How would you add coupons?","A Coupon model (code, type, value, min order, expiry, usage limit). Validate on the server at checkout, apply the discount to the total, and save it in the order."],
+      ["Situation Based","How would you add order cancellation and refund?","Allow cancel only in early statuses, restore stock in a transaction, update status, and for paid orders trigger a refund through the gateway."],
+      ["Situation Based","How would you convert this into a REST API for React?","Return JSON, use proper HTTP verbs, keep role checks and validation, and use either cookie sessions with CORS and CSRF or JWT with refresh tokens."],
+      ["Situation Based","Atlas connection fails at startup.","Check DBURL, credentials (URL-encode special characters), Atlas IP access list, cluster status and network. The server should not start without a database."],
+
+      ["HR & Behavioral","What did you learn from ShopKart?","Role-based access, session security, CSRF, transactions, stock handling, file uploads, clean architecture with services, and how to debug and document a larger project."],
+      ["HR & Behavioral","What is the hardest part you built?","Use your real answer. A strong one is order creation with transaction and stock validation, or CSRF with Multer. Explain the problem, the fix and the lesson."],
+      ["HR & Behavioral","What are the weaknesses of the project?","COD only, images stored in MongoDB, no Redis cache, no email notifications, no automated tests yet and no password reset by choice. I know how to improve each of them."],
+      ["HR & Behavioral","Did you build it alone?","Be honest. Explain what you built, what resources or tools you used, and that you understand and can modify every part."],
+      ["HR & Behavioral","How is ShopKart different from your Personal Finance Manager?","Finance Manager: single role, simple CRUD. ShopKart: roles, admin panel, cart, checkout, transactions, uploads, CSRF, rate limiting and a services layer."]
+    ]
+  }
+};
+
+var app = document.getElementById("app");
+
+function showHome() {
+  var h = '<div class="home"><h2>Choose your project</h2><div class="btns">';
+  for (var k in projects) {
+    h += '<button class="pbtn" onclick="showProject(\'' + k + '\')">' + projects[k].name + '</button>';
+  }
+  app.innerHTML = h + '</div></div>';
+  window.scrollTo(0, 0);
+}
+
+function showProject(key) {
+  var p = projects[key];
+  var cats = [];
+  p.qa.forEach(function (x) { if (cats.indexOf(x[0]) < 0) cats.push(x[0]); });
+  var h = '<div class="bar"><button class="back" onclick="showHome()">&larr; Back</button><h2>' + p.name + '</h2></div>';
+  if (p.intro) h += '<div class="note">' + p.intro + '</div>';
+  h += '<div class="tools"><input id="s" placeholder="Search questions..." oninput="draw(\'' + key + '\')">';
+  h += '<select id="c" onchange="draw(\'' + key + '\')"><option value="">All categories</option>';
+  cats.forEach(function (c) { h += '<option>' + c + '</option>'; });
+  h += '</select></div><div class="count" id="n"></div><div id="list"></div>';
+  app.innerHTML = h;
+  draw(key);
+  window.scrollTo(0, 0);
+}
+
+function esc(t) {
+  return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function draw(key) {
+  var q = document.getElementById("s").value.toLowerCase();
+  var c = document.getElementById("c").value;
+  var out = "", last = "", total = 0;
+  projects[key].qa.forEach(function (x) {
+    if (c && x[0] !== c) return;
+    if (q && (x[1] + " " + x[2]).toLowerCase().indexOf(q) < 0) return;
+    if (x[0] !== last) { out += '<div class="cat">' + x[0] + '</div>'; last = x[0]; }
+    out += '<div class="q"><button onclick="this.parentNode.classList.toggle(\'open\')">' + esc(x[1]) + '</button><div class="a">' + esc(x[2]) + '</div></div>';
+    total++;
+  });
+  document.getElementById("list").innerHTML = out || '<div class="empty">No questions found.</div>';
+  document.getElementById("n").textContent = total + " questions";
+}
+
+showHome();
+</script>
+</body>
+</html>
