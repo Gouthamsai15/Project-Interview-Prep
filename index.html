@@ -17,9 +17,21 @@ header h1{margin:0;font-size:22px}
 .pbtn{background:#1f3a5f;color:#fff;border:0;border-radius:8px;padding:22px 30px;font-size:18px;cursor:pointer;width:300px}
 .pbtn:hover{background:#2c5282}
 .pbtn small{display:block;font-size:13px;font-weight:normal;margin-top:6px;opacity:.85}
-.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid #d8dde3;margin:-20px -20px 16px;padding:8px 20px}
-.bar h2{margin:0;font-size:16px;color:#1f3a5f}
-.back{background:#fff;border:1px solid #1f3a5f;color:#1f3a5f;padding:5px 10px;border-radius:6px;font-size:14px;cursor:pointer}
+.menu{min-height:calc(100vh - 200px)}
+.bar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #d8dde3;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.barin{max-width:900px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:12px}
+.barin h2{margin:0;font-size:17px;color:#1f3a5f}
+.back{background:#1f3a5f;color:#fff;border:0;padding:7px 14px;border-radius:6px;font-size:14px;cursor:pointer}
+.back:hover{background:#2c5282}
+.q .nbody{display:none;padding:0 14px 14px}
+.q.open .nbody{display:block}
+.nbody h4{margin:14px 0 6px;color:#1f3a5f}
+.nbody p{margin:8px 0}
+.nbody table{border-collapse:collapse;display:block;overflow-x:auto;margin:10px 0;font-size:14px}
+.nbody th,.nbody td{border:1px solid #ccc;padding:6px 10px;text-align:left;vertical-align:top}
+.nbody th{background:#e3ebf5;color:#1f3a5f}
+.nbody tr:nth-child(even) td{background:#f8f9fb}
+.nbody pre{background:#f1f3f5;border:1px solid #dde1e6;border-radius:6px;padding:10px;overflow-x:auto;font-size:13px;margin:10px 0}
 .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .tools input,.tools select{padding:9px;border:1px solid #bbb;border-radius:6px;font-size:15px}
 .tools input{flex:1;min-width:200px}
@@ -27,16 +39,16 @@ header h1{margin:0;font-size:22px}
 .cat{background:#e3ebf5;color:#1f3a5f;padding:8px 12px;border-radius:6px;margin:22px 0 10px;font-weight:bold}
 .q{background:#fff;border:1px solid #d8dde3;border-radius:8px;margin-bottom:10px}
 .q button{width:100%;text-align:left;background:none;border:0;padding:14px;font-size:16px;font-weight:bold;cursor:pointer;color:#222}
-.q .a{display:none;padding:0 14px 14px;color:#333;white-space:pre-line}
+.q .a{display:none;padding:0 14px 14px;color:#333;white-space:pre-wrap}
 .q.open .a{display:block}
 .q.open button{color:#1f3a5f}
 .empty{text-align:center;color:#777;padding:30px}
 .note{background:#fff8e1;border:1px solid #f0d98a;border-radius:8px;padding:14px;margin-bottom:16px}
 footer{text-align:center;color:#777;font-size:13px;padding:20px}
 @media(max-width:600px){
+.barin{padding:8px 14px}
 header h1{font-size:18px}
 .wrap{padding:14px}
-.bar{margin:-14px -14px 14px;padding:8px 14px}
 
 .home h2{font-size:22px}
 .pbtn{width:100%}
@@ -46,6 +58,7 @@ header h1{font-size:18px}
 </head>
 <body>
 <header><h1>Project Interview Prep</h1></header>
+<div id="barbox"></div>
 <div class="wrap" id="app"></div>
 
 <script>
@@ -297,30 +310,565 @@ var projects = {
   }
 };
 
-var app = document.getElementById("app");
+var skills = {
+  python: {
+    name: "Python",
+    qa: [
+      ["Basics","What is Python?","A high-level, interpreted, dynamically typed, general-purpose language known for readable syntax. Used for web, automation, data science, AI and scripting."],
+      ["Basics","Is Python compiled or interpreted?","Both. Source code is compiled to bytecode (.pyc), then the Python Virtual Machine interprets it."],
+      ["Basics","What is dynamic typing?","Variable types are decided at runtime. x = 5 then x = 'hi' is allowed. Python is also strongly typed: 'a' + 1 raises TypeError."],
+      ["Basics","What are Python's built-in data types?","int, float, complex, bool, str, list, tuple, set, frozenset, dict, bytes, bytearray, NoneType."],
+      ["Basics","What is PEP 8?","The official style guide: 4-space indentation, snake_case names, line length about 79, and so on."],
+      ["Basics","What is the difference between == and is?","== compares values. is compares identity (same object in memory)."],
+      ["Basics","What are mutable and immutable types?","Mutable (can change in place): list, dict, set. Immutable: int, float, str, tuple, frozenset, bool."],
+      ["Basics","What is None?","A singleton object of NoneType that represents no value. Compare using 'is None'."],
+      ["Basics","What are truthy and falsy values?","Falsy: 0, 0.0, '', [], (), {}, set(), None, False. Everything else is truthy."],
+      ["Basics","What is type casting?","Converting types with int(), float(), str(), list(), etc. Example: int('10') gives 10."],
+      ["Basics","What is the difference between / // and %?","/ true division (7/2 = 3.5), // floor division (3), % remainder (1), ** power."],
+      ["Basics","What are comments and docstrings?","# is a comment. A docstring is a triple-quoted string at the start of a module, function or class, available through __doc__ and help()."],
 
-function showHome() {
-  var h = '<div class="home"><h2>Choose your project</h2><div class="btns">';
-  for (var k in projects) {
-    h += '<button class="pbtn" onclick="showProject(\'' + k + '\')">' + projects[k].name + '</button>';
+      ["Strings","Are strings mutable?","No. Operations like replace() return a new string."],
+      ["Strings","How do you reverse a string?","s[::-1] using slicing."],
+      ["Strings","Explain string slicing.","s[start:stop:step]. stop is excluded. Negative indexes count from the end. s[-1] is the last character."],
+      ["Strings","What are f-strings?","Formatted string literals: f'Name: {name}, total: {x:.2f}'. They are fast and readable (Python 3.6+)."],
+      ["Strings","Difference between split() and join()?","split() breaks a string into a list. join() combines a list into a string: ','.join(['a','b']) gives 'a,b'."],
+      ["Strings","strip vs lstrip vs rstrip?","Remove whitespace (or given characters) from both ends, the left or the right."],
+      ["Strings","How do you check if a string is a palindrome?","s == s[::-1] (after cleaning case and spaces if needed)."],
+      ["Strings","What is the difference between find() and index()?","Both return the position. If not found, find() returns -1 and index() raises ValueError."],
+
+      ["Lists, Tuples, Sets, Dicts","List vs tuple?","List is mutable, tuple is immutable. Tuples are slightly faster, hashable (if elements are) and can be dictionary keys."],
+      ["Lists, Tuples, Sets, Dicts","Set vs list?","A set is unordered, has unique elements and has O(1) average membership checks. A list is ordered and allows duplicates."],
+      ["Lists, Tuples, Sets, Dicts","How does a dictionary work internally?","A hash table. The key is hashed to find a slot, giving O(1) average lookup. Since Python 3.7 dicts keep insertion order."],
+      ["Lists, Tuples, Sets, Dicts","What can be a dictionary key?","Any hashable (usually immutable) object: str, int, tuple of immutables. Not list, dict or set."],
+      ["Lists, Tuples, Sets, Dicts","append vs extend vs insert?","append adds one item at the end, extend adds all items of an iterable, insert adds at a given index."],
+      ["Lists, Tuples, Sets, Dicts","remove vs pop vs del?","remove(value) deletes the first matching value. pop(index) removes and returns an item. del deletes by index or slice."],
+      ["Lists, Tuples, Sets, Dicts","What is list comprehension?","A short way to build lists: [x*x for x in range(10) if x % 2 == 0]. Dict and set comprehensions also exist."],
+      ["Lists, Tuples, Sets, Dicts","Shallow copy vs deep copy?","Shallow copy copies the outer container but shares inner objects (copy.copy). Deep copy copies everything recursively (copy.deepcopy)."],
+      ["Lists, Tuples, Sets, Dicts","sort() vs sorted()?","sort() sorts a list in place and returns None. sorted() returns a new sorted list from any iterable. Both accept key= and reverse=."],
+      ["Lists, Tuples, Sets, Dicts","How do you remove duplicates from a list?","list(set(a)) (order lost) or list(dict.fromkeys(a)) (order kept)."],
+      ["Lists, Tuples, Sets, Dicts","How do you merge two dictionaries?","a | b (3.9+), {**a, **b}, or a.update(b)."],
+      ["Lists, Tuples, Sets, Dicts","dict.get() vs dict[key]?","d[key] raises KeyError if missing. d.get(key, default) returns the default instead."],
+      ["Lists, Tuples, Sets, Dicts","Time complexity of common operations?","list index O(1), list append O(1) amortized, list search O(n), list insert at start O(n), dict/set lookup O(1) average."],
+      ["Lists, Tuples, Sets, Dicts","What is a frozenset?","An immutable, hashable set."],
+      ["Lists, Tuples, Sets, Dicts","What are collections module types?","Counter (counting), defaultdict (default values), deque (fast both-end operations), OrderedDict, namedtuple."],
+
+      ["Control Flow & Loops","for vs while loop?","for iterates over a sequence or iterable. while repeats while a condition is true."],
+      ["Control Flow & Loops","break, continue, pass?","break exits the loop, continue skips to the next iteration, pass does nothing (placeholder)."],
+      ["Control Flow & Loops","What is the else clause on a loop?","It runs when the loop finishes without hitting break."],
+      ["Control Flow & Loops","What do range(), enumerate() and zip() do?","range makes a number sequence. enumerate gives (index, item). zip pairs items from multiple iterables."],
+      ["Control Flow & Loops","What is the walrus operator?",":= assigns and returns a value in one expression: if (n := len(a)) > 10: ... (3.8+)."],
+      ["Control Flow & Loops","What is match-case?","Structural pattern matching (3.10+), similar to switch but more powerful: it can match shapes and values."],
+
+      ["Functions","What are *args and **kwargs?","*args collects extra positional arguments into a tuple. **kwargs collects extra keyword arguments into a dict."],
+      ["Functions","What is a lambda function?","A small anonymous function: lambda x: x * 2. Limited to a single expression."],
+      ["Functions","What are default arguments and the mutable default trap?","def f(a, lst=[]) shares one list across calls because defaults are evaluated once. Use lst=None and create a new list inside."],
+      ["Functions","Pass by value or by reference?","Pass by object reference (assignment). Mutating a mutable argument changes the caller's object. Rebinding the name does not."],
+      ["Functions","What are first-class functions?","Functions are objects: they can be assigned, passed as arguments and returned."],
+      ["Functions","What is scope and the LEGB rule?","Name lookup order: Local, Enclosing, Global, Built-in."],
+      ["Functions","global vs nonlocal?","global modifies a module-level variable inside a function. nonlocal modifies a variable in the enclosing function."],
+      ["Functions","What is a closure?","An inner function that remembers variables from its enclosing function even after that function finished."],
+      ["Functions","What is recursion? Limits?","A function calling itself. Python has a recursion limit (default about 1000), and no tail-call optimization. Prefer loops for deep recursion."],
+      ["Functions","What are map, filter and reduce?","map applies a function to each item. filter keeps items where the function is true. reduce (functools) folds items into one value."],
+      ["Functions","What are type hints?","Optional annotations like def add(a: int, b: int) -> int. They help tools and readers, and are not enforced at runtime."],
+
+      ["OOP","What are the four pillars of OOP?","Encapsulation, abstraction, inheritance and polymorphism."],
+      ["OOP","What are __init__ and self?","__init__ initializes a new object. self is the instance the method is called on."],
+      ["OOP","Class variable vs instance variable?","Class variables are shared by all instances. Instance variables belong to one object (set in __init__ via self)."],
+      ["OOP","instance method vs classmethod vs staticmethod?","Instance method gets self. @classmethod gets cls (often used for alternative constructors). @staticmethod gets neither and acts like a plain function inside the class."],
+      ["OOP","What is inheritance? Types?","A class reusing another class's behavior. Types: single, multiple, multilevel, hierarchical."],
+      ["OOP","What is MRO?","Method Resolution Order: the order Python searches classes for a method, using the C3 linearization. See it with Class.__mro__."],
+      ["OOP","What does super() do?","Calls a method from the parent class following the MRO."],
+      ["OOP","What is method overriding vs overloading?","Overriding: a child class redefines a parent method. Python has no true overloading; use default arguments or *args."],
+      ["OOP","How does encapsulation work in Python?","By convention: _name is protected, __name gets name mangling (private-like). Python does not enforce strict privacy. Use @property for controlled access."],
+      ["OOP","What is @property?","Lets a method be accessed like an attribute, with optional setter and deleter, for validation and computed values."],
+      ["OOP","What are dunder (magic) methods?","Special methods like __str__, __repr__, __len__, __eq__, __add__, __getitem__ that customize object behavior."],
+      ["OOP","__str__ vs __repr__?","__str__ is readable output for users (print). __repr__ is unambiguous output for developers and debugging."],
+      ["OOP","What is an abstract class?","A class with abstract methods that cannot be instantiated. Use the abc module (ABC and @abstractmethod)."],
+      ["OOP","What are dataclasses?","@dataclass auto-generates __init__, __repr__ and __eq__ for classes that mostly hold data."],
+      ["OOP","What is duck typing?","If it walks and quacks like a duck, it is a duck. Python cares about what an object can do, not its class."],
+      ["OOP","What is composition vs inheritance?","Composition means has-a (an object holds another object). Inheritance means is-a. Prefer composition for flexibility."],
+
+      ["Exceptions & Files","How does exception handling work?","try runs risky code, except handles errors, else runs if no error, finally always runs."],
+      ["Exceptions & Files","How do you raise and create custom exceptions?","raise ValueError('bad'). Custom: class MyError(Exception): pass."],
+      ["Exceptions & Files","Why not use a bare except?","It also catches KeyboardInterrupt and hides bugs. Catch specific exceptions."],
+      ["Exceptions & Files","What is a context manager (with statement)?","It sets up and cleans up resources automatically, for example files. Implement with __enter__ and __exit__ or contextlib.contextmanager."],
+      ["Exceptions & Files","How do you read and write files?","with open('f.txt', 'r') as f: data = f.read(). Modes: r, w, a, rb, wb. Using with closes the file automatically."],
+      ["Exceptions & Files","read(), readline() and readlines()?","read() gets the whole content, readline() one line, readlines() a list of lines. For big files, loop over the file object."],
+      ["Exceptions & Files","How do you work with JSON and CSV?","json.load/dump/loads/dumps for JSON. csv.reader/writer or DictReader/DictWriter for CSV."],
+
+      ["Modules & Packages","Module vs package vs library?","Module: a .py file. Package: a folder of modules (with __init__.py). Library: a collection of packages."],
+      ["Modules & Packages","What does if __name__ == '__main__' do?","Runs code only when the file is executed directly, not when imported."],
+      ["Modules & Packages","What is pip and a virtual environment?","pip installs packages. A virtual environment (venv) isolates project dependencies. requirements.txt lists them."],
+      ["Modules & Packages","import vs from import?","import math uses math.sqrt(). from math import sqrt uses sqrt() directly. Avoid from x import * for clarity."],
+      ["Modules & Packages","What is a circular import and how to fix it?","Two modules import each other. Fix by restructuring, importing inside a function, or moving shared code to a third module."],
+
+      ["Iterators, Generators, Decorators","Iterable vs iterator?","An iterable can produce an iterator (has __iter__). An iterator has __next__ and remembers its position, raising StopIteration at the end."],
+      ["Iterators, Generators, Decorators","What is a generator?","A function using yield that produces values lazily, one at a time, saving memory. Calling it returns a generator object."],
+      ["Iterators, Generators, Decorators","yield vs return?","return ends the function. yield pauses it and keeps its state so it can resume."],
+      ["Iterators, Generators, Decorators","Generator expression vs list comprehension?","(x*x for x in a) is lazy and uses little memory. [x*x for x in a] builds the full list at once."],
+      ["Iterators, Generators, Decorators","What is a decorator?","A function that wraps another function to add behavior without changing its code, applied with @name. Used for logging, auth, timing and caching."],
+      ["Iterators, Generators, Decorators","Why use functools.wraps?","It keeps the original function's name and docstring on the wrapper."],
+      ["Iterators, Generators, Decorators","What is lru_cache?","functools.lru_cache memoizes function results so repeated calls with the same arguments are fast."],
+
+      ["Memory & Internals","How does Python manage memory?","Private heap, reference counting and a garbage collector that handles reference cycles."],
+      ["Memory & Internals","What is garbage collection?","Automatic freeing of objects no longer referenced. Reference counting does most of it, and the cyclic GC cleans cycles."],
+      ["Memory & Internals","What is the GIL?","The Global Interpreter Lock lets only one thread execute Python bytecode at a time in CPython. It limits CPU-bound threading but not I/O-bound work."],
+      ["Memory & Internals","Threading vs multiprocessing vs asyncio?","Threading: I/O-bound tasks. Multiprocessing: CPU-bound tasks (separate processes, no shared GIL). asyncio: many concurrent I/O tasks on one thread."],
+      ["Memory & Internals","What is async and await?","Used with asyncio for non-blocking code. async def defines a coroutine, and await pauses it until the result is ready."],
+      ["Memory & Internals","What is __slots__?","Restricts instance attributes and saves memory by avoiding a per-object __dict__."],
+      ["Memory & Internals","What is interning?","Python reuses some immutable objects (small ints, short strings) to save memory, so two names may refer to the same object."],
+      ["Memory & Internals","What are .pyc files?","Cached compiled bytecode stored in __pycache__ to speed up imports."],
+
+      ["Coding Questions","Write a function to check if a number is prime.","def is_prime(n):\n    if n < 2: return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0: return False\n    return True"],
+      ["Coding Questions","Fibonacci using a generator.","def fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        yield a\n        a, b = b, a + b"],
+      ["Coding Questions","Count the frequency of words.","from collections import Counter\nCounter(text.split())"],
+      ["Coding Questions","Find the second largest number in a list.","sorted(set(a))[-2]  (check length first), or track two variables in a single pass for O(n)."],
+      ["Coding Questions","Check if two strings are anagrams.","sorted(a) == sorted(b), or Counter(a) == Counter(b)."],
+      ["Coding Questions","Swap two variables.","a, b = b, a"],
+      ["Coding Questions","Find the factorial using recursion.","def fact(n):\n    return 1 if n <= 1 else n * fact(n - 1)"],
+      ["Coding Questions","Flatten a nested list.","[x for sub in nested for x in sub]"],
+      ["Coding Questions","What is the output of print(0.1 + 0.2 == 0.3)?","False. Floating-point precision. Use math.isclose() or the decimal module."],
+      ["Coding Questions","What is the output of a = [1,2]; b = a; b.append(3); print(a)?","[1, 2, 3]. Both names refer to the same list object."],
+
+      ["Libraries & Practical","What is NumPy and why is it fast?","A library for N-dimensional arrays. It is fast because of contiguous memory, C implementations and vectorized operations."],
+      ["Libraries & Practical","What is Pandas?","A library for tabular data using DataFrame and Series: cleaning, filtering, grouping, merging and file I/O."],
+      ["Libraries & Practical","Flask vs Django vs FastAPI?","Flask: lightweight and flexible. Django: full-featured with ORM, admin and auth. FastAPI: modern, async, fast APIs with automatic validation and docs."],
+      ["Libraries & Practical","What are unit tests in Python?","Tests for small pieces of code, using unittest or pytest. pytest has simple asserts, fixtures and plugins."],
+      ["Libraries & Practical","What is the requests library?","A simple HTTP client: requests.get(url).json()."],
+
+      ["Situation Based","Your script is slow. How do you find out why?","Measure first with time, timeit or cProfile. Then fix the hot spot: better algorithm or data structure, avoid repeated work, use generators, caching, vectorization, or multiprocessing for CPU-bound code."],
+      ["Situation Based","You must process a 10 GB file with little memory.","Read it in chunks or line by line using a generator, avoid readlines(), and process and write results incrementally. With pandas use chunksize."],
+      ["Situation Based","A function behaves strangely when called multiple times with a list default.","That is the mutable default argument trap. Use None as the default and create the list inside the function."],
+      ["Situation Based","You get KeyError in production. How do you handle it?","Find which key is missing from the traceback and logs, then use dict.get(), validate input, or catch KeyError with a clear message. Add a test for the case."],
+      ["Situation Based","How do you manage dependencies across projects?","One virtual environment per project, pinned versions in requirements.txt (or poetry), and avoid installing globally."],
+      ["Situation Based","How do you call many APIs quickly?","They are I/O-bound, so use asyncio with aiohttp or a thread pool (concurrent.futures). Add timeouts, retries and rate limiting."],
+      ["Situation Based","How do you debug Python code?","Read the traceback, use print or logging, the pdb debugger or an IDE debugger, and write a failing test that reproduces the bug."],
+      ["Situation Based","Why does your code pass locally but fail on the server?","Different Python or package versions, missing environment variables, file paths, OS differences, or permissions. Compare environments and pin dependencies."]
+    ]
   }
-  app.innerHTML = h + '</div></div>';
+};
+
+function nP(s){return '<p>'+esc(s)+'</p>';}
+function nH(s){return '<h4>'+esc(s)+'</h4>';}
+function nL(a){return '<ul>'+a.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>';}
+function nC(s){return '<pre>'+esc(s)+'</pre>';}
+function nT(h,r){
+  return '<table><tr>'+h.map(function(x){return '<th>'+esc(x)+'</th>';}).join('')+'</tr>'+
+  r.map(function(row){return '<tr>'+row.map(function(x){return '<td>'+esc(x)+'</td>';}).join('')+'</tr>';}).join('')+'</table>';
+}
+
+skills.python.notes = [
+{t:"1. Introduction & Features", h:
+ nP("Python is a high-level, interpreted, dynamically typed, general-purpose language created by Guido van Rossum (first released 1991).")+
+ nL(["Simple, readable syntax (indentation defines blocks)","Interpreted: code is compiled to bytecode and run by the Python Virtual Machine","Dynamically typed and strongly typed","Object-oriented, with functional features","Huge standard library and community packages (pip)","Cross-platform, open source"])+
+ nT(["Area","Common tools"],[["Web","Django, Flask, FastAPI"],["Data / Analytics","NumPy, Pandas, Matplotlib"],["AI / ML","scikit-learn, TensorFlow, PyTorch"],["Automation / Scripting","os, shutil, requests, Selenium"],["Testing","unittest, pytest"]])+
+ nC("print('Hello, World!')   # first program")},
+
+{t:"2. Variables & Data Types", h:
+ nP("A variable is a name that refers to an object. No declaration is needed: x = 10.")+
+ nT(["Type","Example","Mutable?","Note"],[["int","10","No","Unlimited size"],["float","3.14","No","Floating-point precision"],["complex","2+3j","No","Real + imaginary"],["bool","True / False","No","Subclass of int"],["str","'hello'","No","Text sequence"],["list","[1, 2, 3]","Yes","Ordered, allows duplicates"],["tuple","(1, 2, 3)","No","Ordered, fixed"],["set","{1, 2, 3}","Yes","Unordered, unique"],["frozenset","frozenset({1,2})","No","Immutable set"],["dict","{'a': 1}","Yes","Key-value pairs"],["NoneType","None","No","Represents no value"]])+
+ nH("Naming rules")+nL(["Start with a letter or underscore, never a digit","Letters, digits and underscores only","Case-sensitive (age and Age differ)","Cannot be a keyword (if, for, class...)","Style: snake_case for variables and functions, PascalCase for classes, UPPER_CASE for constants"])+
+ nH("Type casting")+nC("int('10')      # 10\nfloat('2.5')   # 2.5\nstr(100)       # '100'\nlist('abc')    # ['a','b','c']\ntype(5)        # <class 'int'>")},
+
+{t:"3. Operators", h:
+ nT(["Category","Operators","Example"],[["Arithmetic","+  -  *  /  //  %  **","7 // 2 = 3, 7 % 2 = 1, 2 ** 3 = 8"],["Comparison","==  !=  >  <  >=  <=","5 > 3 is True"],["Logical","and  or  not","True and False is False"],["Assignment","=  +=  -=  *=  /=  //=  %=  **=","x += 1"],["Membership","in  not in","'a' in 'cat' is True"],["Identity","is  is not","a is None"],["Bitwise","&  |  ^  ~  <<  >>","5 & 3 = 1"]])+
+ nP("Precedence (high to low): **, unary minus, * / // %, + -, comparisons, not, and, or.")},
+
+{t:"4. Strings", h:
+ nP("Strings are immutable sequences of characters. Single, double or triple quotes can be used.")+
+ nT(["Method","Purpose","Example"],[["upper() / lower()","Change case","'ab'.upper() -> 'AB'"],["title() / capitalize()","Title or first-letter case","'hi all'.title() -> 'Hi All'"],["strip() / lstrip() / rstrip()","Remove whitespace","'  a '.strip() -> 'a'"],["split(sep)","String to list","'a,b'.split(',') -> ['a','b']"],["join(list)","List to string","'-'.join(['a','b']) -> 'a-b'"],["replace(old,new)","Replace text","'aab'.replace('a','x') -> 'xxb'"],["find() / index()","Position (find gives -1 if missing)","'cat'.find('t') -> 2"],["startswith() / endswith()","Prefix and suffix test","'abc'.startswith('a') -> True"],["isdigit() / isalpha()","Character checks","'123'.isdigit() -> True"],["count(x)","Occurrences","'banana'.count('a') -> 3"],["format() / f-string","Formatting","f'{name} is {age}'"]])+
+ nH("Slicing: s[start:stop:step]")+nC("s = 'python'\ns[0]      # 'p'\ns[-1]     # 'n'\ns[1:4]    # 'yth'\ns[::-1]   # 'nohtyp' (reverse)")},
+
+{t:"5. Lists", h:
+ nP("An ordered, mutable collection that allows duplicates and mixed types.")+
+ nT(["Method","Purpose","Example"],[["append(x)","Add one item at end","a.append(4)"],["extend(iter)","Add many items","a.extend([5,6])"],["insert(i,x)","Insert at index","a.insert(0,'x')"],["remove(x)","Remove first match","a.remove(3)"],["pop(i)","Remove and return item (last by default)","a.pop()"],["clear()","Remove all items","a.clear()"],["index(x)","Index of first match","a.index(2)"],["count(x)","Count occurrences","a.count(1)"],["sort()","Sort in place","a.sort(reverse=True)"],["reverse()","Reverse in place","a.reverse()"],["copy()","Shallow copy","b = a.copy()"]])+
+ nC("nums = [1, 2, 3, 4]\nnums[1:3]           # [2, 3]\nsquares = [x*x for x in nums]   # list comprehension\nlen(nums), sum(nums), max(nums), min(nums)")},
+
+{t:"6. Tuples & Sets", h:
+ nH("Tuple")+nP("Ordered, immutable. Faster than lists and usable as dictionary keys. A single-item tuple needs a comma: (5,).")+
+ nC("t = (10, 20, 30)\na, b, c = t       # unpacking\nt.count(10); t.index(20)")+
+ nH("Set")+nP("Unordered collection of unique, hashable items. Fast membership tests.")+
+ nT(["Operation","Symbol / method","Result"],[["Union","a | b  or  a.union(b)","All items"],["Intersection","a & b","Common items"],["Difference","a - b","In a, not in b"],["Symmetric difference","a ^ b","In either, not both"],["Add / remove","add(x), remove(x), discard(x)","Modify the set"],["Subset test","a.issubset(b)","True or False"]])},
+
+{t:"7. Dictionaries", h:
+ nP("Key-value pairs. Keys must be unique and hashable. Ordered by insertion since Python 3.7. Average O(1) lookup (hash table).")+
+ nT(["Method","Purpose"],[["d[key]","Get value (KeyError if missing)"],["d.get(key, default)","Safe get"],["d.keys() / values() / items()","Views of keys, values, pairs"],["d.update(other)","Merge another dict"],["d.pop(key)","Remove and return value"],["d.setdefault(k, v)","Get, or insert default"],["del d[key]","Delete a key"],["key in d","Check key exists"]])+
+ nC("d = {'name': 'Asha', 'age': 22}\nfor k, v in d.items():\n    print(k, v)\nsq = {x: x*x for x in range(5)}   # dict comprehension")},
+
+{t:"8. Data Structures Comparison", h:
+ nT(["Feature","list","tuple","set","dict"],[["Syntax","[ ]","( )","{ }","{k: v}"],["Ordered","Yes","Yes","No","Yes (insertion)"],["Mutable","Yes","No","Yes","Yes"],["Duplicates","Allowed","Allowed","Not allowed","Unique keys"],["Indexing","Yes","Yes","No","By key"],["Lookup speed","O(n)","O(n)","O(1)","O(1)"],["Use case","General collection","Fixed data, keys","Unique items, set maths","Mapping data"]])},
+
+{t:"9. Control Flow & Loops", h:
+ nC("if age >= 18:\n    print('adult')\nelif age >= 13:\n    print('teen')\nelse:\n    print('child')")+
+ nC("for i in range(1, 6):      # 1 to 5\n    print(i)\n\nn = 3\nwhile n > 0:\n    n -= 1\n\nfor i, v in enumerate(['a','b']):\n    print(i, v)")+
+ nT(["Statement","Meaning"],[["break","Exit the loop"],["continue","Skip to next iteration"],["pass","Do nothing (placeholder)"],["else on loop","Runs if the loop ended without break"],["range(start, stop, step)","Number sequence, stop excluded"],["zip(a, b)","Pair items from iterables"]])+
+ nC("match command:          # Python 3.10+\n    case 'go':\n        print('moving')\n    case _:\n        print('unknown')")},
+
+{t:"10. Functions", h:
+ nC("def add(a, b=0):\n    '''Return the sum.'''\n    return a + b\n\nadd(2, 3)\nadd(a=2, b=3)")+
+ nT(["Argument type","Example","Note"],[["Positional","f(1, 2)","Order matters"],["Keyword","f(a=1, b=2)","Order does not matter"],["Default","def f(a, b=5)","Avoid mutable defaults"],["*args","def f(*args)","Extra positional args as tuple"],["**kwargs","def f(**kwargs)","Extra keyword args as dict"]])+
+ nT(["Scope (LEGB)","Meaning"],[["Local","Inside the current function"],["Enclosing","In an outer function"],["Global","Module level"],["Built-in","Names like len, print"]])+
+ nC("square = lambda x: x * x\nlist(map(lambda x: x*2, [1,2,3]))       # [2, 4, 6]\nlist(filter(lambda x: x > 1, [1,2,3]))  # [2, 3]")+
+ nL(["Functions are first-class objects","Closures remember enclosing variables","Use global / nonlocal to rebind outer variables","Type hints: def f(a: int) -> int"])},
+
+{t:"11. Object-Oriented Programming", h:
+ nC("class Student:\n    school = 'ABC'            # class variable\n\n    def __init__(self, name):\n        self.name = name      # instance variable\n\n    def greet(self):\n        return f'Hi {self.name}'\n\n    def __str__(self):\n        return self.name\n\ns = Student('Asha')\ns.greet()")+
+ nT(["Pillar","Meaning","Python way"],[["Encapsulation","Bundle data with methods, control access","_protected, __private, @property"],["Abstraction","Hide details, show essentials","abc module, abstract methods"],["Inheritance","Reuse parent class","class B(A), super()"],["Polymorphism","Same interface, different behavior","Method overriding, duck typing"]])+
+ nT(["Method type","First argument","Use"],[["Instance method","self","Works with object data"],["@classmethod","cls","Alternative constructors, class data"],["@staticmethod","none","Utility function inside class"]])+
+ nT(["Dunder method","Purpose"],[["__init__","Initialize object"],["__str__ / __repr__","User-friendly / developer output"],["__len__","len(obj)"],["__eq__ / __lt__","Comparison"],["__add__","+ operator"],["__getitem__","obj[key]"],["__enter__ / __exit__","with statement"]])+
+ nP("Multiple inheritance uses MRO (C3 linearization). Check with ClassName.__mro__.")},
+
+{t:"12. Exception Handling & Files", h:
+ nC("try:\n    n = int(input())\n    print(10 / n)\nexcept ValueError:\n    print('not a number')\nexcept ZeroDivisionError:\n    print('cannot divide by zero')\nelse:\n    print('no error')\nfinally:\n    print('always runs')")+
+ nT(["Exception","When it occurs"],[["ValueError","Right type, wrong value (int('abc'))"],["TypeError","Wrong type ('a' + 1)"],["KeyError","Missing dictionary key"],["IndexError","List index out of range"],["ZeroDivisionError","Divide by zero"],["FileNotFoundError","File does not exist"],["AttributeError","Attribute does not exist"],["ImportError","Import fails"]])+
+ nC("class MyError(Exception):\n    pass\n\nraise MyError('custom message')")+
+ nT(["File mode","Meaning"],[["r","Read (default)"],["w","Write (overwrites file)"],["a","Append"],["x","Create, fail if exists"],["r+","Read and write"],["b","Binary (rb, wb)"]])+
+ nC("with open('data.txt', 'r') as f:\n    for line in f:\n        print(line.strip())")},
+
+{t:"13. Modules, Packages & pip", h:
+ nT(["Concept","Meaning"],[["Module","A single .py file"],["Package","Folder of modules (with __init__.py)"],["Library","Collection of packages"],["import x","Use as x.func()"],["from x import y","Use y directly"],["if __name__ == '__main__'","Run code only when executed directly"]])+
+ nT(["Command","Purpose"],[["python -m venv venv","Create virtual environment"],["pip install pkg","Install a package"],["pip freeze > requirements.txt","Save dependencies"],["pip install -r requirements.txt","Install from file"],["pip list","Show installed packages"]])},
+
+{t:"14. Comprehensions & Functional Tools", h:
+ nC("[x*x for x in range(5) if x % 2 == 0]      # list\n{x for x in 'hello'}                           # set\n{k: len(k) for k in ['a', 'bb']}               # dict\n(x*x for x in range(5))                        # generator")+
+ nT(["Tool","Use"],[["map(f, it)","Apply f to every item"],["filter(f, it)","Keep items where f is true"],["reduce(f, it)","Combine into one value (functools)"],["sorted(it, key=f)","Custom sorting"],["any() / all()","At least one / every item true"],["sum() min() max()","Aggregates"]])},
+
+{t:"15. Iterators, Generators & Decorators", h:
+ nT(["Concept","Meaning"],[["Iterable","Can be looped over (list, str, dict)"],["Iterator","Has __next__, remembers position"],["Generator","Function with yield, lazy values"],["Decorator","Function that wraps another function"]])+
+ nC("def count(n):\n    for i in range(n):\n        yield i\n\nfor x in count(3):\n    print(x)")+
+ nC("import functools\n\ndef timer(func):\n    @functools.wraps(func)\n    def wrapper(*args, **kwargs):\n        print('before')\n        result = func(*args, **kwargs)\n        print('after')\n        return result\n    return wrapper\n\n@timer\ndef hello():\n    print('hi')")+
+ nP("Generators save memory because values are produced one at a time. functools.lru_cache caches function results.")},
+
+{t:"16. Memory, GIL & Concurrency", h:
+ nL(["Memory is managed in a private heap","Reference counting plus a cyclic garbage collector free unused objects","GIL: only one thread runs Python bytecode at a time in CPython"])+
+ nT(["Approach","Best for","Note"],[["threading","I/O-bound tasks","Limited by GIL for CPU work"],["multiprocessing","CPU-bound tasks","Separate processes, more memory"],["asyncio","Many I/O tasks (network)","Single thread, async / await"],["concurrent.futures","Simple pools","ThreadPoolExecutor, ProcessPoolExecutor"]])+
+ nT(["Copy type","Behavior"],[["Assignment (b = a)","Same object, no copy"],["Shallow (copy.copy)","New outer object, shared inner objects"],["Deep (copy.deepcopy)","Everything copied recursively"]])},
+
+{t:"17. Built-in Functions & Standard Library", h:
+ nT(["Function","Purpose"],[["len, sum, min, max, abs, round","Basic utilities"],["range, enumerate, zip, reversed","Looping helpers"],["sorted, map, filter, any, all","Data processing"],["isinstance, type, id, dir, help","Inspection"],["input, print, open","Input, output, files"]])+
+ nT(["Module","Purpose"],[["math","Math functions"],["random","Random numbers"],["datetime","Dates and times"],["os / pathlib","Files and paths"],["sys","Interpreter details, arguments"],["json / csv","Data formats"],["re","Regular expressions"],["collections","Counter, defaultdict, deque, namedtuple"],["itertools / functools","Iteration and function tools"],["logging","Logging"]])},
+
+{t:"18. Time Complexity Cheat Sheet", h:
+ nT(["Operation","list","dict / set"],[["Access by index / key","O(1)","O(1) average"],["Search (in)","O(n)","O(1) average"],["Append / add","O(1) amortized","O(1) average"],["Insert at start","O(n)","n/a"],["Delete","O(n)","O(1) average"],["Sort","O(n log n)","n/a"]])},
+
+{t:"19. PEP 8 & Best Practices", h:
+ nT(["Item","Convention"],[["Variables, functions","snake_case"],["Classes","PascalCase"],["Constants","UPPER_CASE"],["Indentation","4 spaces"],["Line length","About 79 characters"],["Imports","Top of file: standard, third-party, local"]])+
+ nL(["Use virtual environments","Catch specific exceptions","Use with for files","Prefer f-strings","Write docstrings and tests","Avoid mutable default arguments"])}
+];
+
+skills.javascript = {
+  name: "JavaScript",
+  qa: [
+    ["Basics","What is JavaScript?","A high-level, interpreted, dynamically typed, single-threaded language that runs in browsers and, with Node.js, on servers. It supports object-oriented, functional and event-driven styles."],
+    ["Basics","JavaScript vs Java?","They are different languages. JavaScript is dynamically typed, prototype-based and mainly used for web and Node. Java is statically typed, class-based and compiled to bytecode."],
+    ["Basics","What is ECMAScript?","The language standard that JavaScript follows. ES6 (ES2015) added let, const, arrow functions, classes, modules, promises and more."],
+    ["Basics","Is JavaScript compiled or interpreted?","Modern engines (like V8) use JIT compilation: the code is parsed, compiled to bytecode and optimized machine code while running."],
+    ["Basics","What is the difference between client-side and server-side JavaScript?","Client-side runs in the browser (DOM, events, fetch). Server-side runs in Node.js (files, databases, HTTP servers)."],
+    ["Basics","What is strict mode?","'use strict' enables stricter rules: no undeclared variables, no duplicate parameters, and this is undefined in plain functions. It catches common mistakes. Modules and classes are strict by default."],
+    ["Basics","Single-threaded: what does it mean?","JavaScript has one call stack and runs one piece of code at a time. Async work is handled by the event loop and browser or Node APIs."],
+
+    ["Data Types & Operators","What are the data types in JavaScript?","Primitives: string, number, bigint, boolean, undefined, null, symbol. Non-primitive: object (including arrays, functions, dates)."],
+    ["Data Types & Operators","Primitive vs reference types?","Primitives are copied by value and are immutable. Objects are copied by reference, so two variables can point to the same object."],
+    ["Data Types & Operators","null vs undefined?","undefined means a variable was declared but not assigned (or a missing property). null is an intentional empty value set by the programmer. typeof null is 'object' (a known quirk)."],
+    ["Data Types & Operators","== vs ===?","== compares values after type coercion (5 == '5' is true). === compares value and type without coercion (5 === '5' is false). Prefer ===."],
+    ["Data Types & Operators","What is type coercion?","Automatic conversion between types. Example: '5' + 1 gives '51', '5' - 1 gives 4."],
+    ["Data Types & Operators","What are falsy values?","false, 0, -0, 0n, '', null, undefined, NaN. Everything else is truthy (including [] and {})."],
+    ["Data Types & Operators","What is NaN? How do you check it?","Not-a-Number, the result of invalid numeric operations. NaN !== NaN, so use Number.isNaN(x)."],
+    ["Data Types & Operators","What does typeof return?","A string such as 'string', 'number', 'boolean', 'undefined', 'object', 'function', 'symbol', 'bigint'. Arrays return 'object' (use Array.isArray)."],
+    ["Data Types & Operators","What is the nullish coalescing operator (??)?","a ?? b returns b only when a is null or undefined. Unlike ||, it keeps 0 and empty string."],
+    ["Data Types & Operators","What is optional chaining (?.)?","user?.address?.city returns undefined instead of throwing when something is null or undefined."],
+    ["Data Types & Operators","Why is 0.1 + 0.2 not 0.3?","Numbers are 64-bit floating point, so some decimals cannot be stored exactly. Use rounding, integers (paise), or toFixed for display."],
+    ["Data Types & Operators","What is BigInt?","A type for integers larger than 2^53 - 1, written with n: 123n."],
+    ["Data Types & Operators","What is Symbol?","A unique, immutable primitive used as a unique property key."],
+
+    ["Variables & Scope","var vs let vs const?","var: function scoped, hoisted and initialized as undefined, can be redeclared. let: block scoped, can be reassigned. const: block scoped, cannot be reassigned (object contents can still change)."],
+    ["Variables & Scope","What is hoisting?","Declarations are moved to the top of their scope during compilation. var is hoisted as undefined, function declarations are fully hoisted, let and const are hoisted but not usable before declaration."],
+    ["Variables & Scope","What is the temporal dead zone (TDZ)?","The time between entering a scope and the let or const declaration line. Accessing the variable there throws ReferenceError."],
+    ["Variables & Scope","What are the types of scope?","Global, function and block scope, plus module scope. Inner scopes can access outer scopes (scope chain)."],
+    ["Variables & Scope","What is lexical scoping?","A function's scope is decided by where it is written in the code, not where it is called."],
+    ["Variables & Scope","What is an IIFE?","An Immediately Invoked Function Expression: (function () { ... })(). It runs at once and creates a private scope."],
+    ["Variables & Scope","Can you change a const object?","Yes. const prevents reassigning the variable, not mutating the object. Use Object.freeze to block changes (shallow)."],
+
+    ["Functions","Function declaration vs expression?","A declaration (function a() {}) is hoisted fully. An expression (const a = function () {}) is not usable before its line."],
+    ["Functions","What are arrow functions?","A short syntax: (a, b) => a + b. They have no own this, arguments or prototype and cannot be used as constructors."],
+    ["Functions","What is a callback function?","A function passed to another function to be called later, for example in setTimeout or array methods."],
+    ["Functions","What is a higher-order function?","A function that takes a function as an argument or returns one. Examples: map, filter, reduce."],
+    ["Functions","What are default and rest parameters?","Default: function f(a, b = 5). Rest: function f(...args) collects the extra arguments into an array."],
+    ["Functions","What is the spread operator?","... expands an iterable or object: [...a, ...b], {...obj, x: 1}, f(...args)."],
+    ["Functions","What is a pure function?","A function that returns the same output for the same input and has no side effects."],
+    ["Functions","What is currying?","Turning f(a, b) into f(a)(b). Useful for reusing partially applied functions."],
+    ["Functions","What is recursion? Risk?","A function calling itself. Without a base case or with very deep calls it causes a stack overflow."],
+    ["Functions","What is the arguments object?","An array-like object with all passed arguments in regular functions. Not available in arrow functions, so use rest parameters."],
+    ["Functions","What are call, apply and bind?","They set this. call(thisArg, a, b) runs now with arguments listed. apply(thisArg, [a, b]) runs now with an array. bind(thisArg) returns a new function to run later."],
+    ["Functions","What are debounce and throttle?","Debounce runs a function after the user stops triggering it for a delay (search box). Throttle runs it at most once per interval (scroll, resize)."],
+
+    ["Closures & this","What is a closure?","A function that remembers variables from its outer scope even after the outer function has finished. Used for private data, counters and factories."],
+    ["Closures & this","Give a closure example.","function counter() { let c = 0; return () => ++c; }\nconst next = counter();\nnext(); // 1\nnext(); // 2"],
+    ["Closures & this","Classic var in loop with setTimeout problem?","for (var i = 0; i < 3; i++) setTimeout(() => console.log(i)) prints 3, 3, 3 because var is shared. Use let (new binding per iteration) or an IIFE."],
+    ["Closures & this","How is this decided?","By how a function is called: method call gives the object, plain call gives undefined (strict) or window, new gives the new object, call/apply/bind set it explicitly. Arrow functions use this from the surrounding scope."],
+    ["Closures & this","Why does this get lost in a callback?","A method passed as a callback loses its object. Fix with bind, an arrow function, or wrapping it: () => obj.method()."],
+    ["Closures & this","Regular function vs arrow function this?","Regular functions get this at call time. Arrow functions capture this lexically from where they are defined."],
+
+    ["Objects & Prototypes","How do you create objects?","Object literal {}, constructor function with new, Object.create(proto), class syntax."],
+    ["Objects & Prototypes","What is the prototype chain?","Every object has an internal link to a prototype. When a property is missing, JavaScript looks up the chain until null."],
+    ["Objects & Prototypes","What is prototypal inheritance?","Objects inherit directly from other objects through the prototype link, rather than from classes."],
+    ["Objects & Prototypes","What are ES6 classes?","Syntactic sugar over prototypes: class, constructor, extends, super, static, and private fields with #."],
+    ["Objects & Prototypes","How do you copy an object? Shallow vs deep?","Shallow: {...obj} or Object.assign (nested objects are shared). Deep: structuredClone(obj) or a library. JSON.parse(JSON.stringify()) loses functions, undefined and dates."],
+    ["Objects & Prototypes","Object.freeze vs Object.seal?","freeze: no add, delete or change. seal: no add or delete, but existing values can change. Both are shallow."],
+    ["Objects & Prototypes","How do you loop over an object?","for...in (includes inherited keys), Object.keys, Object.values, Object.entries."],
+    ["Objects & Prototypes","How do you check if a property exists?","'key' in obj, obj.hasOwnProperty('key'), Object.hasOwn(obj, 'key')."],
+    ["Objects & Prototypes","What is destructuring?","Unpacking values: const { name, age } = user; const [a, b] = arr; with defaults and renaming supported."],
+    ["Objects & Prototypes","What are getters and setters?","Special accessor properties: get fullName() { ... } and set fullName(v) { ... }."],
+    ["Objects & Prototypes","What are Map and Set vs object and array?","Map stores key-value pairs with any key type and keeps order. Set stores unique values. Both have O(1) lookup and a size property."],
+    ["Objects & Prototypes","What are WeakMap and WeakSet?","Collections with weakly held object keys that do not block garbage collection."],
+
+    ["Arrays & Strings","map vs forEach?","forEach runs a function and returns undefined. map returns a new array of results."],
+    ["Arrays & Strings","filter, find, some, every?","filter returns matching items. find returns the first match. some is true if any item passes. every is true if all pass."],
+    ["Arrays & Strings","Explain reduce.","arr.reduce((acc, x) => acc + x, 0) folds an array into one value using an accumulator."],
+    ["Arrays & Strings","slice vs splice?","slice(start, end) returns a copy and does not change the array. splice(start, count, ...items) changes the original array."],
+    ["Arrays & Strings","Which array methods mutate the original?","push, pop, shift, unshift, splice, sort, reverse, fill. Non-mutating: map, filter, slice, concat, toSorted, toReversed."],
+    ["Arrays & Strings","How do you remove duplicates from an array?","[...new Set(arr)]"],
+    ["Arrays & Strings","How does sort work by default?","It sorts as strings, so [10, 2, 1] becomes [1, 10, 2]. Use arr.sort((a, b) => a - b) for numbers."],
+    ["Arrays & Strings","How do you check if something is an array?","Array.isArray(x)"],
+    ["Arrays & Strings","How do you flatten an array?","arr.flat(Infinity) or flatMap for map plus flatten one level."],
+    ["Arrays & Strings","How do you reverse a string?","str.split('').reverse().join('')"],
+    ["Arrays & Strings","What are template literals?","Backtick strings with `Hello ${name}`, multi-line support and embedded expressions."],
+    ["Arrays & Strings","includes vs indexOf?","includes returns true or false. indexOf returns the position or -1."],
+
+    ["ES6+ Features","List important ES6 features.","let and const, arrow functions, template literals, destructuring, spread and rest, default parameters, classes, modules, promises, Map and Set, Symbol, for...of, generators."],
+    ["ES6+ Features","for...in vs for...of?","for...in loops over enumerable keys of an object. for...of loops over values of an iterable (array, string, Map, Set)."],
+    ["ES6+ Features","What are ES modules?","import and export syntax for splitting code into files. Modules are strict, have their own scope and are loaded once."],
+    ["ES6+ Features","Named export vs default export?","Named: export const a; import { a }. Default: export default x; import anyName. A module can have many named exports and one default."],
+    ["ES6+ Features","What are generators?","Functions declared with function* that can pause with yield and resume. They return iterators."],
+    ["ES6+ Features","What is a Proxy?","An object that intercepts operations on another object (get, set, delete), useful for validation and reactivity."],
+    ["ES6+ Features","What is tagged template literal?","A function that processes a template string: tag`text ${value}`."],
+
+    ["Asynchronous JavaScript","Synchronous vs asynchronous?","Synchronous code runs line by line and blocks. Asynchronous code starts a task and continues, handling the result later."],
+    ["Asynchronous JavaScript","What is the event loop?","It continuously checks whether the call stack is empty and then moves queued callbacks onto it, giving non-blocking behavior in a single thread."],
+    ["Asynchronous JavaScript","Call stack, task queue and microtask queue?","Call stack runs the current code. Macrotasks (setTimeout, events) wait in the task queue. Microtasks (promise callbacks, queueMicrotask) run after the stack empties and before the next macrotask."],
+    ["Asynchronous JavaScript","Output order: console.log(1); setTimeout(() => console.log(2), 0); Promise.resolve().then(() => console.log(3)); console.log(4);","1, 4, 3, 2. Sync code first, then microtasks (promise), then macrotasks (timeout)."],
+    ["Asynchronous JavaScript","What is callback hell?","Deeply nested callbacks that are hard to read and maintain. Solve with promises and async/await."],
+    ["Asynchronous JavaScript","What is a Promise?","An object for a future value with states pending, fulfilled or rejected. Use then, catch and finally."],
+    ["Asynchronous JavaScript","Promise.all vs allSettled vs race vs any?","all: waits for all, rejects on the first failure. allSettled: waits for all and reports each result. race: first to settle. any: first to fulfill."],
+    ["Asynchronous JavaScript","What is async/await?","Syntax over promises. An async function returns a promise, and await pauses it until a promise resolves. Handle errors with try/catch."],
+    ["Asynchronous JavaScript","Sequential vs parallel awaits?","await a(); await b(); runs one after another. await Promise.all([a(), b()]) runs both in parallel."],
+    ["Asynchronous JavaScript","What is fetch? Does it reject on 404?","fetch makes HTTP requests and returns a promise. It rejects only on network failure. For 404 or 500 you must check response.ok."],
+    ["Asynchronous JavaScript","setTimeout vs setInterval?","setTimeout runs once after a delay. setInterval repeats. Clear with clearTimeout or clearInterval."],
+    ["Asynchronous JavaScript","How do you handle errors in async code?","try/catch around await, .catch() on promises, and a global unhandledrejection listener as a safety net."],
+
+    ["DOM & Events","What is the DOM?","The Document Object Model: a tree representation of the HTML page that JavaScript can read and change."],
+    ["DOM & Events","How do you select elements?","getElementById, querySelector, querySelectorAll, getElementsByClassName."],
+    ["DOM & Events","innerHTML vs textContent?","innerHTML parses HTML (XSS risk with user input). textContent sets plain text safely and is faster."],
+    ["DOM & Events","What is event bubbling and capturing?","Bubbling: the event goes from the target up to ancestors (default). Capturing: from the top down to the target (set the third argument true)."],
+    ["DOM & Events","What is event delegation?","Adding one listener to a parent and using event.target to handle many children. It is efficient and works for dynamic elements."],
+    ["DOM & Events","preventDefault vs stopPropagation?","preventDefault stops the default action (form submit, link). stopPropagation stops the event from bubbling to parents."],
+    ["DOM & Events","How do you add and remove event listeners?","el.addEventListener('click', handler); el.removeEventListener('click', handler). The same function reference is needed to remove."],
+    ["DOM & Events","What causes reflow and repaint?","Changing layout (size, position) triggers reflow. Changing looks (color) triggers repaint. Batch DOM changes and use classes or DocumentFragment."],
+    ["DOM & Events","What is the defer and async script attribute?","defer downloads in parallel and runs after HTML parsing in order. async runs as soon as downloaded, in any order."],
+
+    ["Browser & Storage","localStorage vs sessionStorage vs cookies?","localStorage: persists until cleared, about 5 MB. sessionStorage: cleared when the tab closes. Cookies: sent with every request, small (about 4 KB), can be HttpOnly and Secure."],
+    ["Browser & Storage","What is JSON and its methods?","A text data format. JSON.stringify(obj) converts to a string. JSON.parse(str) converts back."],
+    ["Browser & Storage","What is CORS?","Cross-Origin Resource Sharing: a browser rule that blocks requests to another origin unless the server allows it with headers."],
+    ["Browser & Storage","What is XSS and how do you prevent it?","Injecting malicious scripts into a page. Prevent by escaping output, using textContent, sanitizing HTML and a Content Security Policy."],
+    ["Browser & Storage","Why not store tokens in localStorage?","Any XSS script can read it. HttpOnly cookies are safer for session tokens."],
+
+    ["Error Handling","How does try/catch/finally work?","try runs code, catch handles an error, finally always runs. throw creates errors, usually new Error('message')."],
+    ["Error Handling","Common error types?","ReferenceError, TypeError, SyntaxError, RangeError. Custom errors can extend Error."],
+    ["Error Handling","Can try/catch catch async errors in callbacks?","Not by itself. Use it around await, or handle errors inside the callback or with .catch()."],
+
+    ["Performance & Memory","What is garbage collection?","The engine frees memory of objects that are no longer reachable (mark and sweep)."],
+    ["Performance & Memory","What causes memory leaks?","Unused global variables, forgotten timers, detached DOM nodes, unremoved event listeners and closures holding large data."],
+    ["Performance & Memory","What is memoization?","Caching function results by arguments so repeated calls are fast."],
+    ["Performance & Memory","What is lazy loading?","Loading images, scripts or routes only when needed to speed up the first load."],
+    ["Performance & Memory","What are web workers?","Background threads for heavy computation so the UI does not freeze. They cannot access the DOM."],
+
+    ["Coding Questions","What is the output of console.log(typeof null, typeof undefined, typeof [])?","object undefined object"],
+    ["Coding Questions","What is the output of console.log([] + [], [] + {}, 1 + '2', '3' - 1)?","'' (empty string), '[object Object]', '12', 2"],
+    ["Coding Questions","What is the output of console.log(a); var a = 5;?","undefined, because of var hoisting. With let it would throw ReferenceError."],
+    ["Coding Questions","Write a function to check a palindrome.","const isPal = s => s === s.split('').reverse().join('');"],
+    ["Coding Questions","Find the largest number in an array.","Math.max(...arr)"],
+    ["Coding Questions","Count the frequency of items.","arr.reduce((m, x) => { m[x] = (m[x] || 0) + 1; return m; }, {})"],
+    ["Coding Questions","Write a debounce function.","function debounce(fn, ms) {\n  let t;\n  return (...args) => {\n    clearTimeout(t);\n    t = setTimeout(() => fn(...args), ms);\n  };\n}"],
+    ["Coding Questions","Implement a simple Promise delay.","const delay = ms => new Promise(res => setTimeout(res, ms));"],
+
+    ["Situation Based","The page freezes during a heavy loop. What do you do?","Move heavy work to a Web Worker, split it into chunks with setTimeout or requestIdleCallback, or optimize the algorithm."],
+    ["Situation Based","A button click handler runs twice. Why?","Possibly the listener was added more than once, the event bubbled to a parent with the same handler, or a form submit also fired. Check listeners and use stopPropagation or remove duplicates."],
+    ["Situation Based","API data shows as undefined in the UI.","Probably the code runs before the promise resolves or the response shape differs. Use await or then, check response.ok, log the data and use optional chaining."],
+    ["Situation Based","You get 'Cannot read properties of undefined'.","Some value is undefined before the property access. Trace where it should be set, check async timing, and use optional chaining or validation."],
+    ["Situation Based","How do you debug JavaScript?","console.log or console.table, browser DevTools breakpoints, the debugger statement, the network tab for API calls and source maps."],
+    ["Situation Based","Search box calls the API on every key press. Fix?","Use debounce so the request is sent after the user pauses, and cancel old requests with AbortController."],
+    ["Situation Based","How do you make a website load faster?","Minify and bundle code, lazy load images and routes, use defer on scripts, cache assets, use a CDN, compress images, and reduce DOM size."],
+    ["Situation Based","How would you share code between frontend and backend?","Use ES modules or an npm package for shared utilities and validation, keeping environment-specific code separate."]
+  ]
+};
+
+skills.javascript.notes = [
+{t:"1. Introduction & Setup", h:
+ nP("JavaScript is a high-level, interpreted, dynamically typed, single-threaded language. It makes web pages interactive and, with Node.js, runs on servers.")+
+ nL(["Runs in every browser (V8, SpiderMonkey, JavaScriptCore)","Event-driven and non-blocking","Supports object-oriented and functional styles","Standardized as ECMAScript (ES6 in 2015, yearly updates after)"])+
+ nT(["Where it runs","Tools"],[["Browser","DOM, fetch, localStorage, events"],["Server (Node.js)","Express, file system, databases"],["Mobile / Desktop","React Native, Electron"],["Frameworks","React, Vue, Angular, Next.js"]])+
+ nC("<script src='app.js' defer><\/script>\n\nconsole.log('Hello, World!');")},
+
+{t:"2. Variables & Data Types", h:
+ nT(["Keyword","Scope","Reassign","Redeclare","Hoisting"],[["var","Function","Yes","Yes","Hoisted as undefined"],["let","Block","Yes","No","Hoisted, TDZ"],["const","Block","No","No","Hoisted, TDZ"]])+
+ nT(["Type","Example","Kind"],[["string","'hi'","Primitive"],["number","42, 3.14","Primitive"],["bigint","123n","Primitive"],["boolean","true","Primitive"],["undefined","let x;","Primitive"],["null","null","Primitive"],["symbol","Symbol('id')","Primitive"],["object","{}, [], function","Reference"]])+
+ nC("typeof 'a'        // 'string'\ntypeof null       // 'object' (quirk)\nNumber('42')      // 42\nString(5)         // '5'\nparseInt('10px')  // 10\nBoolean('')       // false")},
+
+{t:"3. Operators", h:
+ nT(["Category","Operators","Example"],[["Arithmetic","+ - * / % **","2 ** 3 = 8"],["Comparison","== != === !== > < >= <=","5 === '5' is false"],["Logical","&& || !","a && b"],["Nullish / Optional","?? ?.","a ?? 'default'"],["Assignment","= += -= *= /= ||= ??=","x += 1"],["Ternary","cond ? a : b","age > 18 ? 'adult' : 'minor'"],["Spread / Rest","...","[...arr]"],["Type","typeof, instanceof","x instanceof Array"]])+
+ nT(["Expression","Result","Why"],[["'5' + 1","'51'","+ concatenates with a string"],["'5' - 1","4","- converts to number"],["[] == false","true","Coercion"],["null == undefined","true","Loose equality special case"],["null === undefined","false","Different types"],["NaN === NaN","false","NaN is never equal to itself"]])},
+
+{t:"4. Strings", h:
+ nT(["Method","Purpose","Example"],[["length","Number of characters","'abc'.length -> 3"],["toUpperCase / toLowerCase","Change case","'a'.toUpperCase()"],["trim()","Remove spaces at ends","' a '.trim()"],["slice(s, e)","Extract part","'hello'.slice(1, 3) -> 'el'"],["substring(s, e)","Extract part (no negatives)","'hello'.substring(1,3)"],["split(sep)","String to array","'a,b'.split(',')"],["replace / replaceAll","Replace text","'aa'.replaceAll('a','b')"],["includes / startsWith / endsWith","Check content","'abc'.includes('b')"],["indexOf / lastIndexOf","Find position","'abc'.indexOf('c')"],["charAt / at","Character at index","'abc'.at(-1) -> 'c'"],["padStart / padEnd","Pad to length","'5'.padStart(3,'0') -> '005'"],["repeat(n)","Repeat","'ab'.repeat(2)"]])+
+ nC("const name = 'Asha';\nconsole.log(`Hello ${name}, 2 + 3 = ${2 + 3}`);   // template literal")},
+
+{t:"5. Numbers & Math", h:
+ nT(["Method","Purpose","Example"],[["Math.round / floor / ceil","Rounding","Math.floor(4.7) -> 4"],["Math.max / min","Largest / smallest","Math.max(1, 5)"],["Math.random()","Random 0 to under 1","Math.floor(Math.random()*10)"],["Math.abs / sqrt / pow","Maths","Math.sqrt(9) -> 3"],["toFixed(n)","Decimal places (string)","(3.14159).toFixed(2)"],["Number.isInteger / isNaN","Checks","Number.isNaN(NaN)"],["parseInt / parseFloat","Parse strings","parseFloat('3.5kg')"],["toLocaleString('en-IN')","Indian format","(123456).toLocaleString('en-IN') -> '1,23,456'"]])+
+ nP("Numbers are 64-bit floats, so 0.1 + 0.2 is 0.30000000000000004. Safe integers go up to Number.MAX_SAFE_INTEGER (2^53 - 1).")},
+
+{t:"6. Arrays", h:
+ nT(["Method","Purpose","Mutates?"],[["push / pop","Add / remove at end","Yes"],["unshift / shift","Add / remove at start","Yes"],["splice(i, n, ...items)","Remove or insert","Yes"],["slice(s, e)","Copy a part","No"],["concat / spread","Join arrays","No"],["map(fn)","Transform every item","No"],["filter(fn)","Keep matching items","No"],["reduce(fn, init)","Combine into one value","No"],["find / findIndex","First match / its index","No"],["some / every","Any / all pass test","No"],["includes / indexOf","Search","No"],["sort / reverse","Order items","Yes"],["flat / flatMap","Flatten","No"],["join(sep)","Array to string","No"],["forEach(fn)","Loop (returns undefined)","No"]])+
+ nC("const nums = [1, 2, 3, 4];\nnums.map(n => n * 2);              // [2, 4, 6, 8]\nnums.filter(n => n % 2 === 0);     // [2, 4]\nnums.reduce((a, n) => a + n, 0);   // 10\nnums.sort((a, b) => b - a);        // descending\n[...new Set([1, 1, 2])];           // [1, 2]\nconst [first, ...rest] = nums;     // destructuring")},
+
+{t:"7. Objects, Map & Set", h:
+ nC("const user = { name: 'Asha', age: 22, greet() { return 'Hi ' + this.name; } };\nuser.name;  user['age'];\nuser.city = 'Pune';       // add\ndelete user.age;          // remove\nconst { name, city = 'NA' } = user;   // destructuring")+
+ nT(["Method","Purpose"],[["Object.keys / values / entries","Keys, values, pairs"],["Object.assign / spread","Copy or merge (shallow)"],["Object.freeze / seal","Restrict changes"],["structuredClone(obj)","Deep copy"],["Object.hasOwn(obj, k)","Own property check"],["JSON.stringify / parse","Object to text and back"]])+
+ nT(["Feature","Object","Map","Set"],[["Stores","Key-value (string/symbol keys)","Key-value (any key type)","Unique values"],["Order","Insertion (mostly)","Insertion","Insertion"],["Size","Object.keys(o).length","map.size","set.size"],["Methods","dot / brackets","get set has delete","add has delete"]])},
+
+{t:"8. Control Flow & Loops", h:
+ nC("if (score >= 90) { grade = 'A'; }\nelse if (score >= 75) { grade = 'B'; }\nelse { grade = 'C'; }\n\nswitch (day) {\n  case 1: name = 'Mon'; break;\n  default: name = 'Other';\n}")+
+ nT(["Loop","Use"],[["for (let i = 0; i < n; i++)","Counted loop"],["while (cond)","Repeat while true"],["do { } while (cond)","Run at least once"],["for...of","Values of arrays, strings, Maps, Sets"],["for...in","Keys of an object"],["arr.forEach(fn)","Array loop (no break)"]])+
+ nT(["Keyword","Meaning"],[["break","Exit loop or switch"],["continue","Skip to next iteration"],["return","Exit function"]])},
+
+{t:"9. Functions", h:
+ nC("function add(a, b = 0) { return a + b; }       // declaration\nconst sub = function (a, b) { return a - b; };   // expression\nconst mul = (a, b) => a * b;                      // arrow\nconst sum = (...nums) => nums.reduce((a, n) => a + n, 0);")+
+ nT(["Feature","Regular function","Arrow function"],[["this","Set by how it is called","Inherited from outer scope"],["arguments object","Yes","No (use rest)"],["Constructor (new)","Yes","No"],["Hoisting","Declarations are hoisted","Not usable before definition"],["Best for","Methods, constructors","Callbacks, short functions"]])+
+ nL(["Functions are first-class values","Callbacks and higher-order functions are common","IIFE: (function () { })()","Pure functions give predictable results"])},
+
+{t:"10. Scope, Hoisting & Closures", h:
+ nT(["Concept","Meaning"],[["Global scope","Accessible everywhere"],["Function scope","Variables inside a function (var, let, const)"],["Block scope","Inside { } for let and const"],["Scope chain","Inner scope looks outward for variables"],["Hoisting","Declarations processed before execution"],["TDZ","let / const unusable before declaration"],["Closure","Function remembering its outer variables"]])+
+ nC("function counter() {\n  let count = 0;\n  return function () { return ++count; };\n}\nconst next = counter();\nnext();  // 1\nnext();  // 2")+
+ nC("console.log(a);  // undefined (var hoisted)\nvar a = 5;\nconsole.log(b);  // ReferenceError (TDZ)\nlet b = 5;")},
+
+{t:"11. The this Keyword", h:
+ nT(["How it is called","this refers to"],[["Plain function call","undefined (strict) or window / globalThis"],["Method call obj.fn()","obj"],["Constructor new Fn()","The new object"],["call / apply / bind","The object you pass"],["Arrow function","this of the surrounding scope"],["Event handler (regular function)","The element that fired the event"]])+
+ nC("function show() { console.log(this.name); }\nconst o = { name: 'Asha' };\nshow.call(o);          // Asha\nshow.apply(o, []);     // Asha\nconst f = show.bind(o);\nf();                   // Asha")},
+
+{t:"12. ES6+ Features", h:
+ nT(["Feature","Example"],[["let / const","const PI = 3.14"],["Arrow functions","x => x * 2"],["Template literals","`Hi ${name}`"],["Destructuring","const { a, b } = obj"],["Spread / Rest","[...a, ...b], (...args)"],["Default parameters","function f(a = 1)"],["Classes","class A { }"],["Modules","import / export"],["Promises, async/await","await fetch(url)"],["Optional chaining","user?.address?.city"],["Nullish coalescing","a ?? 'default'"],["Map, Set, Symbol","new Map()"],["Array methods","at, flat, includes, findLast"],["structuredClone","Deep copy"]])},
+
+{t:"13. Prototypes & Classes", h:
+ nC("class Animal {\n  #secret = 1;                 // private field\n  static count = 0;            // static\n  constructor(name) { this.name = name; Animal.count++; }\n  speak() { return this.name + ' makes a sound'; }\n  get info() { return 'Animal: ' + this.name; }\n}\n\nclass Dog extends Animal {\n  speak() { return super.speak() + ' - Woof'; }\n}\nnew Dog('Rex').speak();")+
+ nT(["Concept","Meaning"],[["Prototype","Object that other objects inherit from"],["Prototype chain","Lookup path: object, prototype, ... null"],["__proto__ / Object.getPrototypeOf","Access an object's prototype"],["class","Cleaner syntax over prototypes"],["extends / super","Inheritance and calling the parent"],["instanceof","Check if an object is made by a constructor"]])},
+
+{t:"14. Asynchronous JavaScript", h:
+ nT(["Style","Example","Note"],[["Callback","setTimeout(fn, 1000)","Can lead to callback hell"],["Promise","fetch(url).then(r => r.json())","Chainable, .catch for errors"],["async / await","const data = await getData()","Reads like sync code"]])+
+ nC("async function load() {\n  try {\n    const res = await fetch('/api/items');\n    if (!res.ok) throw new Error('HTTP ' + res.status);\n    const data = await res.json();\n    return data;\n  } catch (err) {\n    console.error(err.message);\n  } finally {\n    console.log('done');\n  }\n}")+
+ nT(["Promise method","Behavior"],[["Promise.all","All fulfilled, or reject on first failure"],["Promise.allSettled","Waits for all, gives each status"],["Promise.race","First settled wins"],["Promise.any","First fulfilled wins"],["Promise.resolve / reject","Create settled promises"]])+
+ nC("// parallel requests\nconst [a, b] = await Promise.all([getA(), getB()]);")},
+
+{t:"15. Event Loop", h:
+ nP("JavaScript has one call stack. Async tasks wait in queues and the event loop moves them to the stack when it is empty.")+
+ nT(["Part","Role"],[["Call stack","Runs the current function calls"],["Web / Node APIs","Handle timers, network, DOM events"],["Microtask queue","Promise callbacks, queueMicrotask (runs first)"],["Macrotask queue","setTimeout, setInterval, events, I/O"],["Event loop","Moves queued tasks to the stack"]])+
+ nC("console.log('1');\nsetTimeout(() => console.log('2'), 0);\nPromise.resolve().then(() => console.log('3'));\nconsole.log('4');\n// Output: 1 4 3 2")},
+
+{t:"16. DOM Manipulation", h:
+ nT(["Task","Code"],[["Select one","document.querySelector('.box')"],["Select many","document.querySelectorAll('li')"],["By id","document.getElementById('app')"],["Change text","el.textContent = 'Hi'"],["Change HTML","el.innerHTML = '<b>Hi</b>'"],["Attribute","el.setAttribute('href', url)"],["Style","el.style.color = 'red'"],["Classes","el.classList.add('active') / remove / toggle"],["Create","const li = document.createElement('li')"],["Add / remove","parent.appendChild(li); li.remove()"]])+
+ nP("Use textContent for user input (safe). innerHTML with user data can cause XSS.")},
+
+{t:"17. Events", h:
+ nC("btn.addEventListener('click', (e) => {\n  e.preventDefault();\n  console.log(e.target);\n});\n\n// event delegation\nlist.addEventListener('click', (e) => {\n  if (e.target.matches('li')) console.log(e.target.textContent);\n});")+
+ nT(["Event","Fires when"],[["click / dblclick","Mouse click"],["input / change","Input value changes"],["submit","Form submitted"],["keydown / keyup","Key pressed / released"],["mouseover / mouseout","Pointer enters / leaves"],["scroll / resize","Page scrolls / window resizes"],["DOMContentLoaded","HTML parsed"],["load","Page and resources loaded"]])+
+ nT(["Concept","Meaning"],[["Bubbling","Event moves from target up to parents"],["Capturing","Event moves from top down to target"],["preventDefault()","Stop default browser action"],["stopPropagation()","Stop event travelling further"],["Delegation","One parent listener handles many children"]])},
+
+{t:"18. Error Handling & Debugging", h:
+ nC("try {\n  JSON.parse('{bad json');\n} catch (err) {\n  console.log(err.name, err.message);\n} finally {\n  console.log('cleanup');\n}\n\nclass ValidationError extends Error {}\nthrow new ValidationError('Invalid input');")+
+ nT(["Error","Cause"],[["ReferenceError","Variable not defined"],["TypeError","Wrong type or reading property of undefined"],["SyntaxError","Invalid code or JSON"],["RangeError","Value out of range"]])+
+ nT(["Debug tool","Use"],[["console.log / table / error","Print values"],["debugger","Pause in DevTools"],["Breakpoints","Pause at a line"],["Network tab","Inspect API calls"],["Performance tab","Find slow code"]])},
+
+{t:"19. Modules, JSON & Browser Storage", h:
+ nC("// math.js\nexport const add = (a, b) => a + b;\nexport default function hello() {}\n\n// app.js\nimport hello, { add } from './math.js';")+
+ nT(["Storage","Size","Lifetime","Sent to server"],[["localStorage","About 5 MB","Until cleared","No"],["sessionStorage","About 5 MB","Until tab closes","No"],["Cookies","About 4 KB","Set by expiry","Yes, every request"],["IndexedDB","Large","Until cleared","No"]])+
+ nC("localStorage.setItem('user', JSON.stringify({ name: 'Asha' }));\nconst user = JSON.parse(localStorage.getItem('user'));")},
+
+{t:"20. Best Practices & Common Pitfalls", h:
+ nL(["Use const by default, let when needed, avoid var","Always use === instead of ==","Handle errors in async code","Avoid global variables","Use meaningful names and small functions","Debounce or throttle heavy events","Do not mutate state unnecessarily","Validate and escape user input"])+
+ nT(["Pitfall","Fix"],[["Missing semicolon surprises","Use a linter / formatter"],["this lost in callbacks","Arrow function or bind"],["var in loops with timers","Use let"],["Forgetting await","Use async/await and check results"],["sort() on numbers","Pass (a, b) => a - b"],["Mutating shared objects","Copy with spread or structuredClone"],["Memory leaks","Remove listeners and clear timers"]])}
+];
+
+var app = document.getElementById("app");
+var barbox = document.getElementById("barbox");
+var groups = { projects: projects, skills: skills };
+
+function setBar(back, title) {
+  barbox.innerHTML = '<div class="bar"><div class="barin"><button class="back" onclick="' + back + '">&#8592; Back</button><h2>' + title + '</h2></div></div>';
+}
+
+function menu(heading, buttons) {
+  app.innerHTML = '<div class="home menu"><h2>' + heading + '</h2><div class="btns">' + buttons + '</div></div>';
   window.scrollTo(0, 0);
 }
 
-function showProject(key) {
-  var p = projects[key];
+function btn(label, action) {
+  return '<button class="pbtn" onclick="' + action + '">' + label + '</button>';
+}
+
+function showHome() {
+  barbox.innerHTML = "";
+  app.innerHTML = '<div class="home"><h2>Choose a section</h2><div class="btns">' +
+    btn("Skills", "showMenu('skills')") + btn("Projects", "showMenu('projects')") + '</div></div>';
+  window.scrollTo(0, 0);
+}
+
+function showMenu(g) {
+  setBar("showHome()", g === "skills" ? "Skills" : "Projects");
+  var b = "";
+  for (var k in groups[g]) {
+    b += btn(groups[g][k].name, g === "skills" ? "showSkill('" + k + "')" : "showTopic('projects','" + k + "')");
+  }
+  menu(g === "skills" ? "Choose a skill" : "Choose a project", b);
+}
+
+function showSkill(k) {
+  setBar("showMenu('skills')", skills[k].name);
+  menu("Choose Notes or Questions",
+    btn("Notes", "showNotes('" + k + "')") + btn("Questions", "showTopic('skills','" + k + "')"));
+}
+
+function showTopic(g, key) {
+  var p = groups[g][key];
   var cats = [];
   p.qa.forEach(function (x) { if (cats.indexOf(x[0]) < 0) cats.push(x[0]); });
-  var h = '<div class="bar"><button class="back" onclick="showHome()">&larr; Back</button><h2>' + p.name + '</h2></div>';
+  var args = "'" + g + "','" + key + "'";
+  setBar(g === "skills" ? "showSkill('" + key + "')" : "showMenu('projects')", p.name + (g === "skills" ? " - Questions" : ""));
+  var h = "";
   if (p.intro) h += '<div class="note">' + p.intro + '</div>';
-  h += '<div class="tools"><input id="s" placeholder="Search questions..." oninput="draw(\'' + key + '\')">';
-  h += '<select id="c" onchange="draw(\'' + key + '\')"><option value="">All categories</option>';
+  h += '<div class="tools"><input id="s" placeholder="Search questions..." oninput="draw(' + args + ')">';
+  h += '<select id="c" onchange="draw(' + args + ')"><option value="">All categories</option>';
   cats.forEach(function (c) { h += '<option>' + c + '</option>'; });
   h += '</select></div><div class="count" id="n"></div><div id="list"></div>';
   app.innerHTML = h;
-  draw(key);
+  draw(g, key);
   window.scrollTo(0, 0);
+}
+
+function showNotes(key) {
+  setBar("showSkill('" + key + "')", skills[key].name + " - Notes");
+  app.innerHTML = '<div class="tools"><input id="s" placeholder="Search notes..." oninput="drawNotes(\'' + key + '\')"></div><div class="count" id="n"></div><div id="list"></div>';
+  drawNotes(key);
+  window.scrollTo(0, 0);
+}
+
+function drawNotes(key) {
+  var q = document.getElementById("s").value.toLowerCase();
+  var out = "", total = 0;
+  skills[key].notes.forEach(function (x) {
+    if (q && (x.t + " " + x.h.replace(/<[^>]+>/g, " ")).toLowerCase().indexOf(q) < 0) return;
+    out += '<div class="q"><button onclick="toggleQ(this)">' + esc(x.t) + '</button><div class="nbody">' + x.h + '</div></div>';
+    total++;
+  });
+  document.getElementById("list").innerHTML = out || '<div class="empty">No topics found.</div>';
+  document.getElementById("n").textContent = total + " topics";
 }
 
 function toggleQ(btn) {
@@ -335,11 +883,11 @@ function esc(t) {
   return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function draw(key) {
+function draw(g, key) {
   var q = document.getElementById("s").value.toLowerCase();
   var c = document.getElementById("c").value;
   var out = "", last = "", total = 0;
-  projects[key].qa.forEach(function (x) {
+  groups[g][key].qa.forEach(function (x) {
     if (c && x[0] !== c) return;
     if (q && (x[1] + " " + x[2]).toLowerCase().indexOf(q) < 0) return;
     if (x[0] !== last) { out += '<div class="cat">' + x[0] + '</div>'; last = x[0]; }
