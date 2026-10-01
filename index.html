@@ -1806,6 +1806,257 @@ skills.mongodb.notes = [
 {t:"16. Common Errors & Fixes", h:
  nT(["Error","Cause","Fix"],[["MongoServerError E11000 duplicate key","Unique index violated","Catch code 11000 and return a friendly message"],["CastError: Cast to ObjectId failed","Invalid id format","Check mongoose.isValidObjectId first"],["ValidationError","Schema validation failed","Return field messages (err.errors)"],["MongooseServerSelectionError","Cannot reach cluster","Check connection string, IP access list, network"],["Authentication failed","Wrong user or password","Check credentials and URL-encode special characters"],["Buffering timed out","Query ran before connecting","Connect first, then start the server"],["Transaction numbers only allowed on replica set","Standalone server used","Use Atlas or a local replica set"],["Document too large","Over 16 MB","Move big arrays to another collection"],["Update ignored validators","Missing runValidators","Pass { runValidators: true }"],["Password missing in login query","select: false field","Use .select('+password')"]])}
 ];
+
+/* ===== MYSQL SKILL =====
+   PASTE THIS BLOCK right after the MongoDB & Mongoose block (or any other skill's notes)
+   and BEFORE the line:  var app = document.getElementById("app");
+*/
+
+skills.mysql = {
+  name: "MySQL",
+  qa: [
+    ["Database Basics","What is a database and a DBMS?","A database is an organized collection of data. A DBMS (Database Management System) is the software that stores, retrieves and manages it, such as MySQL, PostgreSQL or MongoDB."],
+    ["Database Basics","What is MySQL?","An open-source relational database management system (RDBMS) that uses SQL. It is fast, reliable and widely used for web applications."],
+    ["Database Basics","What is an RDBMS?","A DBMS that stores data in tables with rows and columns and links tables using relationships and keys."],
+    ["Database Basics","What is SQL?","Structured Query Language, the standard language used to create, read, update and delete data in relational databases."],
+    ["Database Basics","What are the types of SQL commands?","DDL (CREATE, ALTER, DROP, TRUNCATE), DML (INSERT, UPDATE, DELETE), DQL (SELECT), DCL (GRANT, REVOKE) and TCL (COMMIT, ROLLBACK, SAVEPOINT)."],
+    ["Database Basics","SQL vs MySQL?","SQL is the language. MySQL is a database software that implements and runs SQL."],
+    ["Database Basics","MySQL vs PostgreSQL vs SQL Server?","MySQL is simple, fast and popular for web apps. PostgreSQL is more feature-rich and standards-compliant. SQL Server is Microsoft's commercial RDBMS."],
+    ["Database Basics","What is a table, row, column and field?","A table stores data in rows (records) and columns (fields or attributes). A field is one cell value in a row."],
+    ["Database Basics","What are the common data types in MySQL?","Numeric: INT, BIGINT, DECIMAL, FLOAT. String: CHAR, VARCHAR, TEXT. Date: DATE, DATETIME, TIMESTAMP. Others: BOOLEAN (TINYINT), ENUM, JSON, BLOB."],
+    ["Database Basics","CHAR vs VARCHAR?","CHAR is fixed length and padded with spaces. VARCHAR is variable length and uses only the space needed. Use CHAR for fixed codes, VARCHAR for names and emails."],
+    ["Database Basics","DATETIME vs TIMESTAMP?","DATETIME stores the value as given with a wide range. TIMESTAMP stores UTC, converts by time zone and has a smaller range (until 2038)."],
+    ["Database Basics","Why use DECIMAL for money?","DECIMAL is exact. FLOAT and DOUBLE have rounding errors. Use DECIMAL(10,2) for currency."],
+    ["Database Basics","What is NULL? How is it different from 0 or empty string?","NULL means unknown or no value. 0 and '' are real values. Compare with IS NULL, not = NULL."],
+    ["Database Basics","What are storage engines? InnoDB vs MyISAM?","Engines decide how data is stored. InnoDB (default) supports transactions, foreign keys, row-level locking and crash recovery. MyISAM has table-level locking, no transactions or foreign keys."],
+    ["Database Basics","What are the MySQL command-line basics?","mysql -u root -p to login. SHOW DATABASES; USE dbname; SHOW TABLES; DESCRIBE table; SHOW CREATE TABLE table;"],
+
+    ["DDL & Constraints","How do you create a database and table?","CREATE DATABASE shop;\nUSE shop;\nCREATE TABLE users (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  name VARCHAR(100) NOT NULL,\n  email VARCHAR(150) UNIQUE NOT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);"],
+    ["DDL & Constraints","What are the constraints in MySQL?","PRIMARY KEY, FOREIGN KEY, UNIQUE, NOT NULL, DEFAULT, CHECK (enforced from 8.0.16) and AUTO_INCREMENT."],
+    ["DDL & Constraints","What is a primary key?","A column (or set) that uniquely identifies each row. It cannot be NULL and a table has only one."],
+    ["DDL & Constraints","What is a foreign key?","A column that references the primary key of another table to enforce relationships and referential integrity."],
+    ["DDL & Constraints","Primary key vs unique key?","A table has one primary key and it cannot be NULL. A table can have many unique keys and they can allow NULL."],
+    ["DDL & Constraints","What is a composite key?","A key made of two or more columns together, like (order_id, product_id)."],
+    ["DDL & Constraints","What are ON DELETE CASCADE, SET NULL and RESTRICT?","They define what happens to child rows when the parent row is deleted: CASCADE deletes them, SET NULL sets the foreign key to NULL, RESTRICT blocks the delete."],
+    ["DDL & Constraints","ALTER TABLE examples?","ALTER TABLE users ADD phone VARCHAR(15);\nALTER TABLE users MODIFY name VARCHAR(150);\nALTER TABLE users DROP COLUMN phone;\nALTER TABLE users RENAME COLUMN name TO full_name;"],
+    ["DDL & Constraints","DROP vs TRUNCATE vs DELETE?","DROP removes the table and its structure. TRUNCATE removes all rows quickly, resets AUTO_INCREMENT and cannot be rolled back easily. DELETE removes rows (with WHERE), is logged per row and can be rolled back in a transaction."],
+    ["DDL & Constraints","What does AUTO_INCREMENT do?","Automatically generates the next integer id for new rows."],
+    ["DDL & Constraints","What is a CHECK constraint?","It restricts values in a column, like CHECK (price > 0). Enforced in MySQL 8.0.16 and later."],
+
+    ["CRUD & Basic Queries","How do you insert data?","INSERT INTO users (name, email) VALUES ('Asha', 'asha@x.com');\nMultiple rows: INSERT INTO users (name, email) VALUES (...), (...);"],
+    ["CRUD & Basic Queries","How do you select data?","SELECT name, email FROM users WHERE id = 1;"],
+    ["CRUD & Basic Queries","How do you update and delete rows?","UPDATE users SET name = 'Asha K' WHERE id = 1;\nDELETE FROM users WHERE id = 1;\nAlways use WHERE, or every row is affected."],
+    ["CRUD & Basic Queries","Which operators can be used in WHERE?","=, <>, !=, >, <, >=, <=, BETWEEN, IN, LIKE, IS NULL, AND, OR, NOT."],
+    ["CRUD & Basic Queries","What does LIKE do with % and _?","% matches any number of characters, _ matches exactly one. WHERE name LIKE 'A%' finds names starting with A."],
+    ["CRUD & Basic Queries","What do ORDER BY, LIMIT and OFFSET do?","ORDER BY sorts results (ASC or DESC). LIMIT restricts the rows. OFFSET skips rows, used for pagination: LIMIT 10 OFFSET 20."],
+    ["CRUD & Basic Queries","What is DISTINCT?","Removes duplicate rows from the result: SELECT DISTINCT city FROM users."],
+    ["CRUD & Basic Queries","What are aliases?","Temporary names for columns or tables using AS: SELECT name AS customer FROM users u."],
+    ["CRUD & Basic Queries","What is the order of SQL clause execution?","FROM (and JOIN), WHERE, GROUP BY, HAVING, SELECT, DISTINCT, ORDER BY, LIMIT."],
+    ["CRUD & Basic Queries","What is INSERT ... ON DUPLICATE KEY UPDATE?","An upsert: inserts a row, or updates it if a unique or primary key already exists."],
+    ["CRUD & Basic Queries","What is REPLACE INTO?","Deletes an existing row with the same key and inserts a new one. It differs from an update because the row is deleted first."],
+    ["CRUD & Basic Queries","What does COALESCE or IFNULL do?","Return the first non-NULL value: IFNULL(phone, 'N/A')."],
+    ["CRUD & Basic Queries","What is CASE?","Conditional logic in a query: SELECT name, CASE WHEN marks >= 40 THEN 'Pass' ELSE 'Fail' END AS result FROM students."],
+
+    ["Joins & Subqueries","What is a JOIN?","It combines rows from two or more tables based on a related column."],
+    ["Joins & Subqueries","Types of joins?","INNER JOIN (matching rows), LEFT JOIN (all left plus matches), RIGHT JOIN (all right plus matches), CROSS JOIN (all combinations) and SELF JOIN. MySQL has no FULL JOIN; emulate with LEFT UNION RIGHT."],
+    ["Joins & Subqueries","INNER JOIN vs LEFT JOIN?","INNER returns only rows with matches in both tables. LEFT returns all rows from the left table and NULL for missing matches on the right."],
+    ["Joins & Subqueries","Write a join example.","SELECT o.id, u.name, o.total\nFROM orders o\nJOIN users u ON u.id = o.user_id\nWHERE o.total > 1000;"],
+    ["Joins & Subqueries","How do you find rows with no match (for example users with no orders)?","SELECT u.* FROM users u LEFT JOIN orders o ON o.user_id = u.id WHERE o.id IS NULL;"],
+    ["Joins & Subqueries","What is a self join?","Joining a table with itself, for example employees and their managers using aliases."],
+    ["Joins & Subqueries","What is a subquery?","A query inside another query: SELECT * FROM products WHERE price > (SELECT AVG(price) FROM products)."],
+    ["Joins & Subqueries","Subquery vs JOIN?","Joins are usually faster and clearer for combining data. Subqueries are fine for filters or single values. The optimizer can rewrite many subqueries."],
+    ["Joins & Subqueries","IN vs EXISTS?","IN compares to a list of values. EXISTS checks whether a subquery returns any row and often performs better for large correlated subqueries."],
+    ["Joins & Subqueries","What is a correlated subquery?","A subquery that uses columns from the outer query and runs once per outer row."],
+    ["Joins & Subqueries","UNION vs UNION ALL?","UNION combines results and removes duplicates. UNION ALL keeps duplicates and is faster."],
+    ["Joins & Subqueries","What is a CTE?","A Common Table Expression (WITH name AS (...)) is a temporary named result for readable queries, supported in MySQL 8.0, including recursive CTEs."],
+
+    ["Aggregation & Window Functions","List aggregate functions.","COUNT, SUM, AVG, MIN, MAX, GROUP_CONCAT."],
+    ["Aggregation & Window Functions","What does GROUP BY do?","Groups rows with the same values so aggregate functions can calculate per group: SELECT category, SUM(amount) FROM expenses GROUP BY category."],
+    ["Aggregation & Window Functions","WHERE vs HAVING?","WHERE filters rows before grouping. HAVING filters groups after aggregation."],
+    ["Aggregation & Window Functions","COUNT(*) vs COUNT(column) vs COUNT(DISTINCT column)?","COUNT(*) counts all rows. COUNT(column) counts non-NULL values. COUNT(DISTINCT column) counts unique non-NULL values."],
+    ["Aggregation & Window Functions","What are window functions?","Functions that calculate across related rows without collapsing them: ROW_NUMBER, RANK, DENSE_RANK, LAG, LEAD, SUM() OVER (...). Available in MySQL 8.0."],
+    ["Aggregation & Window Functions","RANK vs DENSE_RANK vs ROW_NUMBER?","ROW_NUMBER gives unique numbers. RANK gives ties the same rank and skips numbers after. DENSE_RANK gives ties the same rank without gaps."],
+    ["Aggregation & Window Functions","How do you find the second highest salary?","SELECT MAX(salary) FROM employees WHERE salary < (SELECT MAX(salary) FROM employees);\nor use DENSE_RANK() OVER (ORDER BY salary DESC) = 2."],
+    ["Aggregation & Window Functions","How do you find duplicate rows?","SELECT email, COUNT(*) FROM users GROUP BY email HAVING COUNT(*) > 1;"],
+    ["Aggregation & Window Functions","How do you get the top 3 per group?","Use ROW_NUMBER() OVER (PARTITION BY category ORDER BY price DESC) in a subquery or CTE and filter rn <= 3."],
+
+    ["Normalization & Design","What is normalization?","Organizing tables to reduce redundancy and avoid update, insert and delete anomalies."],
+    ["Normalization & Design","Explain 1NF, 2NF and 3NF.","1NF: atomic values, no repeating groups. 2NF: 1NF plus no partial dependency on part of a composite key. 3NF: 2NF plus no transitive dependency (non-key columns depend only on the key)."],
+    ["Normalization & Design","What is BCNF?","A stricter 3NF: every determinant must be a candidate key."],
+    ["Normalization & Design","What is denormalization and why use it?","Adding redundancy deliberately to reduce joins and speed up reads, at the cost of extra storage and harder updates."],
+    ["Normalization & Design","What are the types of relationships?","One-to-one, one-to-many and many-to-many (needs a junction table)."],
+    ["Normalization & Design","How do you model many-to-many?","With a junction table holding two foreign keys, for example order_items(order_id, product_id, qty)."],
+    ["Normalization & Design","What is an ER diagram?","A diagram of entities, attributes and relationships used to design a database."],
+    ["Normalization & Design","What is a surrogate key vs natural key?","Surrogate: an artificial id like AUTO_INCREMENT. Natural: a real-world unique value such as email. Surrogate keys are stable and usually preferred as primary keys."],
+    ["Normalization & Design","Why store a price snapshot in order_items?","If product prices change later, old orders must still show the price paid at purchase time."],
+    ["Normalization & Design","What is soft delete?","Marking a row as deleted (is_deleted or deleted_at) instead of removing it, keeping history and references safe."],
+
+    ["Indexes & Performance","What is an index?","A data structure (usually a B-tree) that speeds up searches, sorts and joins on columns."],
+    ["Indexes & Performance","Pros and cons of indexes?","Faster SELECT, WHERE, JOIN and ORDER BY. But they use storage and slow INSERT, UPDATE and DELETE because indexes must be updated."],
+    ["Indexes & Performance","Types of indexes?","Primary, unique, normal (secondary), composite, full-text, spatial and prefix indexes."],
+    ["Indexes & Performance","What is a clustered index?","In InnoDB the primary key is the clustered index: table rows are stored in primary key order. Secondary indexes store the primary key value."],
+    ["Indexes & Performance","What is a composite index and the leftmost prefix rule?","An index on multiple columns. A query can use it only if it filters on the leftmost columns: index (user_id, date) helps user_id, or user_id and date, but not date alone."],
+    ["Indexes & Performance","What is a covering index?","An index containing all columns a query needs, so MySQL reads only the index and not the table."],
+    ["Indexes & Performance","How do you create and drop an index?","CREATE INDEX idx_user_date ON transactions (user_id, date);\nDROP INDEX idx_user_date ON transactions;"],
+    ["Indexes & Performance","What does EXPLAIN do?","Shows the query execution plan: type (ALL means full scan), possible_keys, key used, rows examined. Use it to find slow queries."],
+    ["Indexes & Performance","When is an index not used?","When a function is applied to the column (WHERE YEAR(date) = 2026), with leading wildcard LIKE '%abc', type mismatch, OR conditions without proper indexes, or very low-selectivity columns."],
+    ["Indexes & Performance","How do you optimize a slow query?","Check EXPLAIN, add suitable indexes, select only needed columns instead of SELECT *, filter early, avoid functions on indexed columns, use pagination, avoid N+1 queries and optimize joins."],
+    ["Indexes & Performance","Why avoid SELECT *?","It returns unneeded data, increases network and memory usage, and prevents covering indexes."],
+    ["Indexes & Performance","Why is OFFSET slow for big pages? Alternative?","MySQL must read and skip all earlier rows. Use keyset pagination: WHERE id < last_id ORDER BY id DESC LIMIT 10."],
+    ["Indexes & Performance","What is the slow query log?","A log of queries that take longer than a set time. It helps find queries to optimize."],
+    ["Indexes & Performance","What is the N+1 query problem?","Running one query per item in a loop. Fix with a JOIN or a single query using IN."],
+
+    ["Transactions & Locking","What is a transaction?","A group of SQL statements treated as one unit: either all succeed (COMMIT) or all are undone (ROLLBACK)."],
+    ["Transactions & Locking","What are ACID properties?","Atomicity (all or nothing), Consistency (valid state), Isolation (transactions do not interfere), Durability (committed data persists)."],
+    ["Transactions & Locking","Write a transaction example.","START TRANSACTION;\nUPDATE accounts SET balance = balance - 500 WHERE id = 1;\nUPDATE accounts SET balance = balance + 500 WHERE id = 2;\nCOMMIT;   -- or ROLLBACK;"],
+    ["Transactions & Locking","What are isolation levels?","READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ (InnoDB default) and SERIALIZABLE. Higher levels prevent more anomalies but reduce concurrency."],
+    ["Transactions & Locking","What are dirty read, non-repeatable read and phantom read?","Dirty read: reading uncommitted data. Non-repeatable read: the same row changes between two reads. Phantom read: new rows appear between two reads."],
+    ["Transactions & Locking","What is a deadlock and how do you handle it?","Two transactions wait for each other's locks. MySQL detects it and rolls one back. Reduce by accessing tables in the same order, keeping transactions short and retrying."],
+    ["Transactions & Locking","Row-level vs table-level locking?","InnoDB locks individual rows, allowing high concurrency. MyISAM locks whole tables."],
+    ["Transactions & Locking","What is SELECT ... FOR UPDATE?","Locks the selected rows until the transaction ends, used to avoid overselling stock or double spending."],
+    ["Transactions & Locking","What is a SAVEPOINT?","A point inside a transaction you can roll back to without undoing the whole transaction."],
+    ["Transactions & Locking","What is autocommit?","By default MySQL commits each statement immediately. START TRANSACTION turns it off until COMMIT or ROLLBACK."],
+
+    ["Views, Procedures & Triggers","What is a view?","A saved SELECT query that acts like a virtual table. It simplifies complex queries and can restrict access to columns."],
+    ["Views, Procedures & Triggers","What is a stored procedure?","A saved set of SQL statements executed with CALL, with parameters and logic, running on the database server."],
+    ["Views, Procedures & Triggers","Stored procedure vs function?","A procedure is called with CALL and may return multiple results or none. A function returns one value and can be used inside queries."],
+    ["Views, Procedures & Triggers","What is a trigger?","Code that runs automatically BEFORE or AFTER INSERT, UPDATE or DELETE on a table, for audit logs or validations."],
+    ["Views, Procedures & Triggers","What is a cursor?","A database object to process query results row by row inside procedures. Use sparingly as it is slow."],
+    ["Views, Procedures & Triggers","What is an event?","A scheduled task inside MySQL that runs at set times, like cleaning old data."],
+    ["Views, Procedures & Triggers","What is a prepared statement and why use it?","A precompiled query with placeholders (?). It is faster for repeated queries and prevents SQL injection."],
+
+    ["Security & Administration","What is SQL injection and how do you prevent it?","Attackers put SQL into input to change the query. Prevent with parameterized queries or prepared statements, input validation and least-privilege database users. Never concatenate user input into SQL."],
+    ["Security & Administration","How do you create a user and grant privileges?","CREATE USER 'app'@'localhost' IDENTIFIED BY 'strong_pass';\nGRANT SELECT, INSERT, UPDATE, DELETE ON shop.* TO 'app'@'localhost';\nFLUSH PRIVILEGES;"],
+    ["Security & Administration","What is the principle of least privilege?","Give each database user only the permissions it needs. Applications should not use root."],
+    ["Security & Administration","How do you store passwords?","Never in plain text. Hash with bcrypt or argon2 in the application and store the hash in a VARCHAR column."],
+    ["Security & Administration","How do you back up and restore MySQL?","mysqldump -u user -p shop > backup.sql to back up and mysql -u user -p shop < backup.sql to restore. Production also uses binary logs and automated snapshots."],
+    ["Security & Administration","What is replication?","Copying data from a primary (source) server to one or more replicas for read scaling and availability."],
+    ["Security & Administration","What is sharding vs partitioning?","Partitioning splits a table into parts inside one server. Sharding splits data across multiple servers."],
+    ["Security & Administration","What is a connection pool?","A set of reusable open database connections so the app does not create a new one per request."],
+    ["Security & Administration","What is the binary log?","A log of all data changes, used for replication and point-in-time recovery."],
+
+    ["MySQL with Node.js","How do you connect Node.js to MySQL?","Use the mysql2 package: const mysql = require('mysql2/promise');\nconst pool = mysql.createPool({ host, user, password, database, connectionLimit: 10 });"],
+    ["MySQL with Node.js","How do you run a safe query with mysql2?","const [rows] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]);\nPlaceholders prevent SQL injection."],
+    ["MySQL with Node.js","Why use a pool instead of a single connection?","A pool reuses connections and handles many concurrent requests efficiently."],
+    ["MySQL with Node.js","How do you run a transaction in mysql2?","const conn = await pool.getConnection();\ntry {\n  await conn.beginTransaction();\n  await conn.execute('UPDATE ...', [..]);\n  await conn.execute('INSERT ...', [..]);\n  await conn.commit();\n} catch (e) {\n  await conn.rollback();\n  throw e;\n} finally {\n  conn.release();\n}"],
+    ["MySQL with Node.js","What are ORMs and query builders for MySQL?","Sequelize, Prisma and TypeORM are ORMs mapping tables to objects. Knex is a query builder. They add migrations and safer queries but hide SQL details."],
+    ["MySQL with Node.js","How do you handle duplicate entry errors?","Catch error code ER_DUP_ENTRY (errno 1062) and return a friendly message such as 'Email already registered'."],
+    ["MySQL with Node.js","How do you do pagination in an Express and MySQL API?","const limit = 10; const offset = (page - 1) * limit;\nawait pool.execute('SELECT * FROM products ORDER BY id DESC LIMIT ? OFFSET ?', [String(limit), String(offset)]);"],
+
+    ["MySQL vs MongoDB","MySQL vs MongoDB?","MySQL: tables, fixed schema, joins, strong ACID, SQL. MongoDB: flexible documents, easy horizontal scaling, no joins by default. Choose by data shape and access patterns."],
+    ["MySQL vs MongoDB","When would you choose MySQL?","For structured, relational data with many relationships, strict consistency and complex joins or reports, such as banking, e-commerce orders and inventory."],
+    ["MySQL vs MongoDB","When would you choose MongoDB?","For flexible or fast-changing document data, nested objects, rapid prototyping and easy horizontal scaling."],
+
+    ["Coding Questions","Write a query for total spending per user.","SELECT u.name, SUM(o.total) AS spent\nFROM users u JOIN orders o ON o.user_id = u.id\nGROUP BY u.id, u.name\nORDER BY spent DESC;"],
+    ["Coding Questions","Find users who placed more than 5 orders.","SELECT user_id, COUNT(*) AS cnt\nFROM orders\nGROUP BY user_id\nHAVING COUNT(*) > 5;"],
+    ["Coding Questions","Find the Nth highest salary.","SELECT DISTINCT salary FROM employees ORDER BY salary DESC LIMIT 1 OFFSET N-1;\n(N-1 replaced with a number, e.g. OFFSET 2 for third highest)"],
+    ["Coding Questions","Delete duplicate rows keeping the lowest id.","DELETE u1 FROM users u1\nJOIN users u2 ON u1.email = u2.email AND u1.id > u2.id;"],
+    ["Coding Questions","Monthly sales report.","SELECT DATE_FORMAT(created_at, '%Y-%m') AS month, SUM(total) AS sales\nFROM orders\nGROUP BY month\nORDER BY month;"],
+    ["Coding Questions","Create orders and order_items tables with foreign keys.","CREATE TABLE orders (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  user_id INT NOT NULL,\n  total DECIMAL(10,2) NOT NULL,\n  FOREIGN KEY (user_id) REFERENCES users(id)\n);\nCREATE TABLE order_items (\n  order_id INT, product_id INT, qty INT, price DECIMAL(10,2),\n  PRIMARY KEY (order_id, product_id),\n  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE\n);"],
+    ["Coding Questions","Rank products by price inside each category.","SELECT name, category, price,\n  RANK() OVER (PARTITION BY category ORDER BY price DESC) AS rnk\nFROM products;"],
+    ["Coding Questions","Get users who never placed an order.","SELECT * FROM users u\nWHERE NOT EXISTS (SELECT 1 FROM orders o WHERE o.user_id = u.id);"],
+
+    ["Situation Based","A query is slow on a table with 10 million rows.","Run EXPLAIN, look for full table scans (type ALL), add a suitable composite index, avoid functions on indexed columns, select only needed columns, paginate with keyset pagination and consider caching."],
+    ["Situation Based","Two customers buy the last item at the same time.","Use a transaction with SELECT ... FOR UPDATE, or an atomic UPDATE products SET stock = stock - 1 WHERE id = ? AND stock > 0 and check affected rows."],
+    ["Situation Based","You accidentally ran UPDATE without WHERE.","If inside a transaction, ROLLBACK. Otherwise restore from backup or binary log. Prevent with transactions, safe-update mode and reviewing queries first."],
+    ["Situation Based","Users report seeing each other's data.","Check queries filter by the logged-in user's id, review joins for missing conditions, and add ownership checks and tests."],
+    ["Situation Based","Deadlock errors appear under load.","Keep transactions short, access tables and rows in a consistent order, add proper indexes to reduce locking, and retry on deadlock."],
+    ["Situation Based","Connection error: Too many connections.","Use a connection pool with a limit, release connections after use, fix leaks, and raise max_connections only if needed."],
+    ["Situation Based","How do you add a column to a huge table in production?","Use an online schema change (ALGORITHM=INPLACE or tools like gh-ost or pt-online-schema-change), test on a copy and run in low-traffic hours."],
+    ["Situation Based","Login query is vulnerable: SELECT * FROM users WHERE email = '$email'.","This is SQL injection. Use parameterized queries (WHERE email = ?), validate input and hash passwords."],
+    ["Situation Based","Data is inconsistent between orders and stock.","Wrap order creation and stock update in a single transaction so both succeed or both roll back."],
+    ["Situation Based","How would you design tables for an e-commerce site?","users, products, categories, carts and cart_items, orders and order_items (with price snapshot), addresses and reviews, with foreign keys and indexes on user_id, product_id and created_at."]
+  ]
+};
+
+skills.mysql.notes = [
+{t:"1. Introduction to MySQL & RDBMS", h:
+ nP("MySQL is an open-source relational database management system that stores data in tables and is queried with SQL. It is widely used behind web applications.")+
+ nL(["Relational: tables, rows, columns and relationships","SQL is the query language","InnoDB is the default engine (transactions, foreign keys, row locking)","Used by many web apps and the LAMP stack","Tools: MySQL Workbench, mysql CLI, phpMyAdmin"])+
+ nT(["Term","Meaning"],[["Database","Collection of tables"],["Table","Rows and columns of data"],["Row / record","One entry"],["Column / field","One attribute"],["Primary key","Unique id of a row"],["Foreign key","Link to another table's key"],["Index","Structure to speed up queries"],["Schema","Design of tables and relations"]])+
+ nT(["SQL group","Commands"],[["DDL","CREATE, ALTER, DROP, TRUNCATE"],["DML","INSERT, UPDATE, DELETE"],["DQL","SELECT"],["DCL","GRANT, REVOKE"],["TCL","COMMIT, ROLLBACK, SAVEPOINT"]])},
+
+{t:"2. Data Types", h:
+ nT(["Category","Type","Use"],[["Integer","TINYINT, INT, BIGINT","Ids, counts, flags"],["Exact decimal","DECIMAL(10,2)","Money"],["Approximate","FLOAT, DOUBLE","Scientific values (not money)"],["Text","CHAR(n), VARCHAR(n)","Codes, names, emails"],["Long text","TEXT, LONGTEXT","Descriptions, articles"],["Date and time","DATE, TIME, DATETIME, TIMESTAMP","Dates, created_at"],["Other","ENUM, SET, JSON, BLOB, BOOLEAN","Fixed lists, JSON data, files, true/false"]])+
+ nT(["Pair","Difference"],[["CHAR vs VARCHAR","Fixed length vs variable length"],["DATETIME vs TIMESTAMP","Stored as given vs stored in UTC with time zone conversion (until 2038)"],["FLOAT vs DECIMAL","Rounding errors vs exact"],["TEXT vs VARCHAR","Large unindexed text vs bounded length"]])+
+ nL(["Pick the smallest suitable type","Use DECIMAL for money","Use TINYINT(1) or BOOLEAN for true/false","NULL is not the same as 0 or empty string"])},
+
+{t:"3. DDL: Creating & Altering Tables", h:
+ nC("CREATE DATABASE shop CHARACTER SET utf8mb4;\nUSE shop;\n\nCREATE TABLE users (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  name VARCHAR(100) NOT NULL,\n  email VARCHAR(150) NOT NULL UNIQUE,\n  password_hash VARCHAR(255) NOT NULL,\n  role ENUM('customer','admin') DEFAULT 'customer',\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\nALTER TABLE users ADD phone VARCHAR(15);\nALTER TABLE users MODIFY name VARCHAR(150) NOT NULL;\nALTER TABLE users DROP COLUMN phone;\nDROP TABLE users;")+
+ nT(["Constraint","Purpose"],[["PRIMARY KEY","Unique, not null row identifier"],["FOREIGN KEY","Enforces relation to another table"],["UNIQUE","No duplicate values"],["NOT NULL","Value required"],["DEFAULT","Default value"],["CHECK","Condition on values (MySQL 8.0.16+)"],["AUTO_INCREMENT","Automatic numeric id"]])+
+ nT(["Command","Effect"],[["DELETE","Removes selected rows, can ROLLBACK, keeps structure"],["TRUNCATE","Removes all rows fast, resets AUTO_INCREMENT"],["DROP","Removes the table completely"]])},
+
+{t:"4. CRUD & Basic Queries", h:
+ nC("INSERT INTO products (name, price, stock) VALUES ('Phone', 9999.00, 10);\n\nSELECT id, name, price FROM products\nWHERE price BETWEEN 1000 AND 20000 AND name LIKE 'P%'\nORDER BY price DESC\nLIMIT 10 OFFSET 0;\n\nUPDATE products SET price = 8999 WHERE id = 1;\nDELETE FROM products WHERE stock = 0;")+
+ nT(["Clause","Purpose"],[["SELECT","Choose columns"],["FROM","Choose table"],["WHERE","Filter rows"],["GROUP BY","Group rows"],["HAVING","Filter groups"],["ORDER BY","Sort"],["LIMIT / OFFSET","Restrict rows, pagination"]])+
+ nT(["Operator","Example"],[["Comparison","=, <>, >, <, >=, <="],["Range / list","BETWEEN 1 AND 5, IN (1,2,3)"],["Pattern","LIKE 'A%', LIKE '_b%'"],["NULL test","IS NULL, IS NOT NULL"],["Logic","AND, OR, NOT"]])+
+ nP("Always use WHERE with UPDATE and DELETE, or every row is changed. Execution order: FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT.")},
+
+{t:"5. Functions & Expressions", h:
+ nT(["Type","Functions"],[["String","CONCAT, UPPER, LOWER, LENGTH, SUBSTRING, TRIM, REPLACE"],["Numeric","ROUND, CEIL, FLOOR, ABS, MOD, RAND"],["Date","NOW, CURDATE, DATE_FORMAT, DATEDIFF, DATE_ADD, YEAR, MONTH"],["Null handling","IFNULL, COALESCE, NULLIF"],["Conditional","CASE WHEN, IF()"],["Aggregate","COUNT, SUM, AVG, MIN, MAX, GROUP_CONCAT"]])+
+ nC("SELECT name,\n       CASE WHEN stock = 0 THEN 'Out of stock'\n            WHEN stock < 5 THEN 'Low'\n            ELSE 'In stock' END AS status,\n       IFNULL(discount, 0) AS discount,\n       DATE_FORMAT(created_at, '%d-%m-%Y') AS added\nFROM products;")},
+
+{t:"6. Joins", h:
+ nT(["Join","Returns"],[["INNER JOIN","Rows matching in both tables"],["LEFT JOIN","All left rows plus matches (NULL if none)"],["RIGHT JOIN","All right rows plus matches"],["CROSS JOIN","Every combination"],["SELF JOIN","Table joined with itself"],["FULL JOIN","Not in MySQL, emulate with LEFT UNION RIGHT"]])+
+ nC("SELECT o.id, u.name, p.name AS product, oi.qty\nFROM orders o\nJOIN users u        ON u.id = o.user_id\nJOIN order_items oi ON oi.order_id = o.id\nJOIN products p     ON p.id = oi.product_id\nWHERE u.id = 5;\n\n-- users without orders\nSELECT u.* FROM users u\nLEFT JOIN orders o ON o.user_id = u.id\nWHERE o.id IS NULL;")+
+ nL(["Join on indexed columns (primary and foreign keys)","UNION removes duplicates, UNION ALL keeps them and is faster","A table alias keeps long queries readable"])},
+
+{t:"7. Subqueries & CTEs", h:
+ nC("-- subquery in WHERE\nSELECT * FROM products\nWHERE price > (SELECT AVG(price) FROM products);\n\n-- IN / EXISTS\nSELECT * FROM users u\nWHERE EXISTS (SELECT 1 FROM orders o WHERE o.user_id = u.id);\n\n-- CTE (MySQL 8.0)\nWITH monthly AS (\n  SELECT DATE_FORMAT(created_at, '%Y-%m') AS m, SUM(total) AS sales\n  FROM orders GROUP BY m\n)\nSELECT * FROM monthly WHERE sales > 100000;")+
+ nT(["Type","Meaning"],[["Scalar subquery","Returns one value"],["Row / table subquery","Returns a row or a set of rows"],["Correlated subquery","Uses outer query columns, runs per outer row"],["Derived table","Subquery in FROM"],["CTE","Named temporary result with WITH"]])},
+
+{t:"8. Aggregation, GROUP BY & Window Functions", h:
+ nC("SELECT category, COUNT(*) AS items, SUM(amount) AS total, AVG(amount) AS avg_amt\nFROM expenses\nWHERE user_id = 1\nGROUP BY category\nHAVING SUM(amount) > 1000\nORDER BY total DESC;")+
+ nT(["WHERE","HAVING"],[["Filters rows before grouping","Filters groups after aggregation"],["Cannot use aggregates","Can use aggregates"]])+
+ nC("-- window functions (MySQL 8.0)\nSELECT name, category, price,\n  ROW_NUMBER() OVER (PARTITION BY category ORDER BY price DESC) AS rn,\n  RANK()       OVER (PARTITION BY category ORDER BY price DESC) AS rnk,\n  SUM(price)   OVER (PARTITION BY category) AS category_total\nFROM products;")+
+ nT(["Function","Behavior"],[["ROW_NUMBER","Unique sequence per partition"],["RANK","Same rank for ties, gaps after"],["DENSE_RANK","Same rank for ties, no gaps"],["LAG / LEAD","Previous / next row value"],["SUM() OVER","Running or partition totals"]])},
+
+{t:"9. Normalization & Database Design", h:
+ nT(["Normal form","Rule"],[["1NF","Atomic values, no repeating groups"],["2NF","1NF and no partial dependency on part of a composite key"],["3NF","2NF and no transitive dependency"],["BCNF","Every determinant is a candidate key"]])+
+ nT(["Relationship","Implementation"],[["One-to-one","Foreign key with UNIQUE"],["One-to-many","Foreign key on the many side (orders.user_id)"],["Many-to-many","Junction table (order_items: order_id, product_id)"]])+
+ nC("CREATE TABLE order_items (\n  order_id   INT NOT NULL,\n  product_id INT NOT NULL,\n  qty        INT NOT NULL CHECK (qty > 0),\n  price      DECIMAL(10,2) NOT NULL,   -- snapshot of price at purchase\n  PRIMARY KEY (order_id, product_id),\n  FOREIGN KEY (order_id)   REFERENCES orders(id) ON DELETE CASCADE,\n  FOREIGN KEY (product_id) REFERENCES products(id)\n);")+
+ nL(["Normalize to reduce redundancy, denormalize carefully for read speed","Use surrogate keys (AUTO_INCREMENT) as primary keys","Store price snapshots in order items","Consider soft delete (deleted_at) for important records"])},
+
+{t:"10. Indexes & Query Optimization", h:
+ nC("CREATE INDEX idx_tx_user_date ON transactions (user_id, date);\nCREATE UNIQUE INDEX uq_users_email ON users (email);\n\nEXPLAIN SELECT * FROM transactions WHERE user_id = 5 ORDER BY date DESC LIMIT 10;")+
+ nT(["Index type","Purpose"],[["Primary (clustered in InnoDB)","Row identity and storage order"],["Unique","Prevent duplicates"],["Normal (secondary)","Speed up lookups"],["Composite","Multiple columns, leftmost prefix rule"],["Full-text","Text search (MATCH ... AGAINST)"],["Covering","Index contains all needed columns"]])+
+ nT(["EXPLAIN column","Meaning"],[["type = ALL","Full table scan (usually bad)"],["type = ref / range / const","Index used"],["key","Index actually chosen"],["rows","Estimated rows examined"],["Extra: Using filesort / temporary","Possible extra work to optimize"]])+
+ nT(["Why an index is not used","Fix"],[["Function on column (YEAR(date)=2026)","Use a range: date >= '2026-01-01' AND date < '2027-01-01'"],["LIKE '%abc'","Use a full-text index or avoid leading wildcard"],["Type mismatch","Compare values with the same data type"],["Leftmost column skipped","Reorder index or query"]])+
+ nL(["Avoid SELECT *","Use keyset pagination for large tables","Index columns used in WHERE, JOIN and ORDER BY","Too many indexes slow down writes"])},
+
+{t:"11. Transactions & Locking", h:
+ nC("START TRANSACTION;\n\nUPDATE products SET stock = stock - 2 WHERE id = 7 AND stock >= 2;\n-- check affected rows = 1, otherwise ROLLBACK\nINSERT INTO orders (user_id, total) VALUES (3, 1998.00);\nINSERT INTO order_items (order_id, product_id, qty, price) VALUES (LAST_INSERT_ID(), 7, 2, 999.00);\n\nCOMMIT;   -- or ROLLBACK;")+
+ nT(["ACID","Meaning"],[["Atomicity","All statements succeed or none"],["Consistency","Database stays valid"],["Isolation","Concurrent transactions do not interfere"],["Durability","Committed data survives crashes"]])+
+ nT(["Isolation level","Prevents"],[["READ UNCOMMITTED","Nothing (dirty reads possible)"],["READ COMMITTED","Dirty reads"],["REPEATABLE READ (default)","Dirty and non-repeatable reads"],["SERIALIZABLE","All anomalies, lowest concurrency"]])+
+ nL(["SELECT ... FOR UPDATE locks rows until the transaction ends","Keep transactions short","Access tables in a consistent order to reduce deadlocks","Retry a transaction after a deadlock error"])},
+
+{t:"12. Views, Stored Procedures & Triggers", h:
+ nC("CREATE VIEW v_order_summary AS\nSELECT o.id, u.name, o.total\nFROM orders o JOIN users u ON u.id = o.user_id;\n\nDELIMITER //\nCREATE PROCEDURE get_user_orders(IN uid INT)\nBEGIN\n  SELECT * FROM orders WHERE user_id = uid;\nEND //\nDELIMITER ;\nCALL get_user_orders(5);\n\nCREATE TRIGGER trg_after_order\nAFTER INSERT ON orders\nFOR EACH ROW\n  INSERT INTO audit_log (action, ref_id) VALUES ('ORDER_CREATED', NEW.id);")+
+ nT(["Object","Purpose"],[["View","Saved query acting as a virtual table"],["Stored procedure","Reusable SQL logic called with CALL"],["Function","Returns one value, usable in queries"],["Trigger","Runs automatically on INSERT, UPDATE or DELETE"],["Event","Scheduled task inside MySQL"]])+
+ nP("Keep business logic mostly in the application; use triggers and procedures carefully because they are harder to test and version.")},
+
+{t:"13. Users, Privileges & Security", h:
+ nC("CREATE USER 'shopapp'@'localhost' IDENTIFIED BY 'Str0ng_Pass!';\nGRANT SELECT, INSERT, UPDATE, DELETE ON shop.* TO 'shopapp'@'localhost';\nREVOKE DELETE ON shop.* FROM 'shopapp'@'localhost';\nSHOW GRANTS FOR 'shopapp'@'localhost';")+
+ nT(["Risk","Protection"],[["SQL injection","Prepared statements with placeholders (?), validate input"],["Over-privileged users","Least privilege, never use root in the app"],["Plain-text passwords","Hash with bcrypt or argon2 in the app"],["Exposed server","Firewall, private network, TLS connections"],["Leaked credentials","Env variables, .env in .gitignore, rotate secrets"],["Data loss","Regular backups, test restores"]])+
+ nC("// vulnerable\n\"SELECT * FROM users WHERE email = '\" + email + \"'\"\n\n// safe (mysql2)\nconst [rows] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]);")},
+
+{t:"14. MySQL with Node.js (mysql2)", h:
+ nC("// db.js\nconst mysql = require('mysql2/promise');\nconst pool = mysql.createPool({\n  host: process.env.DB_HOST,\n  user: process.env.DB_USER,\n  password: process.env.DB_PASS,\n  database: process.env.DB_NAME,\n  waitForConnections: true,\n  connectionLimit: 10\n});\nmodule.exports = pool;\n\n// usage\nconst [rows] = await pool.execute('SELECT * FROM products WHERE id = ?', [id]);\nconst [result] = await pool.execute('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);\nconsole.log(result.insertId);")+
+ nC("// transaction\nconst conn = await pool.getConnection();\ntry {\n  await conn.beginTransaction();\n  const [r] = await conn.execute('UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?', [qty, pid, qty]);\n  if (r.affectedRows === 0) throw new Error('Out of stock');\n  await conn.execute('INSERT INTO orders (user_id, total) VALUES (?, ?)', [uid, total]);\n  await conn.commit();\n} catch (e) {\n  await conn.rollback();\n  throw e;\n} finally {\n  conn.release();\n}")+
+ nL(["Use a pool, not one connection","Always use placeholders","Release connections in finally","Handle ER_DUP_ENTRY (1062) for unique email errors","ORMs: Sequelize, Prisma, TypeORM. Query builder: Knex"])},
+
+{t:"15. Backup, Replication & Scaling", h:
+ nC("# backup and restore\nmysqldump -u root -p shop > shop_backup.sql\nmysql -u root -p shop < shop_backup.sql")+
+ nT(["Concept","Meaning"],[["Replication","Source server copies changes to replicas (read scaling, failover)"],["Binary log","Record of changes, used for replication and point-in-time recovery"],["Partitioning","Split a big table into parts on one server"],["Sharding","Split data across multiple servers"],["Connection pooling","Reuse database connections"],["Caching (Redis)","Reduce repeated reads"],["Read replicas","Send read queries to replicas"]])+
+ nL(["Automate backups and test restores","Monitor slow query log and connections","Managed options: AWS RDS, PlanetScale, Cloud SQL"])},
+
+{t:"16. MySQL vs MongoDB & Cheat Sheet", h:
+ nT(["Feature","MySQL","MongoDB"],[["Model","Tables and rows","Collections and documents"],["Schema","Fixed, enforced","Flexible"],["Relations","Joins and foreign keys","Embed or reference ($lookup, populate)"],["Transactions","Strong ACID, mature","ACID on replica sets"],["Query language","SQL","MongoDB query API"],["Scaling","Vertical, replicas, sharding with effort","Built-in horizontal sharding"],["Best for","Structured, relational data","Flexible, nested data"]])+
+ nT(["Task","SQL"],[["Create table","CREATE TABLE t (...)"],["Insert","INSERT INTO t (a,b) VALUES (1,2)"],["Read","SELECT a FROM t WHERE b = 2"],["Update","UPDATE t SET a = 5 WHERE id = 1"],["Delete","DELETE FROM t WHERE id = 1"],["Join","SELECT ... FROM a JOIN b ON a.id = b.a_id"],["Group","SELECT c, COUNT(*) FROM t GROUP BY c HAVING COUNT(*) > 1"],["Index","CREATE INDEX idx ON t (col)"],["Transaction","START TRANSACTION; ... COMMIT;"]])},
+
+{t:"17. Common Errors & Fixes", h:
+ nT(["Error","Cause","Fix"],[["1062 Duplicate entry","Unique or primary key violated","Catch ER_DUP_ENTRY, show a friendly message"],["1451 / 1452 foreign key fails","Parent row missing or still referenced","Insert the parent first, delete children first, or use ON DELETE rules"],["1045 Access denied","Wrong user or password","Check credentials and host privileges"],["1054 Unknown column","Typo or wrong table","Check column names with DESCRIBE"],["1064 Syntax error","Invalid SQL","Check commas, quotes and reserved words"],["1213 Deadlock found","Transactions block each other","Retry, keep transactions short, consistent order"],["Too many connections","Connection leak or no pooling","Use a pool and release connections"],["Incorrect decimal / data truncated","Value does not fit the type","Choose the right type and validate input"],["Query slow","Missing index or full scan","EXPLAIN and add an index"],["Cannot connect (ECONNREFUSED)","Server down, wrong host or port","Check the MySQL service, host, port and firewall"]])}
+];
    
 var app = document.getElementById("app");
 var barbox = document.getElementById("barbox");
