@@ -1555,6 +1555,257 @@ skills.express.notes = [
 {t:"17. Common Mistakes & Quick Fixes", h:
  nT(["Problem","Cause","Fix"],[["req.body is undefined","Body parser missing or after route","Add express.json() before routes"],["Request hangs","next() not called or no response","Check all code paths"],["Cannot set headers after they are sent","Two responses","Use return before res.send"],["Route returns 404","Wrong order, method or prefix","Check route order and mount path"],["CORS error","Server not allowing origin","Use cors with correct origin"],["Sessions lost on restart","MemoryStore","connect-mongo or Redis"],["Secure cookie not set","Behind a proxy","app.set('trust proxy', 1)"],["Async error crashes app","Rejection not forwarded (Express 4)","asyncHandler or try/catch with next(err)"],["CSRF fails on upload","Check before Multer","Validate CSRF after Multer"]])}
 ];
+
+/* ===== MONGODB & MONGOOSE SKILL =====
+   PASTE THIS BLOCK right after the Express.js notes (after "skills.express.notes = [ ... ];")
+   (or after the Node.js notes) and BEFORE the line:  var app = document.getElementById("app");
+*/
+
+skills.mongodb = {
+  name: "MongoDB & Mongoose",
+  qa: [
+    ["MongoDB Basics","What is MongoDB?","An open-source, document-oriented NoSQL database. It stores data as flexible JSON-like documents (stored as BSON) in collections instead of rows in tables."],
+    ["MongoDB Basics","What is NoSQL? Types?","Databases that do not use the traditional table and SQL model. Types: document (MongoDB), key-value (Redis), column-family (Cassandra), graph (Neo4j)."],
+    ["MongoDB Basics","SQL vs MongoDB terminology?","Database = database, table = collection, row = document, column = field, index = index, join = $lookup or populate, primary key = _id."],
+    ["MongoDB Basics","What is a document and a collection?","A document is a set of key-value pairs (like a JSON object). A collection is a group of documents, similar to a table, and does not enforce a fixed schema by default."],
+    ["MongoDB Basics","What is BSON?","Binary JSON, the format MongoDB uses to store data. It supports more types than JSON, such as Date, ObjectId, Decimal128, Binary and Int64."],
+    ["MongoDB Basics","What is _id and ObjectId?","Every document has a unique _id. By default it is an ObjectId: a 12-byte value built from a timestamp, random value and counter. It is indexed automatically."],
+    ["MongoDB Basics","What are the advantages of MongoDB?","Flexible schema, JSON-like documents that map to application objects, horizontal scaling with sharding, replication for high availability, rich query and aggregation features and fast development."],
+    ["MongoDB Basics","What are the disadvantages of MongoDB?","No joins as strong as SQL (use $lookup or populate), data duplication from denormalizing, 16 MB document size limit, and weaker fit for highly relational data."],
+    ["MongoDB Basics","When would you choose MongoDB over SQL?","When data is document-like or changes shape often, when you need fast iteration, horizontal scale, or flexible nested data. Choose SQL for complex relations and strict transactions across many tables."],
+    ["MongoDB Basics","Is MongoDB schema-less?","It has a flexible schema: documents in a collection can differ. In practice apps still need structure, so Mongoose schemas or MongoDB schema validation are used."],
+    ["MongoDB Basics","What is MongoDB Atlas?","MongoDB's cloud-hosted database service. It provides managed clusters, backups, scaling, monitoring and network access rules."],
+    ["MongoDB Basics","What are mongosh and MongoDB Compass?","mongosh is the command-line shell. Compass is the GUI tool for browsing data, running queries and viewing indexes."],
+    ["MongoDB Basics","What is the maximum document size?","16 MB. For larger files use GridFS or cloud storage and keep only the URL in the document."],
+    ["MongoDB Basics","What data types does MongoDB support?","String, Number (Int32, Int64, Double, Decimal128), Boolean, Date, ObjectId, Array, Object (embedded document), Null, Binary, Regex and more."],
+
+    ["CRUD Operations","How do you insert documents?","insertOne({}) for one and insertMany([{}, {}]) for many. In Mongoose: Model.create() or new Model().save()."],
+    ["CRUD Operations","How do you read documents?","find(filter) returns a cursor of matches, findOne(filter) returns one document. Add projection to choose fields."],
+    ["CRUD Operations","How do you update documents?","updateOne(filter, { $set: {...} }), updateMany, replaceOne and findOneAndUpdate. Always use update operators like $set, otherwise you may replace the whole document."],
+    ["CRUD Operations","How do you delete documents?","deleteOne(filter) and deleteMany(filter). In Mongoose: findByIdAndDelete, deleteOne."],
+    ["CRUD Operations","What is projection?","Choosing which fields to return: find({}, { name: 1, _id: 0 }). It reduces data transferred."],
+    ["CRUD Operations","What are sort, skip and limit?","sort({ date: -1 }) orders results (1 ascending, -1 descending). skip(n) skips documents. limit(n) restricts the count. Together they give pagination."],
+    ["CRUD Operations","What does upsert mean?","Update if a matching document exists, otherwise insert a new one: updateOne(filter, update, { upsert: true })."],
+    ["CRUD Operations","What does $set do and what if you forget it?","$set changes only the given fields. Without an operator in replaceOne or a whole-object update, the document is replaced and other fields are lost."],
+    ["CRUD Operations","updateOne vs findOneAndUpdate?","updateOne returns a result summary (matched and modified counts). findOneAndUpdate returns the document (before or after the change with new: true) in one atomic step."],
+    ["CRUD Operations","What does countDocuments do?","Counts documents matching a filter. estimatedDocumentCount is faster but counts the whole collection from metadata."],
+    ["CRUD Operations","What is a cursor?","A pointer to the result set of a query. Results are fetched in batches, so you can iterate large results without loading everything into memory."],
+
+    ["Query Operators","List comparison operators.","$eq, $ne, $gt, $gte, $lt, $lte, $in, $nin."],
+    ["Query Operators","List logical operators.","$and, $or, $nor, $not."],
+    ["Query Operators","What are $in and $nin?","$in matches any value in an array: { category: { $in: ['food', 'rent'] } }. $nin matches none of them."],
+    ["Query Operators","What does $exists do?","Matches documents that have (or do not have) a field: { email: { $exists: true } }."],
+    ["Query Operators","What does $regex do?","Pattern matching on strings: { name: { $regex: 'phone', $options: 'i' } }. Escape user input to avoid regex injection."],
+    ["Query Operators","How do you query arrays?","{ tags: 'node' } matches arrays containing the value. $all needs all values, $size matches length, $elemMatch matches an element with multiple conditions."],
+    ["Query Operators","How do you query nested fields?","Dot notation: { 'address.city': 'Pune' }."],
+    ["Query Operators","List update operators.","$set, $unset, $inc, $mul, $min, $max, $rename, $push, $pull, $addToSet, $pop."],
+    ["Query Operators","$push vs $addToSet?","$push appends a value even if it exists. $addToSet adds only if the value is not already in the array."],
+    ["Query Operators","What does $inc do?","Atomically increases or decreases a number: { $inc: { stock: -1 } }. Safe for concurrent updates."],
+    ["Query Operators","What is the $expr operator?","Lets you use aggregation expressions in a query, for example comparing two fields in the same document."],
+
+    ["Schema Design","Embedding vs referencing?","Embed data that is read together and does not change independently (order items inside an order). Reference data shared by many documents or that grows without limit (product to category, user to orders)."],
+    ["Schema Design","What are the relationship types and how do you model them?","One-to-one: embed. One-to-few: embed an array. One-to-many: reference or embed depending on size. Many-to-many: arrays of references or a separate linking collection."],
+    ["Schema Design","What is denormalization and its trade-off?","Duplicating data to avoid joins and speed up reads. The trade-off is extra storage and keeping copies consistent."],
+    ["Schema Design","What is the snapshot pattern?","Storing a copy of data at a point in time, like product name and price inside an order, so history stays correct when the source changes."],
+    ["Schema Design","What are unbounded arrays and why avoid them?","Arrays that grow without limit (like all comments inside a post) can hit the 16 MB limit and slow updates. Use a separate collection with a reference."],
+    ["Schema Design","How do you design for your queries?","Model data around how the app reads and writes it. Decide access patterns first, then choose embedding or referencing and indexes."],
+    ["Schema Design","What is schema validation in MongoDB?","$jsonSchema validators on a collection enforce required fields and types at the database level, even for writes that bypass Mongoose."],
+    ["Schema Design","How do you store money?","Avoid floating-point for accounting. Store smallest units as integers (paise) or use Decimal128."],
+    ["Schema Design","What is the bucket pattern?","Grouping many small related items (like sensor readings per hour) into one document to reduce document count and index size."],
+
+    ["Indexes & Performance","What is an index and why use it?","A data structure that speeds up queries on a field. Without an index MongoDB does a full collection scan."],
+    ["Indexes & Performance","What are the downsides of indexes?","They use storage and slow writes slightly because each index must be updated. Only add indexes you need."],
+    ["Indexes & Performance","Types of indexes?","Single field, compound, multikey (arrays), text, unique, TTL, partial, sparse, geospatial and hashed."],
+    ["Indexes & Performance","What is a compound index and does order matter?","An index on multiple fields like { user: 1, date: -1 }. Order matters: it supports queries on the leading fields (user, or user and date), not date alone."],
+    ["Indexes & Performance","What is a unique index?","Guarantees no two documents share the same value, such as email. It works at the database level even for simultaneous requests."],
+    ["Indexes & Performance","What is a TTL index?","An index that automatically deletes documents after a time, useful for sessions, OTPs and temporary data."],
+    ["Indexes & Performance","What is a text index?","Supports text search on string fields with $text. For advanced search use Atlas Search."],
+    ["Indexes & Performance","What is a partial index?","Indexes only documents that match a filter, saving space."],
+    ["Indexes & Performance","How do you check if a query uses an index?","Use explain('executionStats'). Look for IXSCAN (index used) versus COLLSCAN (full scan) and compare docsExamined with nReturned."],
+    ["Indexes & Performance","What is a covered query?","A query answered entirely from the index without reading documents, when all filter and projected fields are in the index."],
+    ["Indexes & Performance","What is the ESR rule for compound indexes?","Order fields as Equality, Sort, Range for best performance."],
+    ["Indexes & Performance","Why is skip() slow on large data?","MongoDB must walk past all skipped documents. Use range or cursor-based pagination with the last seen _id or date."],
+    ["Indexes & Performance","How do you improve slow queries?","Add suitable indexes, use projection, paginate, avoid unbounded regex, use lean() in Mongoose, use aggregation on the server and review explain plans."],
+    ["Indexes & Performance","What is the profiler?","MongoDB's database profiler logs slow operations so you can find and optimize them."],
+
+    ["Aggregation","What is the aggregation framework?","A pipeline of stages that process documents on the server to filter, group, reshape and compute data."],
+    ["Aggregation","List common aggregation stages.","$match, $group, $sort, $project, $limit, $skip, $unwind, $lookup, $addFields, $count, $facet."],
+    ["Aggregation","What does $group do?","Groups documents by a key and computes values with accumulators like $sum, $avg, $min, $max, $push."],
+    ["Aggregation","Why put $match early in the pipeline?","It reduces the number of documents flowing through later stages and can use indexes."],
+    ["Aggregation","What is $lookup?","A left outer join to another collection in the pipeline. The result is added as an array field."],
+    ["Aggregation","What does $unwind do?","Deconstructs an array field so each element becomes its own document."],
+    ["Aggregation","Aggregation vs processing in JavaScript?","Aggregation runs inside the database and returns only results, using less memory and network. Loading everything and looping in JS does not scale."],
+    ["Aggregation","Write an aggregation for total income and expense per user.","db.transactions.aggregate([\n  { $match: { user: userId } },\n  { $group: { _id: '$type', total: { $sum: '$amount' } } }\n])"],
+    ["Aggregation","What is $facet?","Runs multiple sub-pipelines on the same input in one stage, useful for returning data and total count together."],
+    ["Aggregation","What is $project vs $addFields?","$project selects or reshapes fields. $addFields adds new fields and keeps the existing ones."],
+
+    ["Replication, Sharding & Transactions","What is a replica set?","A group of MongoDB servers holding the same data: one primary takes writes and secondaries replicate it. If the primary fails, an election chooses a new one."],
+    ["Replication, Sharding & Transactions","What is sharding?","Splitting data across multiple servers (shards) using a shard key for horizontal scaling."],
+    ["Replication, Sharding & Transactions","What makes a good shard key?","High cardinality, even distribution of writes and reads, and fits common queries. A poor key creates hot shards."],
+    ["Replication, Sharding & Transactions","Replication vs sharding?","Replication copies the same data for availability and read scaling. Sharding splits different data across servers to scale storage and throughput."],
+    ["Replication, Sharding & Transactions","Does MongoDB support transactions?","Yes, multi-document ACID transactions on replica sets and sharded clusters (4.0+). Single-document operations are always atomic."],
+    ["Replication, Sharding & Transactions","What is ACID?","Atomicity (all or nothing), Consistency, Isolation and Durability."],
+    ["Replication, Sharding & Transactions","When do you need a transaction?","When several writes must succeed or fail together, like creating an order, reducing stock and clearing a cart."],
+    ["Replication, Sharding & Transactions","How do you use a transaction in Mongoose?","const session = await mongoose.startSession();\nawait session.withTransaction(async () => {\n  await Order.create([data], { session });\n  await Product.updateOne({ _id }, { $inc: { stock: -1 } }, { session });\n});\nsession.endSession();"],
+    ["Replication, Sharding & Transactions","What are write concern and read concern?","Write concern sets how many nodes must acknowledge a write (w: 'majority'). Read concern sets the consistency level of reads."],
+    ["Replication, Sharding & Transactions","What is CAP theorem?","A distributed system can guarantee only two of Consistency, Availability and Partition tolerance. MongoDB favors consistency and partition tolerance by default."],
+
+    ["Mongoose Basics","What is Mongoose?","An ODM (Object Data Modeling) library for MongoDB and Node.js. It provides schemas, models, validation, middleware, population and a clean query API."],
+    ["Mongoose Basics","Mongoose vs native MongoDB driver?","The native driver is lower level and flexible. Mongoose adds structure, validation, hooks and helpers, which keeps data consistent and speeds up development."],
+    ["Mongoose Basics","What is a schema?","Defines the shape of documents: fields, types, defaults, validation and indexes."],
+    ["Mongoose Basics","What is a model?","A class compiled from a schema that represents a collection. You use it to create, query, update and delete documents."],
+    ["Mongoose Basics","How do you connect to MongoDB with Mongoose?","await mongoose.connect(process.env.DBURL). Handle connection errors and start the server only after it succeeds."],
+    ["Mongoose Basics","How do you define a schema?","const userSchema = new mongoose.Schema({\n  name: { type: String, required: true, trim: true },\n  email: { type: String, required: true, unique: true, lowercase: true },\n  age: { type: Number, min: 0 }\n}, { timestamps: true });\nconst User = mongoose.model('User', userSchema);"],
+    ["Mongoose Basics","What do timestamps: true do?","Adds createdAt and updatedAt fields automatically."],
+    ["Mongoose Basics","Common schema types?","String, Number, Date, Boolean, ObjectId, Array, Buffer, Mixed, Decimal128, Map."],
+    ["Mongoose Basics","What are schema options like trim, lowercase, default, enum, select?","trim removes spaces, lowercase converts case, default sets a value, enum restricts values, select: false hides a field (like password) from queries by default."],
+    ["Mongoose Basics","How does Mongoose name collections?","It lowercases and pluralizes the model name: User becomes users. You can override it with the collection option."],
+    ["Mongoose Basics","What does unique: true do in a schema?","It creates a unique index. It is not a validator, so duplicates cause a MongoDB error (code 11000) that you must handle."],
+    ["Mongoose Basics","What is the difference between mongoose.connect and createConnection?","connect sets up the default connection used by models. createConnection creates separate connections, for multiple databases."],
+    ["Mongoose Basics","What is autoIndex and why disable it in production?","Mongoose builds schema indexes on startup. In production, building indexes can be heavy, so teams create indexes through migrations or controlled scripts."],
+
+    ["Mongoose CRUD & Queries","How do you create a document?","await User.create({ name, email }) or const u = new User({...}); await u.save()."],
+    ["Mongoose CRUD & Queries","Common Mongoose query methods?","find, findOne, findById, findByIdAndUpdate, findOneAndUpdate, updateOne, updateMany, deleteOne, deleteMany, findByIdAndDelete, countDocuments."],
+    ["Mongoose CRUD & Queries","What is query chaining?","Model.find(filter).select('name').sort({ createdAt: -1 }).skip(10).limit(10).populate('user')."],
+    ["Mongoose CRUD & Queries","What does lean() do?","Returns plain JavaScript objects instead of full Mongoose documents. It is faster and uses less memory for read-only data."],
+    ["Mongoose CRUD & Queries","findByIdAndUpdate: how to get the updated document?","Pass { new: true } (or returnDocument: 'after'). Add runValidators: true so update validators run."],
+    ["Mongoose CRUD & Queries","save() vs update methods?","save() runs full validation and document middleware on a loaded document. updateOne and findOneAndUpdate are single database operations that skip document middleware unless configured."],
+    ["Mongoose CRUD & Queries","What is exec()?","Runs a query and returns a real Promise. Queries are thenable so await works without it, but exec gives better stack traces."],
+    ["Mongoose CRUD & Queries","How do you implement search and filtering safely?","Allow-list filter and sort values, escape regex input, validate types, and never pass req.query or req.body directly into a query."],
+    ["Mongoose CRUD & Queries","How do you implement pagination in Mongoose?","const page = Math.max(parseInt(req.query.page) || 1, 1);\nconst limit = 10;\nconst items = await Item.find(filter).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit);\nconst total = await Item.countDocuments(filter);"],
+    ["Mongoose CRUD & Queries","What is select('+password')?","Fields marked select: false are hidden. Using select('+password') includes them, for example during login."],
+
+    ["Validation & Middleware","What validation does Mongoose provide?","Built-in validators (required, min, max, minlength, maxlength, enum, match) and custom validators using validate."],
+    ["Validation & Middleware","How do you write a custom validator?","phone: { type: String, validate: { validator: v => /^[6-9]\\d{9}$/.test(v), message: 'Invalid phone' } }"],
+    ["Validation & Middleware","What is Mongoose middleware (hooks)?","Functions that run before or after operations such as save, validate, find and remove: schema.pre('save', fn) and schema.post('save', fn)."],
+    ["Validation & Middleware","How do you hash a password with a pre save hook?","userSchema.pre('save', async function (next) {\n  if (!this.isModified('password')) return next();\n  this.password = await bcrypt.hash(this.password, 10);\n  next();\n});"],
+    ["Validation & Middleware","Do validators run on updates?","Not by default for update methods. Pass { runValidators: true } to run them."],
+    ["Validation & Middleware","What are instance methods and static methods?","Instance methods are added to documents (schema.methods.comparePassword). Statics are added to the model (schema.statics.findByEmail)."],
+    ["Validation & Middleware","What are virtuals?","Computed properties that are not stored in the database, like fullName from firstName and lastName."],
+    ["Validation & Middleware","What does the toJSON transform do?","Customizes output, for example removing password and __v before sending a document as JSON."],
+    ["Validation & Middleware","How do you handle duplicate key errors?","Catch error.code === 11000 and return a friendly message such as 'Email already registered' with status 409."],
+    ["Validation & Middleware","What is the __v field?","The version key Mongoose adds to track document revisions, mainly for arrays. It can be disabled with versionKey: false."],
+
+    ["Relationships & Populate","How do you reference another document in Mongoose?","user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }."],
+    ["Relationships & Populate","What is populate()?","Replaces referenced ObjectIds with the actual documents, similar to a join: Order.find().populate('user', 'name email')."],
+    ["Relationships & Populate","populate vs $lookup?","populate runs extra queries in Mongoose and is easy to use. $lookup runs inside the database in an aggregation and is better for complex or large operations."],
+    ["Relationships & Populate","What is the N+1 query problem?","Running one query per item in a loop. Avoid with populate, $lookup or batching with $in."],
+    ["Relationships & Populate","How do you populate nested or multiple fields?","populate('a b') or populate({ path: 'order', populate: { path: 'product' } })."],
+    ["Relationships & Populate","What are subdocuments?","Schemas nested inside another schema, like an items array in an order. They get their own _id by default."],
+    ["Relationships & Populate","What are discriminators?","A way to create models that extend a base model and share a collection, for example Admin and Customer extending User."],
+
+    ["Security & Best Practices","What is NoSQL injection and how do you prevent it?","Attackers send objects like { '$ne': '' } to change a query. Validate input types, allow-list values, use sanitizing middleware and never build queries directly from req.body."],
+    ["Security & Best Practices","What is mass assignment?","Saving req.body directly lets users set protected fields like role. Pick allowed fields explicitly."],
+    ["Security & Best Practices","How do you secure the connection string?","Store it in .env, add .env to .gitignore, use a least-privilege database user, restrict IPs in Atlas, and rotate credentials if leaked."],
+    ["Security & Best Practices","Why validate ObjectId before querying?","An invalid id causes a CastError. Use mongoose.isValidObjectId and respond with 404 or 400."],
+    ["Security & Best Practices","How do you protect user data between users?","Always query by both the resource _id and the logged-in user's id to prevent IDOR."],
+    ["Security & Best Practices","How do you handle connection errors and reconnects?","Listen to connection events, log errors, fail fast on startup if the first connection fails, and let the driver handle reconnects."],
+    ["Security & Best Practices","How do you back up MongoDB?","Atlas automated backups and snapshots, or mongodump and mongorestore. Test restores regularly."],
+    ["Security & Best Practices","Why use connection pooling?","Reusing open connections avoids the cost of creating a new one per request. Configure maxPoolSize if needed."],
+
+    ["Coding Questions","Write a User schema with password hashing.","const userSchema = new mongoose.Schema({\n  name: { type: String, required: true, trim: true },\n  email: { type: String, required: true, unique: true, lowercase: true },\n  password: { type: String, required: true, select: false }\n}, { timestamps: true });\nuserSchema.pre('save', async function (next) {\n  if (!this.isModified('password')) return next();\n  this.password = await bcrypt.hash(this.password, 10);\n  next();\n});"],
+    ["Coding Questions","Find the 10 latest expense transactions of a user.","Transaction.find({ user: userId, type: 'expense' })\n  .sort({ date: -1 })\n  .limit(10)\n  .lean();"],
+    ["Coding Questions","Update a product only if enough stock exists.","const res = await Product.updateOne(\n  { _id: id, stock: { $gte: qty } },\n  { $inc: { stock: -qty } }\n);\nif (res.modifiedCount === 0) throw new Error('Out of stock');"],
+    ["Coding Questions","Group expenses by category.","Transaction.aggregate([\n  { $match: { user: userId, type: 'expense' } },\n  { $group: { _id: '$category', total: { $sum: '$amount' } } },\n  { $sort: { total: -1 } }\n]);"],
+    ["Coding Questions","Create a compound and a unique index.","transactionSchema.index({ user: 1, date: -1 });\nreviewSchema.index({ user: 1, product: 1 }, { unique: true });"],
+    ["Coding Questions","Populate a user in an order.","const orders = await Order.find({ user: req.user._id })\n  .populate('items.product', 'name price')\n  .sort({ createdAt: -1 });"],
+    ["Coding Questions","Basic mongosh commands.","use shop\ndb.products.insertOne({ name: 'Phone', price: 9999 })\ndb.products.find({ price: { $lt: 20000 } })\ndb.products.updateOne({ name: 'Phone' }, { $set: { price: 8999 } })\ndb.products.deleteOne({ name: 'Phone' })"],
+
+    ["Situation Based","Your queries are slow with 1 lakh documents. What do you do?","Run explain(), look for COLLSCAN, add proper compound indexes, use projection, pagination and lean(), use aggregation for totals and consider caching."],
+    ["Situation Based","Two users register with the same email at the same time.","The unique index makes one insert fail with duplicate key error 11000. Catch it and show 'Email already registered'."],
+    ["Situation Based","Two customers buy the last item at the same time.","Use an atomic conditional update (stock >= qty with $inc) inside a transaction. Only one succeeds and the other gets an out-of-stock message."],
+    ["Situation Based","Atlas connection fails on startup. How do you debug?","Check the connection string, username and password (URL-encode special characters), Atlas IP access list, cluster status, internet and the exact error message."],
+    ["Situation Based","Your MongoDB password was pushed to GitHub.","Rotate the password in Atlas immediately, remove it from code and history, update .env, restrict IP access and check logs for misuse."],
+    ["Situation Based","A document is nearing the 16 MB limit.","Likely an unbounded embedded array. Move the array to a separate collection with references, or use the bucket pattern."],
+    ["Situation Based","Someone sends { email: { '$ne': null } } to login.","This is NoSQL injection. Validate that email is a string, cast input and use sanitizing or schema validation."],
+    ["Situation Based","populate is slow for a big list.","Use select to limit fields, lean(), add indexes on referenced fields, or switch to an aggregation with $lookup."],
+    ["Situation Based","How do you add a new field to existing documents?","Add it to the schema with a default, then run updateMany({ field: { $exists: false } }, { $set: { field: value } }) as a migration."],
+    ["Situation Based","Should you choose SQL or MongoDB for an e-commerce site?","Both can work. MongoDB suits flexible product attributes and fast development. For heavy relational reporting SQL may fit better. Choose based on data access patterns and team skill."]
+  ]
+};
+
+skills.mongodb.notes = [
+{t:"1. Introduction to MongoDB", h:
+ nP("MongoDB is an open-source, document-oriented NoSQL database. It stores data as flexible BSON documents inside collections, which map naturally to JavaScript objects.")+
+ nL(["Flexible schema","Rich query language and aggregation framework","Horizontal scaling with sharding","High availability with replica sets","Managed cloud option: MongoDB Atlas"])+
+ nT(["SQL","MongoDB"],[["Database","Database"],["Table","Collection"],["Row","Document"],["Column","Field"],["Primary key","_id (ObjectId)"],["JOIN","$lookup or populate()"],["Index","Index"],["Transaction","Transaction (replica set)"]])+
+ nC("// a document\n{\n  _id: ObjectId('...'),\n  name: 'Asha',\n  email: 'asha@example.com',\n  address: { city: 'Pune', pin: 411001 },\n  tags: ['student', 'dev'],\n  createdAt: ISODate('2026-01-15')\n}")},
+
+{t:"2. Data Types & BSON", h:
+ nP("MongoDB stores data in BSON, a binary format that supports more types than JSON.")+
+ nT(["Type","Example","Note"],[["String","'hello'","UTF-8"],["Int32 / Int64 / Double","42, 3.14","Numbers"],["Decimal128","NumberDecimal('10.25')","Exact decimals, good for money"],["Boolean","true","true or false"],["Date","ISODate()","Stored in UTC"],["ObjectId","ObjectId()","12-byte unique id"],["Array","[1, 2, 3]","Lists"],["Object","{ a: 1 }","Embedded document"],["Null","null","No value"],["Binary","BinData","Raw bytes"]])+
+ nL(["Maximum document size is 16 MB","_id is required and unique, auto-created if missing","Field names are case-sensitive"])},
+
+{t:"3. CRUD in mongosh", h:
+ nC("use shop                       // select database\n\n// Create\ndb.products.insertOne({ name: 'Phone', price: 9999, stock: 10 })\ndb.products.insertMany([{ name: 'Pen' }, { name: 'Book' }])\n\n// Read\ndb.products.find()\ndb.products.find({ price: { $lt: 20000 } }, { name: 1, price: 1, _id: 0 })\ndb.products.findOne({ name: 'Phone' })\n\n// Update\ndb.products.updateOne({ name: 'Phone' }, { $set: { price: 8999 } })\ndb.products.updateMany({}, { $inc: { stock: 1 } })\n\n// Delete\ndb.products.deleteOne({ name: 'Pen' })\ndb.products.deleteMany({ stock: 0 })")+
+ nT(["Operation","Methods"],[["Create","insertOne, insertMany"],["Read","find, findOne, countDocuments"],["Update","updateOne, updateMany, replaceOne, findOneAndUpdate"],["Delete","deleteOne, deleteMany, findOneAndDelete"],["Shape results","sort, skip, limit, projection"]])+
+ nP("Always use update operators such as $set. Without them a replace can overwrite the whole document.")},
+
+{t:"4. Query & Update Operators", h:
+ nT(["Group","Operators","Example"],[["Comparison","$eq $ne $gt $gte $lt $lte $in $nin","{ age: { $gte: 18 } }"],["Logical","$and $or $nor $not","{ $or: [{ a: 1 }, { b: 2 }] }"],["Element","$exists $type","{ email: { $exists: true } }"],["Evaluation","$regex $expr $text","{ name: { $regex: 'ab', $options: 'i' } }"],["Array","$all $size $elemMatch","{ tags: { $all: ['a', 'b'] } }"]])+
+ nT(["Update operator","Purpose"],[["$set","Set field values"],["$unset","Remove fields"],["$inc","Increase or decrease a number atomically"],["$mul / $min / $max","Multiply, keep smaller, keep larger"],["$rename","Rename a field"],["$push","Add to array"],["$addToSet","Add to array if not present"],["$pull / $pop","Remove from array"]])+
+ nC("// nested field and array queries\ndb.users.find({ 'address.city': 'Pune' })\ndb.users.find({ tags: 'dev' })\n\n// atomic stock decrease\ndb.products.updateOne({ _id: id, stock: { $gte: 1 } }, { $inc: { stock: -1 } })")},
+
+{t:"5. Schema Design Patterns", h:
+ nT(["Choice","Use when","Example"],[["Embed","Data is read together, small, owned by the parent","Order items inside an order"],["Reference","Data is shared, large or changes independently","Product to category, order to user"],["Snapshot","History must stay correct","Product name and price saved in the order"],["Bucket","Many small time-based items","Sensor readings per hour"],["Denormalize","Reads matter more than writes","Store category name inside the product"]])+
+ nT(["Relationship","Modeling"],[["One to one","Embed"],["One to few","Embed an array"],["One to many","Reference (or embed if small)"],["Many to many","Arrays of references or a linking collection"]])+
+ nL(["Design around your queries and access patterns","Avoid unbounded arrays (16 MB limit)","Keep documents reasonably small","Use schema validation for important rules","Store money as integers (paise) or Decimal128"])},
+
+{t:"6. Indexes", h:
+ nC("db.users.createIndex({ email: 1 }, { unique: true })\ndb.transactions.createIndex({ user: 1, date: -1 })     // compound\ndb.sessions.createIndex({ createdAt: 1 }, { expireAfterSeconds: 3600 }) // TTL\ndb.products.createIndex({ name: 'text', description: 'text' })\n\ndb.transactions.find({ user: id }).sort({ date: -1 }).explain('executionStats')")+
+ nT(["Index type","Purpose"],[["Single field","Fast lookup on one field"],["Compound","Queries on several fields, order matters"],["Unique","Prevent duplicates (email)"],["Multikey","Index array values"],["Text","Text search with $text"],["TTL","Auto-delete expired documents"],["Partial / Sparse","Index only some documents"],["Geospatial (2dsphere)","Location queries"]])+
+ nT(["explain result","Meaning"],[["IXSCAN","An index was used (good)"],["COLLSCAN","Full collection scan (usually slow)"],["docsExamined vs nReturned","Large gap means an inefficient query"]])+
+ nL(["Rule of thumb for compound indexes: Equality, Sort, Range","Indexes speed reads but slow writes slightly","Index fields you filter and sort on often","Indexes use memory and disk, so avoid unnecessary ones"])},
+
+{t:"7. Aggregation Framework", h:
+ nC("db.transactions.aggregate([\n  { $match: { user: userId, date: { $gte: start, $lt: end } } },\n  { $group: { _id: '$category', total: { $sum: '$amount' }, count: { $sum: 1 } } },\n  { $sort: { total: -1 } },\n  { $limit: 5 }\n])")+
+ nT(["Stage","Purpose"],[["$match","Filter documents (put early, uses indexes)"],["$group","Group and calculate with $sum, $avg, $min, $max"],["$sort / $limit / $skip","Order and page results"],["$project / $addFields","Choose or add fields"],["$unwind","Split array into documents"],["$lookup","Join another collection"],["$facet","Several pipelines at once"],["$count","Count documents"]])+
+ nC("// join orders with users\ndb.orders.aggregate([\n  { $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'customer' } },\n  { $unwind: '$customer' }\n])")+
+ nL(["Aggregation runs inside the database, so it is faster than looping in JavaScript","Use it for totals, reports and category summaries"])},
+
+{t:"8. Transactions, Replication & Sharding", h:
+ nT(["Concept","Meaning"],[["Replica set","One primary and several secondaries with the same data; automatic failover"],["Sharding","Split data across servers by a shard key to scale horizontally"],["Transaction","Multi-document ACID operations (needs a replica set)"],["Write concern","How many nodes must confirm a write (w: 'majority')"],["Read concern","Consistency level for reads"]])+
+ nC("const session = await mongoose.startSession();\ntry {\n  await session.withTransaction(async () => {\n    await Order.create([orderData], { session });\n    const r = await Product.updateOne(\n      { _id: pid, stock: { $gte: qty } },\n      { $inc: { stock: -qty } },\n      { session }\n    );\n    if (r.modifiedCount === 0) throw new Error('Out of stock');\n    await Cart.deleteOne({ user: uid }, { session });\n  });\n} finally {\n  session.endSession();\n}")+
+ nL(["Single-document writes are always atomic","Use transactions when several writes must succeed or fail together","Atlas clusters are replica sets, so transactions work there","Choose a shard key with high cardinality and even distribution"])},
+
+{t:"9. Mongoose: Connect, Schema & Model", h:
+ nC("const mongoose = require('mongoose');\n\nawait mongoose.connect(process.env.DBURL);\n\nconst productSchema = new mongoose.Schema({\n  name:  { type: String, required: [true, 'Name is required'], trim: true, maxlength: 100 },\n  price: { type: Number, required: true, min: 0 },\n  stock: { type: Number, default: 0, min: 0 },\n  status: { type: String, enum: ['active', 'hidden'], default: 'active' },\n  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }\n}, { timestamps: true });\n\nproductSchema.index({ category: 1, createdAt: -1 });\n\nconst Product = mongoose.model('Product', productSchema);\nmodule.exports = Product;")+
+ nT(["Schema option","Purpose"],[["required","Field must exist"],["default","Default value"],["unique","Creates a unique index (not a validator)"],["trim / lowercase","Clean strings"],["enum","Allowed values"],["min / max / minlength / maxlength","Range checks"],["select: false","Hide field by default (password)"],["ref","Reference another model"],["timestamps","Adds createdAt and updatedAt"]])+
+ nL(["Start the server only after mongoose.connect succeeds","Collection name is the lowercase plural of the model name"])},
+
+{t:"10. Mongoose CRUD & Queries", h:
+ nT(["Task","Method"],[["Create","Model.create(data), new Model(data).save()"],["Read many","Model.find(filter)"],["Read one","Model.findOne(filter), Model.findById(id)"],["Update","Model.findByIdAndUpdate(id, update, { new: true, runValidators: true })"],["Update many","Model.updateMany(filter, update)"],["Delete","Model.findByIdAndDelete(id), deleteOne, deleteMany"],["Count","Model.countDocuments(filter)"],["Aggregate","Model.aggregate([...])"]])+
+ nC("// list with search, filter, sort and pagination\nconst page = Math.max(parseInt(req.query.page) || 1, 1);\nconst limit = 10;\nconst filter = { user: req.user._id };\nif (['income', 'expense'].includes(req.query.type)) filter.type = req.query.type;\n\nconst items = await Transaction.find(filter)\n  .select('type amount category date')\n  .sort({ date: -1 })\n  .skip((page - 1) * limit)\n  .limit(limit)\n  .lean();\nconst total = await Transaction.countDocuments(filter);")+
+ nL(["lean() returns plain objects, faster for read-only data","Use select() to return only needed fields","Escape user input before using it in $regex","Never pass req.body or req.query directly into a query"])},
+
+{t:"11. Validation & Hooks", h:
+ nC("const userSchema = new mongoose.Schema({\n  email: { type: String, required: true, unique: true, lowercase: true,\n           match: [/^\\S+@\\S+\\.\\S+$/, 'Invalid email'] },\n  password: { type: String, required: true, minlength: 8, select: false },\n  phone: { type: String, validate: { validator: v => /^[6-9]\\d{9}$/.test(v), message: 'Invalid phone' } }\n});\n\n// hash password before save\nuserSchema.pre('save', async function (next) {\n  if (!this.isModified('password')) return next();\n  this.password = await bcrypt.hash(this.password, 10);\n  next();\n});\n\n// instance and static methods\nuserSchema.methods.comparePassword = function (plain) {\n  return bcrypt.compare(plain, this.password);\n};\nuserSchema.statics.findByEmail = function (email) {\n  return this.findOne({ email: email.toLowerCase() }).select('+password');\n};")+
+ nT(["Feature","Purpose"],[["Built-in validators","required, min, max, enum, match"],["Custom validators","validate: { validator, message }"],["pre / post hooks","Run code before or after save, validate, find"],["Instance methods","Methods on documents"],["Statics","Methods on the model"],["Virtuals","Computed fields not stored"],["toJSON transform","Hide password and __v in output"]])+
+ nL(["Update methods skip validators unless runValidators: true","Duplicate key error code is 11000: return 409 Email already registered"])},
+
+{t:"12. Relationships & populate()", h:
+ nC("const orderSchema = new mongoose.Schema({\n  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },\n  items: [{\n    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },\n    name: String,        // snapshot\n    price: Number,       // snapshot\n    qty: Number\n  }],\n  total: Number\n}, { timestamps: true });\n\nconst orders = await Order.find({ user: req.user._id })\n  .populate('user', 'name email')\n  .sort({ createdAt: -1 });")+
+ nT(["Approach","Notes"],[["Embed (subdocument)","One read, no join, good for small owned data"],["Reference + populate","Flexible, extra query per populated path"],["$lookup in aggregation","Join inside the database, good for large or complex data"],["Snapshot fields","Keep history correct when source data changes"]])+
+ nL(["Avoid N+1: use populate, $lookup or $in batches instead of queries in a loop","Limit populated fields with a select string","Index the fields you reference and populate"])},
+
+{t:"13. Security Best Practices", h:
+ nT(["Risk","Protection"],[["NoSQL injection","Validate types, allow-list filters, sanitize input, never trust req.body objects"],["Mass assignment","Pick allowed fields explicitly instead of saving req.body"],["IDOR","Query by resource _id AND user id"],["Invalid ObjectId errors","mongoose.isValidObjectId before querying"],["Leaked credentials","Env variables, .gitignore, rotate on leak, least-privilege DB user"],["Open network access","Restrict Atlas IP access list"],["Plain-text passwords","Hash with bcrypt, select: false on the password field"],["Large payloads","Body size limit in Express"]])+
+ nC("// injection example\n// attacker sends: { \"email\": { \"$ne\": null }, \"password\": { \"$ne\": null } }\n\n// safe: force strings\nconst email = String(req.body.email || '').toLowerCase();\nconst user = await User.findOne({ email }).select('+password');")+
+ nL(["Create unique indexes for fields that must be unique","Back up data and test restores","Enable authentication and TLS on self-hosted servers"])},
+
+{t:"14. Performance Tips", h:
+ nT(["Technique","Benefit"],[["Indexes matching your queries","Avoids full scans"],["Compound index (Equality, Sort, Range)","Fast filtered and sorted lists"],["Projection / select()","Smaller documents returned"],["lean()","Faster, less memory in Mongoose"],["Pagination","Smaller results"],["Cursor pagination for huge data","Avoids slow skip()"],["Aggregation for totals","Computation inside the database"],["Connection pooling","Reuse connections"],["Caching (Redis)","Avoid repeated queries"],["Avoid unbounded arrays","Smaller documents, faster updates"]])+
+ nC("// find slow queries\ndb.transactions.find({ user: id }).sort({ date: -1 }).explain('executionStats')\n// look for IXSCAN, low docsExamined, small executionTimeMillis")+
+ nL(["Measure first with explain() or the profiler","Remove indexes you do not use","Avoid leading wildcard or case-insensitive regex on huge collections: use text indexes or Atlas Search"])},
+
+{t:"15. MongoDB Atlas & Deployment", h:
+ nT(["Step","Notes"],[["Create a cluster","Free shared tier is fine for learning"],["Create a database user","Use a strong password and least privileges"],["Network access","Allow your host IP (avoid 0.0.0.0/0 in production)"],["Get connection string","mongodb+srv://user:pass@cluster/db"],["Store in .env","DBURL=mongodb+srv://..."],["Connect from Node","mongoose.connect(process.env.DBURL)"],["Backups","Enable automated backups and snapshots"]])+
+ nC("// .env\nDBURL=mongodb+srv://user:pass@cluster0.xxxx.mongodb.net/mydb\n\n// URL-encode special characters in the password, e.g. @ becomes %40")+
+ nL(["Replica sets in Atlas enable transactions","Monitor slow queries and connections in Atlas","Rotate credentials if a connection string leaks"])},
+
+{t:"16. Common Errors & Fixes", h:
+ nT(["Error","Cause","Fix"],[["MongoServerError E11000 duplicate key","Unique index violated","Catch code 11000 and return a friendly message"],["CastError: Cast to ObjectId failed","Invalid id format","Check mongoose.isValidObjectId first"],["ValidationError","Schema validation failed","Return field messages (err.errors)"],["MongooseServerSelectionError","Cannot reach cluster","Check connection string, IP access list, network"],["Authentication failed","Wrong user or password","Check credentials and URL-encode special characters"],["Buffering timed out","Query ran before connecting","Connect first, then start the server"],["Transaction numbers only allowed on replica set","Standalone server used","Use Atlas or a local replica set"],["Document too large","Over 16 MB","Move big arrays to another collection"],["Update ignored validators","Missing runValidators","Pass { runValidators: true }"],["Password missing in login query","select: false field","Use .select('+password')"]])}
+];
    
 var app = document.getElementById("app");
 var barbox = document.getElementById("barbox");
