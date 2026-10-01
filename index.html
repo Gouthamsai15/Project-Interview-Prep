@@ -796,6 +796,256 @@ skills.javascript.notes = [
  nT(["Pitfall","Fix"],[["Missing semicolon surprises","Use a linter / formatter"],["this lost in callbacks","Arrow function or bind"],["var in loops with timers","Use let"],["Forgetting await","Use async/await and check results"],["sort() on numbers","Pass (a, b) => a - b"],["Mutating shared objects","Copy with spread or structuredClone"],["Memory leaks","Remove listeners and clear timers"]])}
 ];
 
+skills.dsa = {
+  name: "DSA",
+  qa: [
+    ["Basics & Complexity","What is a data structure?","A way of organizing and storing data so it can be accessed and modified efficiently. Examples: array, linked list, stack, queue, hash table, tree, graph."],
+    ["Basics & Complexity","What is an algorithm?","A finite, step-by-step procedure to solve a problem. A good algorithm is correct, efficient and clear."],
+    ["Basics & Complexity","Linear vs non-linear data structures?","Linear: elements in a sequence (array, linked list, stack, queue). Non-linear: hierarchical or networked (tree, graph)."],
+    ["Basics & Complexity","What is time complexity?","How the running time grows with input size n, written in Big-O notation."],
+    ["Basics & Complexity","What is space complexity?","How much extra memory an algorithm uses as n grows (not counting the input, usually)."],
+    ["Basics & Complexity","Explain Big-O, Omega and Theta.","Big-O: upper bound (worst case). Omega: lower bound (best case). Theta: tight bound (both)."],
+    ["Basics & Complexity","Order common complexities from fast to slow.","O(1), O(log n), O(n), O(n log n), O(n^2), O(2^n), O(n!)."],
+    ["Basics & Complexity","What is amortized analysis?","Average cost per operation over a sequence. Example: dynamic array append is O(1) amortized even though resizing sometimes costs O(n)."],
+    ["Basics & Complexity","What is the complexity of a nested loop?","Two loops of n each give O(n^2). A loop that halves the problem each time gives O(log n)."],
+    ["Basics & Complexity","What are in-place and stable algorithms?","In-place: uses O(1) extra space. Stable: equal elements keep their original order after sorting."],
+    ["Basics & Complexity","How do you approach a coding problem in an interview?","Understand and clarify, work an example, state brute force, optimize with a pattern or data structure, write clean code, test with edge cases, and state time and space complexity."],
+
+    ["Arrays & Strings","What is an array? Pros and cons?","A contiguous block of same-type elements. Pros: O(1) index access, cache friendly. Cons: fixed size (in low-level languages), O(n) insert or delete in the middle."],
+    ["Arrays & Strings","Array vs linked list?","Array: random access O(1), insert/delete O(n), contiguous memory. Linked list: access O(n), insert/delete O(1) at a known node, extra memory for pointers."],
+    ["Arrays & Strings","What is a dynamic array?","An array that grows by allocating a bigger block (usually double) and copying. Python list and JS array work this way. Append is O(1) amortized."],
+    ["Arrays & Strings","How do you reverse an array in place?","Two pointers at both ends, swap, and move inward. O(n) time, O(1) space."],
+    ["Arrays & Strings","How do you find the missing number in 1..n?","Expected sum n(n+1)/2 minus actual sum, or XOR all numbers and indexes. O(n) time, O(1) space."],
+    ["Arrays & Strings","Maximum subarray sum?","Kadane's algorithm: keep current = max(x, current + x) and a global max. O(n)."],
+    ["Arrays & Strings","Two Sum problem?","Use a hash map from value to index: for each x check if target - x was seen. O(n) time, O(n) space."],
+    ["Arrays & Strings","How do you rotate an array by k?","Reverse the whole array, then reverse the first k and the remaining n-k elements. O(n) time, O(1) space."],
+    ["Arrays & Strings","How do you check if a string is a palindrome?","Two pointers from both ends comparing characters. O(n) time, O(1) space."],
+    ["Arrays & Strings","How do you check if two strings are anagrams?","Compare sorted strings (O(n log n)) or compare character count maps (O(n))."],
+    ["Arrays & Strings","Longest substring without repeating characters?","Sliding window with a set or map of last positions. O(n)."],
+    ["Arrays & Strings","Why are strings immutable in many languages?","Safety, thread safety, caching of hashes, and use as dictionary keys. Repeated concatenation in a loop costs O(n^2); use a list and join."],
+    ["Arrays & Strings","What is the prefix sum technique?","Precompute running sums so any range sum is prefix[r] - prefix[l-1] in O(1)."],
+
+    ["Linked List","What is a linked list? Types?","Nodes holding data and a pointer to the next node. Types: singly, doubly, circular."],
+    ["Linked List","How do you reverse a linked list?","Iterate with prev, curr, next pointers, flipping each next pointer. O(n) time, O(1) space."],
+    ["Linked List","How do you detect a cycle?","Floyd's tortoise and hare: slow moves 1 step, fast moves 2. If they meet, there is a cycle. O(n) time, O(1) space."],
+    ["Linked List","How do you find the middle node?","Slow and fast pointers: when fast reaches the end, slow is at the middle."],
+    ["Linked List","How do you find the start of a cycle?","After slow and fast meet, reset one pointer to head and move both one step at a time. They meet at the cycle start."],
+    ["Linked List","How do you remove the nth node from the end?","Move a fast pointer n steps ahead, then move both until fast reaches the end. Slow is just before the node to remove."],
+    ["Linked List","How do you merge two sorted linked lists?","Use a dummy head and compare node values, attaching the smaller one each time. O(n + m)."],
+    ["Linked List","Why use a dummy node?","It removes special cases for operations at the head of the list."],
+    ["Linked List","Singly vs doubly linked list?","Doubly has prev and next pointers: easy backward traversal and deletion given a node, but more memory."],
+
+    ["Stack & Queue","What is a stack?","LIFO (last in, first out). Operations push, pop, peek in O(1). Uses: undo, recursion, expression evaluation, DFS."],
+    ["Stack & Queue","What is a queue?","FIFO (first in, first out). Operations enqueue, dequeue in O(1). Uses: BFS, scheduling, buffering."],
+    ["Stack & Queue","What is a deque?","A double-ended queue with O(1) insert and remove at both ends."],
+    ["Stack & Queue","How do you check balanced parentheses?","Push opening brackets on a stack, and on a closing bracket pop and check that it matches. The stack must be empty at the end."],
+    ["Stack & Queue","How do you implement a queue using stacks?","Use two stacks: push to the input stack, and on dequeue move elements to the output stack when it is empty. Amortized O(1)."],
+    ["Stack & Queue","What is a monotonic stack?","A stack that keeps elements in sorted order. Used for next greater element, daily temperatures and largest rectangle in histogram."],
+    ["Stack & Queue","What is a circular queue?","A queue using a fixed array where the end wraps around to the start, reusing freed space."],
+    ["Stack & Queue","What is a priority queue?","A queue where the element with the highest priority leaves first. Usually implemented with a heap."],
+
+    ["Hashing","What is hashing?","Mapping a key to an index using a hash function for fast lookup, insert and delete (O(1) average)."],
+    ["Hashing","What is a collision? How is it handled?","Two keys map to the same index. Handled by chaining (list per bucket) or open addressing (linear probing, quadratic probing, double hashing)."],
+    ["Hashing","What is load factor?","Number of items divided by number of buckets. When it grows too high, the table resizes and rehashes."],
+    ["Hashing","What makes a good hash function?","Deterministic, fast, uniformly distributes keys and minimizes collisions."],
+    ["Hashing","Worst case of a hash table?","O(n) when many keys collide into one bucket."],
+    ["Hashing","HashMap vs HashSet?","HashMap stores key-value pairs. HashSet stores only unique keys."],
+    ["Hashing","When do you use a hash map in problems?","For fast lookups, counting frequency, detecting duplicates, and storing seen values (Two Sum, anagrams, subarray sum)."],
+    ["Hashing","How do you find subarrays with sum k?","Prefix sum with a hash map: count how many times (current prefix - k) was seen. O(n)."],
+
+    ["Trees","What is a tree?","A hierarchical structure of nodes with one root and no cycles. Each node has zero or more children."],
+    ["Trees","Binary tree vs binary search tree?","A binary tree has up to two children per node. A BST also keeps left values smaller and right values larger than the node."],
+    ["Trees","What are the tree traversals?","Depth first: inorder (left, root, right), preorder (root, left, right), postorder (left, right, root). Breadth first: level order using a queue."],
+    ["Trees","Inorder traversal of a BST gives?","Values in sorted ascending order."],
+    ["Trees","How do you find the height of a binary tree?","Recursively: 1 + max(height(left), height(right)), with 0 or -1 for null."],
+    ["Trees","What is a balanced tree?","A tree where heights of left and right subtrees differ by at most 1 for every node (like AVL). It keeps operations at O(log n)."],
+    ["Trees","AVL vs Red-Black tree?","AVL is more strictly balanced (faster lookups, more rotations). Red-Black is looser (faster inserts and deletes). Both give O(log n)."],
+    ["Trees","What is a complete vs full vs perfect binary tree?","Full: every node has 0 or 2 children. Complete: all levels filled except possibly the last, filled from the left. Perfect: all levels completely filled."],
+    ["Trees","How do you find the lowest common ancestor?","In a BST, move left or right based on values. In a general tree, recurse: if left and right both return non-null, the current node is the LCA."],
+    ["Trees","How do you validate a BST?","Recurse with min and max bounds for each node, or check that inorder traversal is strictly increasing."],
+    ["Trees","What is a Trie?","A tree for storing strings by characters. Search, insert and prefix lookup take O(length of word). Used for autocomplete and spell check."],
+    ["Trees","What is the diameter of a binary tree?","The longest path between any two nodes. Compute with DFS as the max of left height + right height at each node."],
+    ["Trees","BST operations complexity?","Average O(log n) for search, insert and delete. Worst case O(n) for a skewed tree."],
+
+    ["Heap & Priority Queue","What is a heap?","A complete binary tree that satisfies the heap property: in a min-heap each parent is smaller than its children, in a max-heap it is larger."],
+    ["Heap & Priority Queue","Heap operations complexity?","Insert O(log n), extract min or max O(log n), peek O(1), build heap O(n)."],
+    ["Heap & Priority Queue","How do you find the kth largest element?","Keep a min-heap of size k. The top is the kth largest. O(n log k)."],
+    ["Heap & Priority Queue","What is heap sort?","Build a max-heap, then repeatedly swap the root with the last element and heapify. O(n log n), in place, not stable."],
+    ["Heap & Priority Queue","How do you merge k sorted lists?","Use a min-heap of the current heads of each list. Pop the smallest and push its next node. O(N log k)."],
+    ["Heap & Priority Queue","How do you find a running median?","Use two heaps: a max-heap for the lower half and a min-heap for the upper half, kept balanced."],
+
+    ["Graphs","What is a graph? Terms?","A set of vertices connected by edges. Can be directed or undirected, weighted or unweighted, cyclic or acyclic."],
+    ["Graphs","Adjacency matrix vs adjacency list?","Matrix: O(V^2) space, O(1) edge check, good for dense graphs. List: O(V + E) space, good for sparse graphs."],
+    ["Graphs","BFS vs DFS?","BFS explores level by level using a queue (shortest path in unweighted graphs). DFS goes deep using a stack or recursion (cycle detection, topological sort, connected components). Both are O(V + E)."],
+    ["Graphs","How do you detect a cycle in a graph?","Undirected: DFS with parent tracking or Union-Find. Directed: DFS with a recursion stack, or topological sort (Kahn's algorithm)."],
+    ["Graphs","What is topological sort?","A linear ordering of a DAG so every edge goes from earlier to later. Done with DFS finish order or Kahn's algorithm (in-degree queue). Used for task scheduling."],
+    ["Graphs","Dijkstra's algorithm?","Shortest path from a source in a graph with non-negative weights, using a min-heap. O((V + E) log V)."],
+    ["Graphs","Bellman-Ford vs Dijkstra?","Bellman-Ford handles negative weights and detects negative cycles in O(VE). Dijkstra is faster but needs non-negative weights."],
+    ["Graphs","What is a minimum spanning tree?","A tree connecting all vertices with the smallest total edge weight. Algorithms: Kruskal (sort edges, Union-Find) and Prim (grow with a min-heap)."],
+    ["Graphs","What is Union-Find (Disjoint Set)?","A structure to track connected groups with find and union. With path compression and union by rank, operations are nearly O(1)."],
+    ["Graphs","How do you count islands in a grid?","Loop over cells; on land, run DFS or BFS to mark the connected land visited and increase the count. O(rows x cols)."],
+    ["Graphs","What is a connected component?","A maximal set of vertices where each pair is connected by a path."],
+    ["Graphs","Floyd-Warshall?","All-pairs shortest paths using dynamic programming in O(V^3)."],
+
+    ["Recursion & Backtracking","What is recursion?","A function calling itself on a smaller subproblem, with a base case to stop."],
+    ["Recursion & Backtracking","What is the call stack in recursion?","Each call adds a frame. Too deep a recursion without a base case causes stack overflow."],
+    ["Recursion & Backtracking","Recursion vs iteration?","Recursion is often simpler for trees and divide and conquer but uses stack space. Iteration is usually more memory efficient."],
+    ["Recursion & Backtracking","What is backtracking?","Build a solution step by step and undo (backtrack) a choice when it cannot lead to a valid answer. Used in permutations, subsets, N-Queens and Sudoku."],
+    ["Recursion & Backtracking","How do you generate all subsets?","For each element choose to include or exclude it recursively. There are 2^n subsets."],
+    ["Recursion & Backtracking","What is the N-Queens problem?","Place N queens on an N x N board so none attack each other. Solved by backtracking with column and diagonal checks."],
+    ["Recursion & Backtracking","What is divide and conquer?","Split a problem into subproblems, solve them, and combine the results. Examples: merge sort, quick sort, binary search."],
+
+    ["Sorting","List sorting algorithms and complexity.","Bubble, selection, insertion: O(n^2). Merge sort: O(n log n) always. Quick sort: O(n log n) average, O(n^2) worst. Heap sort: O(n log n). Counting sort: O(n + k)."],
+    ["Sorting","How does quick sort work?","Pick a pivot, partition elements smaller to the left and larger to the right, then recurse on both sides. In place, not stable."],
+    ["Sorting","How does merge sort work?","Split the array in half, sort each half recursively, then merge the two sorted halves. O(n log n), stable, needs O(n) extra space."],
+    ["Sorting","Which sorting algorithm is best?","It depends. Quick sort is usually fastest in practice. Merge sort for stability and linked lists. Insertion sort for small or nearly sorted data. Counting sort for small integer ranges."],
+    ["Sorting","Which sorts are stable?","Merge sort, insertion sort, bubble sort, counting sort. Quick sort, heap sort and selection sort are usually not stable."],
+    ["Sorting","What sort does Python or JavaScript use?","Python uses Timsort (merge plus insertion, stable, O(n log n)). V8 JavaScript also uses Timsort."],
+    ["Sorting","When is insertion sort good?","For small arrays or nearly sorted data, where it runs close to O(n)."],
+
+    ["Searching","Linear vs binary search?","Linear search checks each element in O(n). Binary search halves a sorted array each step in O(log n)."],
+    ["Searching","How does binary search work?","Compare the middle element with the target and discard half. Use mid = low + (high - low) // 2 to avoid overflow."],
+    ["Searching","Binary search on the answer?","When the answer lies in a monotonic range (like minimum capacity or speed), binary search the answer and check feasibility. Example: Koko eating bananas, ship packages."],
+    ["Searching","How do you search in a rotated sorted array?","Binary search: find which half is sorted, check if the target lies in it, and move accordingly. O(log n)."],
+    ["Searching","How do you find the first and last position of an element?","Run binary search twice: one biased to the left bound and one to the right."],
+
+    ["Dynamic Programming & Greedy","What is dynamic programming?","Solving problems by breaking them into overlapping subproblems and storing results to avoid recomputation."],
+    ["Dynamic Programming & Greedy","Memoization vs tabulation?","Memoization: top-down recursion with a cache. Tabulation: bottom-up filling a table iteratively."],
+    ["Dynamic Programming & Greedy","When can you use DP?","When a problem has optimal substructure and overlapping subproblems."],
+    ["Dynamic Programming & Greedy","Fibonacci complexity: recursion vs DP?","Plain recursion is O(2^n). With memoization or a loop it is O(n), and O(1) space using two variables."],
+    ["Dynamic Programming & Greedy","What is the 0/1 knapsack problem?","Pick items with weights and values to maximize value within a capacity. dp[i][w] = max(skip item, take item). O(n x W)."],
+    ["Dynamic Programming & Greedy","Longest common subsequence?","dp[i][j] = dp[i-1][j-1] + 1 if characters match, otherwise max(dp[i-1][j], dp[i][j-1]). O(n x m)."],
+    ["Dynamic Programming & Greedy","Coin change problem?","dp[amount] = min(dp[amount - coin] + 1) over all coins. O(amount x coins)."],
+    ["Dynamic Programming & Greedy","Longest increasing subsequence?","DP is O(n^2). With binary search on a tails array it is O(n log n)."],
+    ["Dynamic Programming & Greedy","What is a greedy algorithm?","It makes the locally best choice at each step hoping for a global optimum. It works only when the greedy-choice property holds."],
+    ["Dynamic Programming & Greedy","Greedy vs DP?","Greedy never reconsiders choices and is faster but not always correct. DP considers all subproblems and guarantees optimality."],
+    ["Dynamic Programming & Greedy","Examples of greedy problems?","Activity selection, fractional knapsack, Huffman coding, Dijkstra, Kruskal, Prim, jump game, minimum platforms."],
+
+    ["Patterns & Techniques","What is the two pointers technique?","Use two indexes moving through data (from both ends or at different speeds) to solve problems like pair sum on sorted arrays, palindromes and removing duplicates in O(n)."],
+    ["Patterns & Techniques","What is the sliding window technique?","Maintain a window over a sequence, expanding and shrinking it, for problems like maximum sum subarray of size k or longest substring with a condition."],
+    ["Patterns & Techniques","What is the fast and slow pointer technique?","Two pointers at different speeds. Used for cycle detection and finding the middle of a linked list."],
+    ["Patterns & Techniques","What is bit manipulation? Common tricks?","Working with bits. n & (n - 1) clears the lowest set bit. n & 1 checks odd. x ^ x = 0 finds the single non-repeating number. 1 << k sets the kth bit mask."],
+    ["Patterns & Techniques","How do you check if a number is a power of 2?","n > 0 and (n & (n - 1)) == 0."],
+    ["Patterns & Techniques","What is the difference between BFS and Dijkstra?","BFS finds shortest paths in unweighted graphs using a queue. Dijkstra handles weighted graphs using a priority queue."],
+    ["Patterns & Techniques","How do you choose a data structure?","Need fast lookup: hash map. Need order or ranges: sorted array or tree. Need min or max repeatedly: heap. Need LIFO: stack. Need FIFO or level order: queue. Need relationships: graph."],
+
+    ["Situation Based","Your solution is too slow. What do you do?","Find the bottleneck, remove repeated work with a hash map or cache, sort or preprocess, use two pointers or a heap, or apply binary search or DP."],
+    ["Situation Based","Input size is 10^5. Which complexity is acceptable?","Roughly O(n log n) or better. O(n^2) would take about 10^10 steps, which is too slow."],
+    ["Situation Based","You get time limit exceeded on a recursive solution.","Look for overlapping subproblems and add memoization, or convert to an iterative or bottom-up version."],
+    ["Situation Based","How do you handle edge cases?","Test empty input, a single element, duplicates, negative numbers, very large values, already sorted input and all-equal elements."],
+    ["Situation Based","You are stuck in an interview. What do you do?","Think aloud, restate the problem, try a small example, give a brute force solution first, then improve it. Ask clarifying questions."],
+    ["Situation Based","How do you store a very large dataset to search quickly?","Use an index structure: hash index for exact match, balanced tree or B-tree for range queries, and a heap or trie when the use case fits."],
+    ["Situation Based","How would you design an LRU cache?","A hash map plus a doubly linked list. The map gives O(1) lookup, and the list keeps usage order so the least recently used node is removed in O(1)."],
+    ["Situation Based","How would you find the top k frequent items in a large stream?","Count with a hash map and keep a min-heap of size k. For huge streams, use approximate methods like count-min sketch."]
+  ]
+};
+
+skills.dsa.notes = [
+{t:"1. Introduction & Complexity", h:
+ nP("A data structure organizes data. An algorithm is a step-by-step method to solve a problem. DSA helps you write efficient, scalable code. Code examples below use Python.")+
+ nT(["Notation","Meaning"],[["Big-O","Upper bound, worst case"],["Omega","Lower bound, best case"],["Theta","Tight bound"]])+
+ nT(["Complexity","Name","Example"],[["O(1)","Constant","Array index, hash lookup"],["O(log n)","Logarithmic","Binary search"],["O(n)","Linear","Single loop"],["O(n log n)","Linearithmic","Merge sort"],["O(n^2)","Quadratic","Nested loops"],["O(2^n)","Exponential","Subsets, naive Fibonacci"],["O(n!)","Factorial","Permutations"]])+
+ nT(["n (input size)","Usually acceptable"],[["up to 10","O(n!)"],["up to 20","O(2^n)"],["up to 500","O(n^3)"],["up to 5,000","O(n^2)"],["up to 10^6","O(n log n) or O(n)"],["10^9 or more","O(log n) or O(1)"]])},
+
+{t:"2. Time Complexity Cheat Sheet", h:
+ nT(["Structure","Access","Search","Insert","Delete"],[["Array","O(1)","O(n)","O(n)","O(n)"],["Linked list","O(n)","O(n)","O(1) at known node","O(1) at known node"],["Stack / Queue","O(n)","O(n)","O(1)","O(1)"],["Hash table","-","O(1) avg","O(1) avg","O(1) avg"],["BST (balanced)","O(log n)","O(log n)","O(log n)","O(log n)"],["BST (skewed)","O(n)","O(n)","O(n)","O(n)"],["Heap","-","O(n)","O(log n)","O(log n)"]])+
+ nT(["Sort","Best","Average","Worst","Space","Stable"],[["Bubble","O(n)","O(n^2)","O(n^2)","O(1)","Yes"],["Selection","O(n^2)","O(n^2)","O(n^2)","O(1)","No"],["Insertion","O(n)","O(n^2)","O(n^2)","O(1)","Yes"],["Merge","O(n log n)","O(n log n)","O(n log n)","O(n)","Yes"],["Quick","O(n log n)","O(n log n)","O(n^2)","O(log n)","No"],["Heap","O(n log n)","O(n log n)","O(n log n)","O(1)","No"],["Counting","O(n + k)","O(n + k)","O(n + k)","O(k)","Yes"]])},
+
+{t:"3. Arrays", h:
+ nP("Contiguous memory, same-type elements, O(1) access by index. Insert or delete in the middle shifts elements, so it takes O(n).")+
+ nC("a = [5, 2, 8, 1]\na.append(9)        # O(1) amortized\na.insert(1, 7)     # O(n)\na.pop()            # O(1)\n\n# reverse in place (two pointers)\ni, j = 0, len(a) - 1\nwhile i < j:\n    a[i], a[j] = a[j], a[i]\n    i += 1; j -= 1")+
+ nC("# Kadane: maximum subarray sum\ndef max_sub(nums):\n    cur = best = nums[0]\n    for x in nums[1:]:\n        cur = max(x, cur + x)\n        best = max(best, cur)\n    return best")+
+ nT(["Technique","Use"],[["Prefix sum","Fast range sum queries"],["Two pointers","Pairs in sorted arrays, partitioning"],["Sliding window","Subarray problems with a condition"],["Hash map","Two Sum, frequency counting"],["Sorting first","Intervals, duplicates, merging"]])},
+
+{t:"4. Strings", h:
+ nP("A string is a sequence of characters. In Python and JavaScript strings are immutable, so building with += in a loop is O(n^2). Collect parts in a list and join.")+
+ nT(["Problem","Approach","Complexity"],[["Palindrome check","Two pointers","O(n)"],["Anagram check","Sorted compare or count map","O(n log n) / O(n)"],["Longest substring without repeats","Sliding window + set","O(n)"],["Reverse words","Split, reverse, join","O(n)"],["Pattern matching","KMP or Rabin-Karp","O(n + m)"],["Longest palindromic substring","Expand around center","O(n^2)"]])+
+ nC("def is_palindrome(s):\n    i, j = 0, len(s) - 1\n    while i < j:\n        if s[i] != s[j]: return False\n        i += 1; j -= 1\n    return True\n\ndef is_anagram(a, b):\n    from collections import Counter\n    return Counter(a) == Counter(b)")},
+
+{t:"5. Linked List", h:
+ nP("Nodes connected by pointers. Fast insert and delete when you hold the node, but no random access.")+
+ nT(["Type","Description"],[["Singly","Each node points to next"],["Doubly","Nodes have prev and next"],["Circular","Last node points back to head"]])+
+ nC("class Node:\n    def __init__(self, val):\n        self.val = val\n        self.next = None\n\ndef reverse(head):\n    prev = None\n    while head:\n        nxt = head.next\n        head.next = prev\n        prev = head\n        head = nxt\n    return prev")+
+ nC("# cycle detection (Floyd)\ndef has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast: return True\n    return False")+
+ nT(["Trick","Used for"],[["Slow / fast pointers","Middle node, cycle detection"],["Dummy head node","Simplify head insert or delete"],["Reverse in place","Palindrome list, reverse k group"],["Two pointers n apart","Remove nth node from end"]])},
+
+{t:"6. Stack", h:
+ nP("LIFO: last in, first out. push, pop and peek are all O(1).")+
+ nC("stack = []\nstack.append(1)    # push\nstack.append(2)\nstack.pop()        # 2\nstack[-1]          # peek")+
+ nC("def balanced(s):\n    pairs = {')': '(', ']': '[', '}': '{'}\n    st = []\n    for ch in s:\n        if ch in '([{':\n            st.append(ch)\n        elif not st or st.pop() != pairs[ch]:\n            return False\n    return not st")+
+ nT(["Use case","Example"],[["Matching brackets","Parentheses validator"],["Undo / Redo","Editors"],["Function calls","Call stack, recursion"],["Expression evaluation","Postfix, infix to postfix"],["Next greater element","Monotonic stack"],["DFS","Iterative traversal"]])},
+
+{t:"7. Queue & Deque", h:
+ nP("FIFO: first in, first out. In Python use collections.deque for O(1) at both ends (a list pop(0) is O(n)).")+
+ nC("from collections import deque\nq = deque()\nq.append(1)        # enqueue\nq.append(2)\nq.popleft()        # dequeue -> 1")+
+ nT(["Type","Description","Use"],[["Queue","FIFO","BFS, scheduling"],["Deque","Insert and remove at both ends","Sliding window maximum"],["Circular queue","Array that wraps around","Fixed-size buffers"],["Priority queue","Highest priority first (heap)","Dijkstra, task scheduling"]])},
+
+{t:"8. Hashing", h:
+ nP("A hash function maps a key to an index. Lookup, insert and delete are O(1) on average and O(n) in the worst case.")+
+ nT(["Collision method","How it works"],[["Chaining","Each bucket holds a list of entries"],["Linear probing","Try the next free slot"],["Quadratic probing","Jump by squares to reduce clustering"],["Double hashing","Second hash gives the step size"]])+
+ nC("# Two Sum\ndef two_sum(nums, target):\n    seen = {}\n    for i, x in enumerate(nums):\n        if target - x in seen:\n            return [seen[target - x], i]\n        seen[x] = i\n\n# Subarray sum equals k (prefix sum + map)\ndef count_subarrays(nums, k):\n    cnt = {0: 1}; s = res = 0\n    for x in nums:\n        s += x\n        res += cnt.get(s - k, 0)\n        cnt[s] = cnt.get(s, 0) + 1\n    return res")},
+
+{t:"9. Trees & Traversals", h:
+ nC("class TreeNode:\n    def __init__(self, val):\n        self.val = val\n        self.left = None\n        self.right = None\n\ndef inorder(n):\n    if n:\n        inorder(n.left); print(n.val); inorder(n.right)\n\ndef height(n):\n    return 0 if not n else 1 + max(height(n.left), height(n.right))")+
+ nT(["Traversal","Order","Use"],[["Inorder","Left, Root, Right","Sorted order in BST"],["Preorder","Root, Left, Right","Copy or serialize a tree"],["Postorder","Left, Right, Root","Delete tree, evaluate expressions"],["Level order","Level by level (queue)","Shortest depth, views of tree"]])+
+ nT(["Tree type","Property"],[["Full","Every node has 0 or 2 children"],["Complete","All levels filled, last filled from left"],["Perfect","All levels completely filled"],["Balanced","Subtree heights differ by at most 1"],["Skewed","Every node has one child (like a list)"]])},
+
+{t:"10. Binary Search Tree & Trie", h:
+ nP("BST rule: left subtree values are smaller, right subtree values are larger. Inorder traversal gives sorted output. Average O(log n), worst case O(n) when skewed.")+
+ nC("def search(root, key):\n    while root and root.val != key:\n        root = root.left if key < root.val else root.right\n    return root\n\ndef is_valid(n, lo=float('-inf'), hi=float('inf')):\n    if not n: return True\n    if not (lo < n.val < hi): return False\n    return is_valid(n.left, lo, n.val) and is_valid(n.right, n.val, hi)")+
+ nT(["Structure","Purpose","Complexity"],[["AVL tree","Strictly balanced BST","O(log n)"],["Red-Black tree","Loosely balanced BST","O(log n)"],["Trie","Prefix search for strings","O(length of word)"],["Segment tree","Range queries and updates","O(log n)"],["B-tree","Database indexes","O(log n)"]])},
+
+{t:"11. Heap & Priority Queue", h:
+ nP("A complete binary tree where each parent is smaller (min-heap) or larger (max-heap) than its children. Stored in an array: children of index i are 2i+1 and 2i+2.")+
+ nT(["Operation","Complexity"],[["Peek min / max","O(1)"],["Insert","O(log n)"],["Extract min / max","O(log n)"],["Build heap","O(n)"],["Heap sort","O(n log n)"]])+
+ nC("import heapq\nh = []\nheapq.heappush(h, 5)\nheapq.heappush(h, 1)\nheapq.heappop(h)          # 1 (min-heap)\n\n# kth largest: keep min-heap of size k\ndef kth_largest(nums, k):\n    h = nums[:k]; heapq.heapify(h)\n    for x in nums[k:]:\n        if x > h[0]: heapq.heapreplace(h, x)\n    return h[0]")+
+ nP("For a max-heap in Python, push negative values.")},
+
+{t:"12. Graphs", h:
+ nT(["Representation","Space","Edge check","Best for"],[["Adjacency matrix","O(V^2)","O(1)","Dense graphs"],["Adjacency list","O(V + E)","O(degree)","Sparse graphs"]])+
+ nC("from collections import deque\n\ndef bfs(graph, start):\n    seen = {start}; q = deque([start])\n    while q:\n        node = q.popleft()\n        for nb in graph[node]:\n            if nb not in seen:\n                seen.add(nb); q.append(nb)\n\ndef dfs(graph, node, seen):\n    seen.add(node)\n    for nb in graph[node]:\n        if nb not in seen:\n            dfs(graph, nb, seen)")+
+ nT(["Algorithm","Purpose","Complexity"],[["BFS","Shortest path (unweighted), levels","O(V + E)"],["DFS","Connected components, cycles, paths","O(V + E)"],["Topological sort","Order tasks in a DAG","O(V + E)"],["Dijkstra","Shortest path, non-negative weights","O((V + E) log V)"],["Bellman-Ford","Negative weights","O(V x E)"],["Floyd-Warshall","All pairs shortest path","O(V^3)"],["Kruskal / Prim","Minimum spanning tree","O(E log E)"],["Union-Find","Connected groups, cycle detection","Almost O(1)"]])},
+
+{t:"13. Recursion & Backtracking", h:
+ nP("Every recursion needs a base case and a smaller subproblem. Backtracking tries a choice, recurses, then undoes the choice.")+
+ nC("def factorial(n):\n    return 1 if n <= 1 else n * factorial(n - 1)\n\n# subsets with backtracking\ndef subsets(nums):\n    res, path = [], []\n    def go(i):\n        if i == len(nums):\n            res.append(path[:]); return\n        go(i + 1)              # skip\n        path.append(nums[i])   # choose\n        go(i + 1)\n        path.pop()             # undo\n    go(0)\n    return res")+
+ nT(["Problem","Count / complexity"],[["Subsets","2^n"],["Permutations","n!"],["N-Queens","Pruned search, exponential"],["Sudoku solver","Pruned search"],["Combination sum","Depends on target"]])},
+
+{t:"14. Sorting Algorithms", h:
+ nC("def merge_sort(a):\n    if len(a) <= 1: return a\n    mid = len(a) // 2\n    l, r = merge_sort(a[:mid]), merge_sort(a[mid:])\n    out = []\n    while l and r:\n        out.append(l.pop(0) if l[0] <= r[0] else r.pop(0))\n    return out + l + r\n\ndef quick_sort(a):\n    if len(a) <= 1: return a\n    p = a[len(a) // 2]\n    return (quick_sort([x for x in a if x < p]) +\n            [x for x in a if x == p] +\n            quick_sort([x for x in a if x > p]))")+
+ nT(["Algorithm","Idea","Best use"],[["Bubble","Swap adjacent out-of-order items","Teaching only"],["Selection","Pick the smallest each time","Few writes needed"],["Insertion","Insert each item into sorted part","Small or nearly sorted data"],["Merge","Divide, sort halves, merge","Stable sort, linked lists"],["Quick","Partition around a pivot","General purpose, fast in practice"],["Heap","Use a heap to extract max","Guaranteed O(n log n), in place"],["Counting / Radix","Count digits or values","Integers in small range"]])+
+ nP("Python's sorted() and list.sort() use Timsort: stable, O(n log n).")},
+
+{t:"15. Searching & Binary Search", h:
+ nT(["Search","Requirement","Complexity"],[["Linear","None","O(n)"],["Binary","Sorted data","O(log n)"],["Hash lookup","Hash table","O(1) average"],["BST search","Balanced BST","O(log n)"]])+
+ nC("def binary_search(a, target):\n    lo, hi = 0, len(a) - 1\n    while lo <= hi:\n        mid = lo + (hi - lo) // 2\n        if a[mid] == target: return mid\n        if a[mid] < target: lo = mid + 1\n        else: hi = mid - 1\n    return -1")+
+ nL(["Binary search on the answer: search a range of possible answers and test feasibility","Lower bound: first index with value >= target","Rotated sorted array: find the sorted half each step","Always check mid calculation and loop condition (off-by-one errors)"])},
+
+{t:"16. Two Pointers & Sliding Window", h:
+ nT(["Technique","When to use","Example"],[["Two pointers (opposite ends)","Sorted array, pair or palindrome","Pair with target sum"],["Two pointers (same direction)","Remove duplicates, partition","Move zeroes"],["Fast and slow pointers","Linked list cycle or middle","Floyd's cycle detection"],["Fixed sliding window","Subarray of size k","Max sum of k elements"],["Variable sliding window","Longest or shortest subarray with a condition","Longest substring without repeats"]])+
+ nC("# longest substring without repeating characters\ndef longest_unique(s):\n    seen = {}; left = best = 0\n    for right, ch in enumerate(s):\n        if ch in seen and seen[ch] >= left:\n            left = seen[ch] + 1\n        seen[ch] = right\n        best = max(best, right - left + 1)\n    return best")},
+
+{t:"17. Dynamic Programming", h:
+ nP("DP solves problems with overlapping subproblems and optimal substructure by storing results. Steps: define the state, write the recurrence, set base cases, choose the order, and optimize space.")+
+ nT(["Style","Description"],[["Memoization (top-down)","Recursion plus cache"],["Tabulation (bottom-up)","Fill a table iteratively"]])+
+ nC("# Fibonacci, O(n) time, O(1) space\ndef fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n\n# Coin change (minimum coins)\ndef coin_change(coins, amount):\n    dp = [0] + [float('inf')] * amount\n    for a in range(1, amount + 1):\n        for c in coins:\n            if c <= a:\n                dp[a] = min(dp[a], dp[a - c] + 1)\n    return dp[amount] if dp[amount] != float('inf') else -1")+
+ nT(["Classic problem","State / recurrence","Complexity"],[["0/1 Knapsack","dp[i][w] = max(skip, take)","O(n x W)"],["Longest Common Subsequence","Match: dp[i-1][j-1] + 1, else max of two","O(n x m)"],["Longest Increasing Subsequence","dp[i] = 1 + max(dp[j]) for j before i","O(n^2) or O(n log n)"],["Edit distance","Insert, delete, replace","O(n x m)"],["Climbing stairs","dp[i] = dp[i-1] + dp[i-2]","O(n)"],["House robber","dp[i] = max(dp[i-1], dp[i-2] + x)","O(n)"]])},
+
+{t:"18. Greedy Algorithms", h:
+ nP("Choose the best option at each step without reconsidering. Correct only when the greedy-choice property and optimal substructure hold, which you should justify.")+
+ nT(["Problem","Greedy choice"],[["Activity selection","Pick the earliest finishing activity"],["Fractional knapsack","Highest value per weight first"],["Huffman coding","Merge two smallest frequencies"],["Minimum platforms / meeting rooms","Sort start and end times"],["Jump game","Track farthest reachable index"],["Dijkstra / Prim / Kruskal","Smallest edge or distance first"]])+
+ nT(["Greedy","Dynamic programming"],[["One choice per step, no going back","Considers all subproblems"],["Faster, simpler","Slower, more memory"],["May not give the optimal answer","Guarantees the optimal answer"]])},
+
+{t:"19. Bit Manipulation", h:
+ nT(["Operator","Symbol","Example"],[["AND","&","5 & 3 = 1"],["OR","|","5 | 3 = 7"],["XOR","^","5 ^ 3 = 6"],["NOT","~","~5 = -6"],["Left shift","<<","1 << 3 = 8"],["Right shift",">>","8 >> 2 = 2"]])+
+ nT(["Trick","Meaning"],[["n & 1","True if n is odd"],["n & (n - 1)","Clear the lowest set bit"],["n & (n - 1) == 0 (n > 0)","n is a power of 2"],["x ^ x = 0, x ^ 0 = x","Find the single non-repeating number"],["1 << k","Mask with kth bit set"],["n >> 1","Divide by 2"]])+
+ nC("def single_number(nums):\n    r = 0\n    for x in nums:\n        r ^= x\n    return r\n\ndef count_bits(n):\n    c = 0\n    while n:\n        n &= n - 1\n        c += 1\n    return c")},
+
+{t:"20. Problem-Solving Patterns & Tips", h:
+ nT(["If the problem says...","Think of..."],[["Sorted array, find pair or target","Two pointers, binary search"],["Subarray or substring with a condition","Sliding window, prefix sum"],["Frequency, duplicates, lookup","Hash map or set"],["Top k, kth largest, running median","Heap"],["Shortest path (unweighted)","BFS"],["Shortest path (weighted)","Dijkstra"],["All combinations, permutations","Backtracking"],["Optimal value with overlapping subproblems","Dynamic programming"],["Tree problems","DFS recursion or BFS level order"],["Dependencies or ordering","Topological sort"],["Connected groups","Union-Find or DFS"],["Matching brackets, next greater","Stack"],["Prefix search of words","Trie"]])+
+ nL(["Clarify the problem and constraints first","Start with a brute force, then optimize","Walk through a small example","Handle edge cases: empty, single item, duplicates, negatives","State time and space complexity","Name variables clearly and test your code by hand"])}
+];
+
 var app = document.getElementById("app");
 var barbox = document.getElementById("barbox");
 var groups = { projects: projects, skills: skills };
