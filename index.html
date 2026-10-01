@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Project Interview Prep</title>
+<title>Interview Prep</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:#222;line-height:1.6}
-header{background:#1f3a5f;color:#fff;padding:16px 20px;text-align:center}
-header h1{margin:0;font-size:22px}
+#top{position:sticky;top:0;z-index:20}
+header{background:#1f3a5f;color:#fff;padding:16px 20px;text-align:center;transition:padding .2s}
+header h1{margin:0;font-size:22px;transition:font-size .2s}
 .wrap{max-width:900px;margin:0 auto;padding:20px}
 .home{text-align:center;min-height:calc(100vh - 120px);display:flex;flex-direction:column;justify-content:center;align-items:center}
 .home h2{font-size:28px;margin-bottom:30px}
@@ -18,11 +19,17 @@ header h1{margin:0;font-size:22px}
 .pbtn:hover{background:#2c5282}
 .pbtn small{display:block;font-size:13px;font-weight:normal;margin-top:6px;opacity:.85}
 .menu{min-height:calc(100vh - 200px)}
-.bar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #d8dde3;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.bar{background:#fff;border-bottom:1px solid #d8dde3;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .barin{max-width:900px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:12px}
 .barin h2{margin:0;font-size:17px;color:#1f3a5f}
 .back{background:#1f3a5f;color:#fff;border:0;padding:7px 14px;border-radius:6px;font-size:14px;cursor:pointer}
 .back:hover{background:#2c5282}
+.barin,.back,.barin h2{transition:all .2s}
+#top.small header{padding:6px 20px}
+#top.small header h1{font-size:15px}
+#top.small .barin{padding:4px 20px}
+#top.small .back{padding:3px 10px;font-size:12px}
+#top.small .barin h2{font-size:13px}
 .q .nbody{display:none;padding:0 14px 14px}
 .q.open .nbody{display:block}
 .nbody h4{margin:14px 0 6px;color:#1f3a5f}
@@ -46,6 +53,7 @@ header h1{margin:0;font-size:22px}
 .note{background:#fff8e1;border:1px solid #f0d98a;border-radius:8px;padding:14px;margin-bottom:16px}
 footer{text-align:center;color:#777;font-size:13px;padding:20px}
 @media(max-width:600px){
+#top.small .barin{padding:4px 14px}
 .barin{padding:8px 14px}
 header h1{font-size:18px}
 .wrap{padding:14px}
@@ -57,8 +65,7 @@ header h1{font-size:18px}
 </style>
 </head>
 <body>
-<header><h1>Project Interview Prep</h1></header>
-<div id="barbox"></div>
+<div id="top"><header><h1>Interview Prep</h1></header><div id="barbox"></div></div>
 <div class="wrap" id="app"></div>
 
 <script>
@@ -1046,6 +1053,269 @@ skills.dsa.notes = [
  nL(["Clarify the problem and constraints first","Start with a brute force, then optimize","Walk through a small example","Handle edge cases: empty, single item, duplicates, negatives","State time and space complexity","Name variables clearly and test your code by hand"])}
 ];
 
+skills.nodejs = {
+  name: "Node.js",
+  qa: [
+    ["Basics","What is Node.js?","An open-source, cross-platform JavaScript runtime built on Chrome's V8 engine that lets you run JavaScript outside the browser, mainly for servers and tools."],
+    ["Basics","Is Node.js a language, framework or library?","None of them. It is a runtime environment. JavaScript is the language, and frameworks like Express run on top of Node."],
+    ["Basics","Why use Node.js?","Same language for frontend and backend, fast V8 engine, non-blocking I/O, huge npm ecosystem, and good for real-time and I/O-heavy apps."],
+    ["Basics","What are the main features of Node.js?","Asynchronous and non-blocking I/O, event-driven, single-threaded event loop, cross-platform, fast execution and npm packages."],
+    ["Basics","Is Node.js single-threaded?","JavaScript code runs on a single main thread, but Node uses libuv and a thread pool for async I/O, so work like file access and DNS runs in the background."],
+    ["Basics","What is V8?","Google's open-source JavaScript engine written in C++. It compiles JavaScript to machine code."],
+    ["Basics","What is libuv?","A C library in Node that provides the event loop, the thread pool and async I/O for files, network and timers."],
+    ["Basics","Node.js vs browser JavaScript?","Browser has DOM, window and Web APIs. Node has fs, http, process and modules, but no DOM. Node uses global instead of window."],
+    ["Basics","When should you not use Node.js?","For heavy CPU-bound work (video encoding, big computations) on the main thread. Use worker threads, child processes or another language for that."],
+    ["Basics","What is the REPL?","Read-Eval-Print Loop. Run node with no arguments to type JavaScript and see results interactively."],
+    ["Basics","What are global objects in Node?","process, console, Buffer, setTimeout, setInterval, __dirname, __filename (CommonJS), require, module, exports and globalThis."],
+    ["Basics","What is the process object?","A global object with information about the running process: process.argv, process.env, process.exit(), process.cwd(), process.on('uncaughtException')."],
+
+    ["Modules","What are modules in Node.js?","Reusable pieces of code in separate files. Node supports CommonJS (require) and ES modules (import)."],
+    ["Modules","CommonJS vs ES modules?","CommonJS: require and module.exports, loaded synchronously, default in .js. ES modules: import and export, static analysis, async loading, enabled with type: 'module' or .mjs."],
+    ["Modules","How does require work?","It resolves the path, loads and wraps the file in a function, executes it once, caches the result in require.cache and returns module.exports."],
+    ["Modules","module.exports vs exports?","exports is a reference to module.exports. Assigning exports = something breaks the link, so use module.exports = something to export a single value."],
+    ["Modules","What is the module wrapper function?","Node wraps each file in a function with exports, require, module, __filename and __dirname, which gives modules their own scope."],
+    ["Modules","What are circular dependencies?","Two modules require each other. Node returns a partially loaded module, which can give undefined values. Restructure the code to avoid it."],
+    ["Modules","How do you get __dirname in ES modules?","Use import.meta.url with fileURLToPath and path.dirname, or import.meta.dirname in newer versions."],
+    ["Modules","What are core, local and third-party modules?","Core: built in (fs, path, http). Local: your own files. Third-party: installed from npm (express, mongoose)."],
+
+    ["Event Loop & Async","What is the event loop?","A mechanism that lets Node handle many operations on one thread. It picks callbacks from queues and runs them when the call stack is empty."],
+    ["Event Loop & Async","What are the phases of the event loop?","Timers, pending callbacks, idle/prepare, poll (I/O), check (setImmediate), close callbacks. Between phases, process.nextTick and promise microtasks run."],
+    ["Event Loop & Async","process.nextTick vs setImmediate vs setTimeout?","nextTick runs right after the current operation, before other async work. Promise callbacks run next as microtasks. setTimeout(0) runs in the timers phase. setImmediate runs in the check phase after I/O."],
+    ["Event Loop & Async","Blocking vs non-blocking code?","Blocking code (fs.readFileSync) halts the thread until done. Non-blocking code (fs.readFile) starts the work and continues, handling the result in a callback or promise."],
+    ["Event Loop & Async","What is callback hell and how do you avoid it?","Deeply nested callbacks. Avoid with promises, async/await, named functions and modular code."],
+    ["Event Loop & Async","What is the error-first callback pattern?","Callbacks take (err, result) where the first argument is the error or null. Always check err first."],
+    ["Event Loop & Async","What is a Promise and async/await in Node?","A Promise represents a future value. async/await lets you write promise-based code in a sequential style with try/catch for errors."],
+    ["Event Loop & Async","What is util.promisify?","It converts a callback-style function into one that returns a promise."],
+    ["Event Loop & Async","Sequential vs parallel async operations?","await a(); await b(); runs one by one. await Promise.all([a(), b()]) runs them in parallel."],
+    ["Event Loop & Async","What does Node do with CPU-heavy work?","Blocks the event loop. Offload it to worker threads, child processes or a job queue."],
+    ["Event Loop & Async","What is the libuv thread pool?","A pool (default 4 threads) used for fs operations, DNS lookup, crypto and zlib. Change size with UV_THREADPOOL_SIZE."],
+
+    ["Core Modules","Name important core modules.","fs, path, http, https, os, events, stream, buffer, crypto, url, util, child_process, cluster, worker_threads, zlib."],
+    ["Core Modules","What is the fs module?","File system operations: readFile, writeFile, appendFile, unlink, mkdir, readdir, stat. Has callback, sync and promise (fs/promises) versions."],
+    ["Core Modules","readFile vs createReadStream?","readFile loads the whole file into memory. createReadStream reads in chunks, which is better for large files."],
+    ["Core Modules","What is the path module and why use it?","It builds and normalizes file paths in a cross-platform way: path.join, path.resolve, path.basename, path.extname."],
+    ["Core Modules","path.join vs path.resolve?","join concatenates segments. resolve builds an absolute path from the right, using the current directory if needed."],
+    ["Core Modules","What is the events module / EventEmitter?","A class for event-driven code: on, once, emit, off. Many Node objects (streams, servers) extend it."],
+    ["Core Modules","What is a Buffer?","A fixed-size chunk of raw binary data outside the V8 heap, used for files, network data and streams."],
+    ["Core Modules","What are streams? Types?","Objects that process data in chunks. Types: Readable, Writable, Duplex, Transform. They save memory and support backpressure."],
+    ["Core Modules","What is piping and backpressure?","pipe connects a readable to a writable stream. Backpressure slows the reader when the writer cannot keep up, avoiding memory overload."],
+    ["Core Modules","What is the os module?","Gives system information: os.cpus(), os.totalmem(), os.platform(), os.hostname()."],
+    ["Core Modules","What does the crypto module do?","Hashing, HMAC, encryption, random bytes and password-based key derivation (scrypt, pbkdf2)."],
+    ["Core Modules","child_process vs worker_threads vs cluster?","child_process runs separate programs or processes. worker_threads run JavaScript in parallel threads sharing memory. cluster forks multiple processes to use all CPU cores for a server."],
+    ["Core Modules","How do you create an HTTP server without Express?","http.createServer((req, res) => { res.writeHead(200); res.end('Hello'); }).listen(3000);"],
+
+    ["npm & package.json","What is npm?","Node Package Manager: the registry of packages and the CLI tool to install and manage them."],
+    ["npm & package.json","What is package.json?","A manifest file with project name, version, scripts, dependencies, devDependencies, main file and metadata."],
+    ["npm & package.json","dependencies vs devDependencies?","dependencies are needed at runtime. devDependencies (nodemon, jest, eslint) are only for development and testing."],
+    ["npm & package.json","What is package-lock.json?","It records exact versions of every installed package so installs are repeatable across machines."],
+    ["npm & package.json","What do ^ and ~ mean in versions?","^1.2.3 allows minor and patch updates (up to below 2.0.0). ~1.2.3 allows only patch updates (up to below 1.3.0)."],
+    ["npm & package.json","npm install vs npm ci?","npm install can update the lock file. npm ci installs exactly from the lock file, is faster and is preferred in CI and production builds."],
+    ["npm & package.json","What is npx?","A tool that runs a package binary without installing it globally, for example npx create-react-app."],
+    ["npm & package.json","What are npm scripts?","Commands in package.json run with npm run name, for example start, dev, test and build."],
+    ["npm & package.json","What is semantic versioning?","MAJOR.MINOR.PATCH: major for breaking changes, minor for backward-compatible features, patch for bug fixes."],
+    ["npm & package.json","How do you check for vulnerable packages?","npm audit and npm audit fix. Keep dependencies updated and review them."],
+    ["npm & package.json","Global vs local install?","Local goes into the project's node_modules. Global (-g) makes CLI tools available everywhere."],
+
+    ["Express & Middleware","What is Express.js?","A minimal and flexible web framework for Node that provides routing, middleware and helpers for building web apps and APIs."],
+    ["Express & Middleware","What is middleware?","A function with (req, res, next) that runs between request and response. It can modify the request, end the response, or call next()."],
+    ["Express & Middleware","Types of middleware?","Application-level, router-level, built-in (express.json, express.static), third-party (helmet, morgan, cors) and error-handling middleware."],
+    ["Express & Middleware","Why does middleware order matter?","Express runs middleware in the order defined. Body parsers and sessions must come before routes, and the error handler must be last."],
+    ["Express & Middleware","What is error-handling middleware?","A function with four parameters (err, req, res, next) placed after all routes to handle errors in one place."],
+    ["Express & Middleware","req.params vs req.query vs req.body?","params: route parts like /users/:id. query: ?page=2. body: data from POST, PUT, PATCH requests."],
+    ["Express & Middleware","What do express.json and express.urlencoded do?","They parse JSON bodies and HTML form bodies into req.body."],
+    ["Express & Middleware","What is express.Router?","A mini-app for grouping related routes in separate files and mounting them with app.use('/users', router)."],
+    ["Express & Middleware","res.send vs res.json vs res.end?","send sends a response of various types. json sends JSON with the right header. end ends the response without data."],
+    ["Express & Middleware","How do you serve static files?","app.use(express.static('public'))"],
+    ["Express & Middleware","What is a template engine?","It renders HTML with data on the server, for example EJS, Pug or Handlebars. Set with app.set('view engine', 'ejs')."],
+    ["Express & Middleware","How do you handle 404 errors?","Add a middleware after all routes: app.use((req, res) => res.status(404).send('Not found'))."],
+    ["Express & Middleware","How do you handle async errors in Express?","Wrap async handlers with try/catch and call next(err), or use an asyncHandler wrapper. Express 5 forwards rejected promises automatically."],
+    ["Express & Middleware","What is CORS and how do you enable it?","A browser rule that blocks cross-origin requests unless the server allows them. Use the cors package with allowed origins."],
+
+    ["REST APIs","What is a REST API?","An API style using HTTP methods on resources identified by URLs, stateless, usually returning JSON."],
+    ["REST APIs","HTTP methods and their use?","GET reads, POST creates, PUT replaces, PATCH updates partly, DELETE removes."],
+    ["REST APIs","Common HTTP status codes?","200 OK, 201 Created, 204 No Content, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 409 Conflict, 422 Unprocessable, 429 Too Many Requests, 500 Server Error."],
+    ["REST APIs","401 vs 403?","401: not authenticated (no or invalid credentials). 403: authenticated but not allowed."],
+    ["REST APIs","PUT vs PATCH?","PUT replaces the entire resource. PATCH updates only the given fields."],
+    ["REST APIs","What does idempotent mean?","Repeating the same request gives the same result. GET, PUT and DELETE are idempotent. POST is not."],
+    ["REST APIs","How do you version an API?","In the URL (/api/v1/users), a header, or a query parameter. URL versioning is the most common."],
+    ["REST APIs","How do you implement pagination?","Use page and limit query parameters with skip and limit in the database, or cursor-based pagination for large data. Return total count and metadata."],
+    ["REST APIs","How do you structure an Express project?","Folders for routes, controllers, services, models, middleware, config and utils. Keep controllers thin and business logic in services."],
+    ["REST APIs","What is rate limiting?","Limiting requests per client in a time window (express-rate-limit) to prevent abuse and brute-force attacks."],
+
+    ["Authentication & Security","Session vs JWT authentication?","Sessions store state on the server and use a session cookie. JWTs are signed tokens kept by the client and verified by the server without storing state. Sessions are easier to revoke."],
+    ["Authentication & Security","What is JWT? Parts?","JSON Web Token with header, payload and signature, separated by dots. The signature proves it was not tampered with. The payload is not encrypted."],
+    ["Authentication & Security","How do you store passwords?","Hash with bcrypt (or argon2) with a salt. Never store plain text or use fast hashes like MD5."],
+    ["Authentication & Security","What is bcrypt and salt rounds?","A slow, salted password hashing algorithm. More salt rounds make hashing slower and harder to brute force (10 to 12 is common)."],
+    ["Authentication & Security","Authentication vs authorization?","Authentication verifies who you are. Authorization decides what you can do (roles and permissions)."],
+    ["Authentication & Security","Where should a JWT be stored?","HttpOnly, Secure, SameSite cookies are safer against XSS than localStorage. Use short-lived access tokens and refresh tokens."],
+    ["Authentication & Security","What is helmet?","Middleware that sets secure HTTP headers (CSP, X-Frame-Options, HSTS and more)."],
+    ["Authentication & Security","What is CSRF and how do you prevent it?","An attack that makes a logged-in browser send an unwanted request. Prevent with CSRF tokens and SameSite cookies."],
+    ["Authentication & Security","What is XSS and how do you prevent it?","Injecting scripts into pages. Escape output, validate input, use CSP and HttpOnly cookies."],
+    ["Authentication & Security","What is NoSQL or SQL injection?","Attackers change a query through input. Use parameterized queries or ORM/ODM, validate input types and never build queries from raw strings."],
+    ["Authentication & Security","How do you protect secrets?","Store them in environment variables (dotenv locally), never commit .env, and use a secrets manager in production."],
+    ["Authentication & Security","How do you validate input?","Use libraries like Joi, Zod or express-validator on the server for every request, not only on the client."],
+    ["Authentication & Security","What is OAuth?","An authorization framework that lets users grant an app limited access to their account on another service (Login with Google) without sharing their password."],
+
+    ["Database (MongoDB & Mongoose)","What is Mongoose?","An ODM for MongoDB that provides schemas, models, validation, middleware and a query API."],
+    ["Database (MongoDB & Mongoose)","SQL vs NoSQL?","SQL: tables, fixed schema, joins, strong consistency. NoSQL (MongoDB): flexible documents, horizontal scaling. Choose based on data shape and needs."],
+    ["Database (MongoDB & Mongoose)","What is a schema and a model?","A schema defines document structure and validation. A model is a class built from the schema that you use to query the collection."],
+    ["Database (MongoDB & Mongoose)","How do you connect to MongoDB?","mongoose.connect(process.env.DBURL). Start the server after the connection succeeds and handle connection errors."],
+    ["Database (MongoDB & Mongoose)","What is populate()?","It replaces referenced ObjectIds with the actual documents, similar to a join."],
+    ["Database (MongoDB & Mongoose)","What are indexes and why use them?","Data structures that speed up queries on fields. Without indexes MongoDB scans the entire collection."],
+    ["Database (MongoDB & Mongoose)","What is aggregation?","A pipeline of stages (match, group, sort, project, lookup) that processes data on the server."],
+    ["Database (MongoDB & Mongoose)","What are transactions in MongoDB?","Multi-document operations that all succeed or all fail. Need a replica set (Atlas provides one)."],
+    ["Database (MongoDB & Mongoose)","How do you avoid the N+1 query problem?","Use populate, aggregation with $lookup or batch queries instead of querying inside a loop."],
+    ["Database (MongoDB & Mongoose)","What is connection pooling?","Reusing a set of open database connections instead of opening a new one for every request."],
+
+    ["Error Handling & Debugging","How do you handle errors in Node.js?","try/catch with async/await, error-first callbacks, .catch() on promises, centralized Express error middleware and process-level handlers as a last safety net."],
+    ["Error Handling & Debugging","What are uncaughtException and unhandledRejection?","Process events for errors nobody caught. Log the error and exit gracefully; the process may be in an unknown state, so restart it with a process manager."],
+    ["Error Handling & Debugging","Operational vs programmer errors?","Operational: expected runtime problems (database down, invalid input). Programmer: bugs (undefined variable). Handle the first and fix the second."],
+    ["Error Handling & Debugging","What is a custom error class?","class AppError extends Error with statusCode and isOperational, used to return proper responses."],
+    ["Error Handling & Debugging","How do you debug Node apps?","console.log, the node --inspect flag with Chrome DevTools or VS Code debugger, breakpoints, and logging with winston or pino."],
+    ["Error Handling & Debugging","Why use a logging library?","Log levels, structured JSON logs, files and transports, and easier searching in production (winston, pino, morgan for requests)."],
+
+    ["Performance & Scaling","How do you scale a Node.js application?","Run multiple instances with cluster or PM2, put a load balancer in front, use stateless servers, shared session stores, caching (Redis), database indexing and horizontal scaling."],
+    ["Performance & Scaling","What is the cluster module?","It forks worker processes that share a server port so the app uses all CPU cores."],
+    ["Performance & Scaling","What is PM2?","A process manager that keeps apps alive, restarts on crash, runs in cluster mode, manages logs and enables zero-downtime reloads."],
+    ["Performance & Scaling","How do you improve Node.js performance?","Avoid blocking the event loop, use async APIs, caching, compression, streams for large data, database indexes, pagination, connection pooling and profile with tools."],
+    ["Performance & Scaling","What is caching and where do you use it?","Storing results of expensive operations for reuse. Use Redis or in-memory caches for frequent reads, with expiry and invalidation."],
+    ["Performance & Scaling","What are memory leaks in Node and their causes?","Memory that is never freed: growing global arrays or caches, unremoved event listeners, uncleared timers and large closures. Find them with heap snapshots."],
+    ["Performance & Scaling","Why can't you use MemoryStore for sessions in production?","It leaks memory, resets on restart and is not shared across instances. Use Redis or MongoDB session storage."],
+    ["Performance & Scaling","What is gzip compression?","The compression middleware reduces response size to speed up delivery."],
+
+    ["Testing & Deployment","How do you test Node.js apps?","Unit tests with Jest or Mocha, API tests with Supertest, mocks for databases and services, and a separate test database."],
+    ["Testing & Deployment","What are environment variables and dotenv?","Configuration values outside code (ports, secrets, URLs) read from process.env. dotenv loads them from a .env file in development."],
+    ["Testing & Deployment","How do you deploy a Node.js app?","Push code to Git, build on a host (Render, Railway, AWS, Heroku), set environment variables, run npm ci and npm start, use HTTPS and a process manager."],
+    ["Testing & Deployment","What is Docker and why use it with Node?","Containers package the app with its dependencies so it runs the same everywhere, easing deployment and scaling."],
+    ["Testing & Deployment","What does NODE_ENV do?","Sets the environment (development, production). Production enables optimizations, secure cookies and hides error details."],
+    ["Testing & Deployment","What is CI/CD?","Automated testing and deployment pipelines that run on every push (GitHub Actions)."],
+    ["Testing & Deployment","What is graceful shutdown?","On SIGTERM, stop accepting new requests, finish ongoing ones, close the database connection, then exit."],
+
+    ["Coding Questions","Write a simple Express server.","const express = require('express');\nconst app = express();\napp.use(express.json());\napp.get('/', (req, res) => res.json({ ok: true }));\napp.listen(3000, () => console.log('Running'));"],
+    ["Coding Questions","Read a file asynchronously.","const fs = require('fs/promises');\nasync function read() {\n  try { const data = await fs.readFile('a.txt', 'utf8'); console.log(data); }\n  catch (e) { console.error(e.message); }\n}"],
+    ["Coding Questions","Write an auth middleware.","function protect(req, res, next) {\n  if (!req.session.userId) return res.redirect('/login');\n  next();\n}"],
+    ["Coding Questions","Write a custom EventEmitter example.","const EventEmitter = require('events');\nconst e = new EventEmitter();\ne.on('greet', name => console.log('Hi ' + name));\ne.emit('greet', 'Asha');"],
+    ["Coding Questions","Output order: console.log(1); setTimeout(() => console.log(2), 0); setImmediate(() => console.log(3)); process.nextTick(() => console.log(4)); Promise.resolve().then(() => console.log(5)); console.log(6);","1, 6, 4, 5, then 2 and 3. The order of setTimeout 0 and setImmediate in the main module can vary; inside an I/O callback setImmediate always runs first."],
+    ["Coding Questions","Write an async error wrapper.","const asyncHandler = fn => (req, res, next) =>\n  Promise.resolve(fn(req, res, next)).catch(next);"],
+    ["Coding Questions","Pipe a file using streams.","fs.createReadStream('in.txt').pipe(fs.createWriteStream('out.txt'));"],
+
+    ["Situation Based","Your API becomes slow under load. What do you do?","Profile to find the bottleneck, check for blocking code and slow database queries, add indexes, caching and pagination, and scale with clustering and a load balancer."],
+    ["Situation Based","The server crashes with an unhandled error in production.","Check logs, fix the root cause, add proper error handling, use a process manager like PM2 to restart, and add monitoring and alerts."],
+    ["Situation Based","Memory usage keeps growing.","Take heap snapshots, look for growing caches, listeners and timers, fix leaks, and restart gracefully as a stopgap."],
+    ["Situation Based","How do you process a 2 GB file?","Use streams to read and process in chunks. Never load the full file into memory."],
+    ["Situation Based","A user uploads large images. How do you handle it?","Limit size and type with Multer, validate on the server, store in cloud storage (S3, Cloudinary) with a CDN and save only the URL in the database."],
+    ["Situation Based","Users get logged out after each deployment.","Sessions are in memory. Store sessions in MongoDB or Redis so they survive restarts and work across instances."],
+    ["Situation Based","How would you send emails without slowing the response?","Push the job to a queue (Bull, RabbitMQ) and process it in a background worker. Respond to the user immediately."],
+    ["Situation Based","How would you design real-time chat?","Use WebSockets (Socket.IO), authenticate the connection, use rooms, scale with a Redis adapter and persist messages in a database."],
+    ["Situation Based","How do you secure a Node.js API?","HTTPS, helmet, CORS rules, rate limiting, input validation, authentication and authorization, hashed passwords, secure cookies, secret management, dependency audits and safe error messages."]
+  ]
+};
+
+skills.nodejs.notes = [
+{t:"1. Introduction to Node.js", h:
+ nP("Node.js is an open-source JavaScript runtime built on Google's V8 engine. It runs JavaScript on the server and is designed for scalable, I/O-heavy network applications.")+
+ nL(["Event-driven, non-blocking I/O","Single main thread with libuv handling async work","Cross-platform","npm: the largest package registry","Good for APIs, real-time apps, CLIs and microservices"])+
+ nT(["Part","Role"],[["V8","Compiles and runs JavaScript"],["libuv","Event loop, thread pool, async I/O"],["Core modules","fs, http, path, events, stream and more"],["npm","Package manager and registry"]])+
+ nT(["Node.js","Browser"],[["No DOM or window","Has DOM and window"],["global object","window object"],["fs, os, http, process","Web APIs (fetch, localStorage)"],["CommonJS and ES modules","ES modules"]])+
+ nC("// app.js\nconsole.log('Hello from Node');\n\n// run it\n// node app.js")},
+
+{t:"2. Modules: CommonJS & ES Modules", h:
+ nC("// math.js (CommonJS)\nconst add = (a, b) => a + b;\nmodule.exports = { add };\n\n// app.js\nconst { add } = require('./math');\n\n// ES module version\n// export const add = (a, b) => a + b;\n// import { add } from './math.js';")+
+ nT(["Feature","CommonJS","ES Modules"],[["Syntax","require / module.exports","import / export"],["Loading","Synchronous","Asynchronous"],["File type","Default for .js, or .cjs","type: 'module' or .mjs"],["__dirname","Available","Use import.meta.url"],["Top-level await","No","Yes"],["Tree shaking","Hard","Supported"]])+
+ nT(["Module type","Example"],[["Core","require('fs'), require('path')"],["Local","require('./utils/helper')"],["Third-party","require('express')"]])+
+ nP("Modules are cached after the first require. Each file is wrapped in a function giving it private scope.")},
+
+{t:"3. npm & package.json", h:
+ nC("{\n  \"name\": \"my-app\",\n  \"version\": \"1.0.0\",\n  \"main\": \"server.js\",\n  \"scripts\": {\n    \"start\": \"node server.js\",\n    \"dev\": \"nodemon server.js\"\n  },\n  \"dependencies\": { \"express\": \"^4.19.0\" },\n  \"devDependencies\": { \"nodemon\": \"^3.0.0\" }\n}")+
+ nT(["Command","Purpose"],[["npm init -y","Create package.json"],["npm install pkg","Install and add to dependencies"],["npm install -D pkg","Install as devDependency"],["npm install -g pkg","Install globally"],["npm ci","Clean install from lock file"],["npm uninstall pkg","Remove a package"],["npm run script","Run a script"],["npm update","Update packages"],["npm audit","Check vulnerabilities"],["npx pkg","Run a package without installing"]])+
+ nT(["Version","Meaning"],[["1.2.3","Exact version"],["^1.2.3","Minor and patch updates allowed"],["~1.2.3","Patch updates only"],["*","Any version (avoid)"]])},
+
+{t:"4. Event Loop", h:
+ nP("The event loop lets Node do non-blocking work on one thread. It runs phases in a loop, and microtasks run between them.")+
+ nT(["Phase / Queue","What runs"],[["nextTick queue","process.nextTick callbacks (highest priority)"],["Microtask queue","Promise then, catch, finally"],["Timers","setTimeout and setInterval callbacks"],["Pending callbacks","Some system-level callbacks"],["Poll","I/O callbacks (files, network)"],["Check","setImmediate callbacks"],["Close","Close events (socket.on('close'))"]])+
+ nC("console.log('1');\nsetTimeout(() => console.log('timeout'), 0);\nsetImmediate(() => console.log('immediate'));\nprocess.nextTick(() => console.log('nextTick'));\nPromise.resolve().then(() => console.log('promise'));\nconsole.log('2');\n// 1, 2, nextTick, promise, timeout, immediate")+
+ nL(["Never block the event loop with long synchronous work","Use worker threads or child processes for CPU-heavy tasks","fs, crypto and DNS use the libuv thread pool (default size 4)"])},
+
+{t:"5. Asynchronous Programming", h:
+ nT(["Style","Example","Note"],[["Callback","fs.readFile(f, (err, data) => {})","Error-first, can nest deeply"],["Promise","readFile(f).then(...).catch(...)","Chainable"],["async / await","const data = await readFile(f)","Cleanest, use try/catch"],["Events","emitter.on('data', fn)","Streams, servers"]])+
+ nC("const fs = require('fs/promises');\n\nasync function run() {\n  try {\n    const [a, b] = await Promise.all([\n      fs.readFile('a.txt', 'utf8'),\n      fs.readFile('b.txt', 'utf8')\n    ]);\n    console.log(a, b);\n  } catch (err) {\n    console.error(err.message);\n  }\n}\nrun();")+
+ nT(["Promise helper","Behavior"],[["Promise.all","Waits for all, fails on first rejection"],["Promise.allSettled","Waits for all, reports each result"],["Promise.race","First settled wins"],["Promise.any","First fulfilled wins"],["util.promisify","Turns a callback function into a promise function"]])},
+
+{t:"6. Core Modules Overview", h:
+ nT(["Module","Purpose","Common functions"],[["fs","File system","readFile, writeFile, mkdir, readdir, unlink"],["path","Path handling","join, resolve, basename, extname"],["http / https","Create servers and requests","createServer, request"],["os","System info","cpus, totalmem, platform"],["events","Event emitter","on, once, emit, off"],["stream","Streaming data","Readable, Writable, Transform, pipeline"],["buffer","Binary data","Buffer.from, toString"],["crypto","Security functions","createHash, randomBytes, scrypt"],["url","URL parsing","URL, URLSearchParams"],["util","Helpers","promisify, inspect"],["child_process","Run other programs","spawn, exec, fork"],["worker_threads","Parallel JS threads","Worker"],["cluster","Multi-process servers","fork"],["zlib","Compression","gzip, gunzip"]])},
+
+{t:"7. File System & Path", h:
+ nC("const fs = require('fs/promises');\nconst path = require('path');\n\nconst file = path.join(__dirname, 'data', 'notes.txt');\n\nawait fs.mkdir(path.dirname(file), { recursive: true });\nawait fs.writeFile(file, 'Hello');\nawait fs.appendFile(file, ' World');\nconst text = await fs.readFile(file, 'utf8');\nawait fs.unlink(file);   // delete")+
+ nT(["fs function","Purpose"],[["readFile / writeFile","Read or write whole file"],["appendFile","Add to file"],["readdir","List directory"],["stat","File information"],["mkdir / rmdir / rm","Create or remove folders"],["rename / copyFile","Move or copy"],["createReadStream / createWriteStream","Stream large files"]])+
+ nT(["path function","Result example"],[["path.join('a','b')","a/b"],["path.resolve('a')","Absolute path"],["path.basename('/x/y.txt')","y.txt"],["path.extname('y.txt')",".txt"],["path.dirname('/x/y.txt')","/x"]])+
+ nP("Sync versions (readFileSync) block the event loop. Use them only at startup, not inside request handlers.")},
+
+{t:"8. Events & EventEmitter", h:
+ nC("const EventEmitter = require('events');\n\nclass Shop extends EventEmitter {}\nconst shop = new Shop();\n\nshop.on('order', (id) => console.log('Order', id));\nshop.once('open', () => console.log('Opened once'));\n\nshop.emit('order', 101);\nshop.emit('open');")+
+ nT(["Method","Purpose"],[["on(event, fn)","Add a listener"],["once(event, fn)","Listener that runs one time"],["emit(event, ...args)","Trigger an event"],["off / removeListener","Remove a listener"],["listenerCount(event)","Number of listeners"]])+
+ nP("Many Node objects are emitters: HTTP servers, streams, sockets and process. Emitting an 'error' event with no listener throws.")},
+
+{t:"9. Streams & Buffers", h:
+ nT(["Stream type","Description","Example"],[["Readable","Source of data","fs.createReadStream, req"],["Writable","Destination for data","fs.createWriteStream, res"],["Duplex","Both readable and writable","TCP socket"],["Transform","Modifies data passing through","zlib.createGzip"]])+
+ nC("const fs = require('fs');\nconst zlib = require('zlib');\nconst { pipeline } = require('stream');\n\npipeline(\n  fs.createReadStream('big.txt'),\n  zlib.createGzip(),\n  fs.createWriteStream('big.txt.gz'),\n  (err) => { if (err) console.error(err); }\n);")+
+ nL(["Streams process data in chunks, saving memory","Backpressure slows the reader when the writer is slow","A Buffer is a fixed chunk of raw bytes: Buffer.from('hi')","Use streams for large files, uploads and downloads"])},
+
+{t:"10. HTTP Server (without Express)", h:
+ nC("const http = require('http');\n\nconst server = http.createServer((req, res) => {\n  if (req.url === '/' && req.method === 'GET') {\n    res.writeHead(200, { 'Content-Type': 'application/json' });\n    res.end(JSON.stringify({ message: 'Hello' }));\n  } else {\n    res.writeHead(404);\n    res.end('Not found');\n  }\n});\n\nserver.listen(3000, () => console.log('http://localhost:3000'));")+
+ nT(["Object","Useful properties / methods"],[["req","req.url, req.method, req.headers, req.on('data')"],["res","res.writeHead, res.setHeader, res.write, res.end, res.statusCode"]])+
+ nP("Express wraps this API and adds routing, middleware and helpers, so you rarely write raw http code in real projects.")},
+
+{t:"11. Express.js Basics", h:
+ nC("const express = require('express');\nconst app = express();\n\napp.use(express.json());\napp.use(express.urlencoded({ extended: true }));\napp.use(express.static('public'));\n\napp.get('/users/:id', (req, res) => {\n  res.json({ id: req.params.id, page: req.query.page });\n});\n\napp.post('/users', (req, res) => {\n  res.status(201).json(req.body);\n});\n\napp.listen(process.env.PORT || 3000);")+
+ nT(["Request data","Where","Example"],[["Route params","req.params","/users/:id"],["Query string","req.query","?search=food"],["Body","req.body","POST form or JSON"],["Headers","req.headers / req.get()","Authorization"],["Cookies","req.cookies","cookie-parser"],["Session","req.session","express-session"]])+
+ nT(["Response method","Purpose"],[["res.send()","Send text, HTML, buffer"],["res.json()","Send JSON"],["res.status(code)","Set status code"],["res.redirect(url)","Redirect"],["res.render(view, data)","Render a template"],["res.cookie()","Set a cookie"]])},
+
+{t:"12. Middleware & Routing", h:
+ nC("// custom middleware\nfunction logger(req, res, next) {\n  console.log(req.method, req.url);\n  next();\n}\napp.use(logger);\n\n// route-level middleware\napp.get('/admin', protect, adminOnly, (req, res) => res.send('Admin'));\n\n// router\nconst router = require('express').Router();\nrouter.get('/', listUsers);\nrouter.post('/', createUser);\napp.use('/users', router);\n\n// error middleware (4 arguments, last)\napp.use((err, req, res, next) => {\n  res.status(err.statusCode || 500).json({ error: err.message });\n});")+
+ nT(["Middleware type","Example"],[["Application-level","app.use(logger)"],["Router-level","router.use(auth)"],["Built-in","express.json(), express.static()"],["Third-party","helmet, cors, morgan, cookie-parser"],["Error-handling","(err, req, res, next)"]])+
+ nL(["Order matters: parsers, session, routes, 404, error handler","Call next() to continue, or end the response","Call next(err) to jump to the error handler"])},
+
+{t:"13. REST API Design & Status Codes", h:
+ nT(["Method","Route","Action"],[["GET","/api/products","List products"],["GET","/api/products/:id","Get one"],["POST","/api/products","Create"],["PUT","/api/products/:id","Replace"],["PATCH","/api/products/:id","Update fields"],["DELETE","/api/products/:id","Delete"]])+
+ nT(["Code","Meaning","Use"],[["200","OK","Successful GET, PUT, PATCH"],["201","Created","Successful POST"],["204","No Content","Successful DELETE"],["400","Bad Request","Invalid input"],["401","Unauthorized","Not logged in"],["403","Forbidden","Logged in, no permission"],["404","Not Found","Resource missing"],["409","Conflict","Duplicate data"],["422","Unprocessable Entity","Validation failed"],["429","Too Many Requests","Rate limited"],["500","Internal Server Error","Server bug"]])+
+ nL(["Use nouns for URLs, not verbs","Keep APIs stateless","Version the API: /api/v1","Support pagination, filtering and sorting","Return consistent JSON error responses"])},
+
+{t:"14. Authentication & Authorization", h:
+ nT(["Approach","How it works","Pros / Cons"],[["Session + cookie","Server stores session, browser sends session ID cookie","Easy to revoke, needs a shared store when scaling"],["JWT","Signed token sent in cookie or Authorization header","Stateless, harder to revoke"],["OAuth","Login via another provider (Google)","No password handling, more setup"]])+
+ nC("const bcrypt = require('bcrypt');\nconst jwt = require('jsonwebtoken');\n\n// register\nconst hash = await bcrypt.hash(password, 10);\n\n// login\nconst ok = await bcrypt.compare(password, user.password);\nconst token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });\n\n// verify middleware\nconst payload = jwt.verify(token, process.env.JWT_SECRET);")+
+ nT(["Concept","Meaning"],[["Authentication","Who are you?"],["Authorization","What can you do? (roles)"],["Hashing","One-way, for passwords (bcrypt, argon2)"],["Salt","Random data added before hashing"],["JWT","Header.Payload.Signature (payload is not encrypted)"],["Refresh token","Long-lived token used to get new access tokens"]])},
+
+{t:"15. Security Best Practices", h:
+ nT(["Threat","Protection"],[["Brute force","Rate limiting, account lockout, strong hashing"],["XSS","Escape output, CSP, HttpOnly cookies"],["CSRF","CSRF tokens, SameSite cookies"],["Injection (SQL / NoSQL)","Validate types, parameterized queries, ODM"],["Insecure headers","helmet"],["Broken access control","Ownership and role checks on every route"],["Sensitive data leaks","Env variables, no secrets in Git, safe error messages"],["Vulnerable packages","npm audit, update dependencies"],["Large payloads","Body size limits"],["Insecure transport","HTTPS and secure cookies"]])+
+ nC("const helmet = require('helmet');\nconst rateLimit = require('express-rate-limit');\nconst cors = require('cors');\n\napp.use(helmet());\napp.use(cors({ origin: 'https://example.com' }));\napp.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));\napp.use(express.json({ limit: '10kb' }));")},
+
+{t:"16. MongoDB & Mongoose", h:
+ nC("const mongoose = require('mongoose');\n\nconst userSchema = new mongoose.Schema({\n  name: { type: String, required: true, trim: true },\n  email: { type: String, required: true, unique: true, lowercase: true },\n  role: { type: String, enum: ['user', 'admin'], default: 'user' }\n}, { timestamps: true });\n\nconst User = mongoose.model('User', userSchema);\n\nawait mongoose.connect(process.env.DBURL);\nawait User.create({ name: 'Asha', email: 'a@x.com' });\nconst users = await User.find({ role: 'user' }).sort({ createdAt: -1 }).limit(10);")+
+ nT(["Operation","Mongoose method"],[["Create","Model.create(), new Model().save()"],["Read many / one","find(), findOne(), findById()"],["Update","findByIdAndUpdate(), updateOne()"],["Delete","findByIdAndDelete(), deleteOne()"],["Count","countDocuments()"],["Join-like","populate('field')"],["Pipeline","aggregate([...])"]])+
+ nL(["Add indexes for fields you query often","Use skip and limit for pagination","Use lean() for faster read-only queries","Validate ObjectIds before querying","Use transactions for multi-document consistency"])},
+
+{t:"17. Error Handling", h:
+ nC("class AppError extends Error {\n  constructor(message, statusCode) {\n    super(message);\n    this.statusCode = statusCode;\n    this.isOperational = true;\n  }\n}\n\nconst asyncHandler = (fn) => (req, res, next) =>\n  Promise.resolve(fn(req, res, next)).catch(next);\n\napp.get('/users/:id', asyncHandler(async (req, res) => {\n  const user = await User.findById(req.params.id);\n  if (!user) throw new AppError('User not found', 404);\n  res.json(user);\n}));\n\nprocess.on('unhandledRejection', (err) => { console.error(err); process.exit(1); });")+
+ nT(["Error kind","Example","Handling"],[["Operational","DB down, invalid input, 404","Handle and respond properly"],["Programmer","Undefined variable, bad logic","Fix the bug, log and restart"]])+
+ nL(["Centralize handling in one error middleware","Never leak stack traces in production","Log errors with context (winston, pino)","Use a process manager to restart crashed apps"])},
+
+{t:"18. Environment, Config & Project Structure", h:
+ nC("// .env\nPORT=3000\nDBURL=mongodb+srv://...\nSESSION_SECRET=long_random_value\nNODE_ENV=development\n\n// server.js\nrequire('dotenv').config();\nconst port = process.env.PORT || 3000;")+
+ nT(["Folder","Contents"],[["config/","Database and app configuration"],["models/","Mongoose schemas"],["controllers/","Request handling logic"],["services/","Business logic"],["routes/","URL to controller mapping"],["middleware/","Auth, validation, errors, uploads"],["utils/","Helpers"],["views/ or public/","Templates and static files"]])+
+ nL(["Add .env to .gitignore","Provide .env.example without real values","Separate app.js (setup) from server.js (start)","Start listening only after the database connects"])},
+
+{t:"19. Performance & Scaling", h:
+ nT(["Technique","Benefit"],[["Async, non-blocking code","Keeps the event loop free"],["Clustering / PM2","Use all CPU cores"],["Load balancer (Nginx)","Distribute traffic across instances"],["Redis caching","Faster reads, less database load"],["Database indexes","Faster queries"],["Pagination","Smaller responses"],["Compression (gzip)","Smaller payloads"],["Streams","Low memory for big files"],["CDN","Faster static assets"],["Worker threads / queues","Offload CPU or slow tasks"]])+
+ nT(["Tool","Purpose"],[["cluster","Fork one process per CPU core"],["worker_threads","Parallel JavaScript threads"],["child_process","Run separate programs"],["PM2","Process manager, logs, zero-downtime reload"],["Bull / BullMQ","Background job queues (Redis)"]])+
+ nP("For multiple instances, keep servers stateless and store sessions in Redis or MongoDB instead of memory.")},
+
+{t:"20. Testing & Deployment", h:
+ nC("// Jest + Supertest\nconst request = require('supertest');\nconst app = require('../app');\n\ntest('GET / returns 200', async () => {\n  const res = await request(app).get('/');\n  expect(res.statusCode).toBe(200);\n});")+
+ nT(["Testing tool","Use"],[["Jest / Mocha","Test runner and assertions"],["Supertest","Test HTTP endpoints"],["Sinon / jest.mock","Mocks and stubs"],["ESLint / Prettier","Code quality and formatting"]])+
+ nT(["Deployment step","Notes"],[["Set NODE_ENV=production","Optimizations, secure cookies"],["Set environment variables","On the host, not in Git"],["npm ci --omit=dev","Install exact production dependencies"],["Run with PM2 or Docker","Auto restart, clustering"],["Use HTTPS and a reverse proxy","Nginx or the platform's proxy"],["Add logging and monitoring","Detect issues early"],["Graceful shutdown","Finish requests, close DB on SIGTERM"]])+
+ nL(["Hosts: Render, Railway, AWS, Azure, DigitalOcean","Use CI/CD (GitHub Actions) to test and deploy","Take database backups"])}
+];
+
 var app = document.getElementById("app");
 var barbox = document.getElementById("barbox");
 var groups = { projects: projects, skills: skills };
@@ -1147,6 +1417,13 @@ function draw(g, key) {
   document.getElementById("list").innerHTML = out || '<div class="empty">No questions found.</div>';
   document.getElementById("n").textContent = total + " questions";
 }
+
+var topBox = document.getElementById("top");
+window.addEventListener("scroll", function () {
+  var y = window.scrollY;
+  if (y > 40) topBox.classList.add("small");
+  else if (y < 10) topBox.classList.remove("small");
+});
 
 showHome();
 </script>
